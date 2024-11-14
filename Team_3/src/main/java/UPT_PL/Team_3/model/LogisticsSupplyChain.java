@@ -192,5 +192,9 @@ public class LogisticsSupplyChain {
 	public void testSSS() {
 		
 	}
+
+    public void testFromVlad(){
+
+    }
     
 }
