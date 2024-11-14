@@ -14,7 +14,6 @@ import jakarta.persistence.Table;
 @Table(name = "Calculation")
 public class Calculation {
 	//	Instance variable
-	
 	@Id                                                    
 	@Column(name = "Calculation_Id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
