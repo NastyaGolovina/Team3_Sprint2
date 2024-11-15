@@ -257,7 +257,7 @@ public class Countries {
         System.out.println("Country successfully deleted.");
     }
 
-    // method to delete product by country, delete product from a certain country
+// Method to delete product by country, delete product from a certain country
     
     public void deleteProductsByCountry() {
     	
@@ -303,7 +303,27 @@ public class Countries {
      for (int i = 0; i < country.getProducts().size(); i++) {
          System.out.println("(" + i + ") " + country.getProducts().get(i));
      }
-       }
+     
+     //Get/Retrieve the selected ProductByCountry
+     ProductsByCountry selectedProductsByCountry = country.getProducts().get(indexProducts);
+     
+     // Proceed to delete the country from the database
+     // Set up database session for dependency checks
+     DatabaseHelper databaseHelper = new DatabaseHelper();
+     databaseHelper.setup();
+     Session session = databaseHelper.getSessionFactory().openSession();
+
+    
+     // Delete the country from the database
+     session.beginTransaction();
+     session.remove(selectedProductsByCountry); // Delete the country from the database
+     session.getTransaction().commit();
+
+     session.close();
+     databaseHelper.exit();
+
+     System.out.println("Product successfully deleted.");
+	}
     
 
     /**

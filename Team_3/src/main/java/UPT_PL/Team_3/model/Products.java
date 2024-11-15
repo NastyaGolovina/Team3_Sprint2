@@ -212,8 +212,8 @@ public class Products {
 	public void deleteProduct(String productID,List<Country> countries, ArrayList<ProductsByCountry> products,String productByCountryId) {
 		
 		 // Ask for the product ID to delete
-        String productId = ProjectHelper.inputStr("Enter the product ID to delete: ");
-        
+       String productId = ProjectHelper.inputStr("Enter the product ID to delete: ");
+       
 	    // Check if product exists in the database or ProductList before proceeding
 	    int productPos = searchProduct(productID);
 	    if (productPos == -1) {
@@ -221,68 +221,62 @@ public class Products {
 	        
 	        return;
 	        }
-	
-	    // Retrieve the selected product object
-        Product product = ProductList.get(productPos);
+	    
+	// Check if the product is being used in ProductsByCountry 
+       boolean isProductUsed = false;  // Initially assume the product is not in use in ProductByCountry 
+       
+       for(Country country : countries) {  // Process each country to delete the product with the specified productId, go thru each country in countries list
+       	for(int i = 0; i < products.size(); i++) { // Iterate through the ProductByCountry list (products) to check if the product is being used
+       		if(products.get(i).getProduct().getProductID().equalsIgnoreCase(productId)) { 
+       			isProductUsed = true;
+       			break;
+       		}
+       		}
+       	// If the product was found to be in use, exit the outer loop
+           if (isProductUsed) {
+               System.out.println("The product with ID " + productId + " cannot be deleted because it is being used.");
+               break;  //Exit the outer loop as well, since we've confirmed product is being used
+           }
+     
+       }
+       
+    // Set up database session for dependency checks
+       DatabaseHelper databaseHelper = new DatabaseHelper();
+       databaseHelper.setup();
+       Session session = databaseHelper.getSessionFactory().openSession();
 
-        boolean isProductUsed = false;  // Initially assume the product is not in use in ProductByCountry 
-        
-        for(Country country : countries) {  // Process each country to delete the product with the specified productId, go thru each country in countries list
-        	for(int i = 0; i < products.size(); i++) { // Iterate through the ProductByCountry list (products) to check if the product is being used
-        		if(products.get(i).getProduct().getProductID().equalsIgnoreCase(productId)) { 
-        			isProductUsed = true;
-        			break;
-        		}
-        	}
-        	// If the product is not in use, we can remove it
-        	if(!isProductUsed) {
-        		for(int i = 0; i < products.size(); i++) {
-        			if(products.get(i).getProduct().getProductID() == productId) {
-        				products.remove(i);
-        				System.out.println("The product with ID " + productId + "is deleted");
-        				break; //exit the loop once finishing delete the product
-        			}
-        		} 
-        	}
-        	else {
-    			System.out.println("The product with ID " + productId + "can not be deleted because it is being used ");
-    		}
-        }
-        
-    
-     // Set up database session for dependency checks
-        DatabaseHelper databaseHelper = new DatabaseHelper();
-        databaseHelper.setup();
-        Session session = databaseHelper.getSessionFactory().openSession();
+       
+       //  Check if the country is linked to any RouteLine
+       List<RouteLine> routeLines = session.createQuery(
+       		"FROM RouteLine rl WHERE rl.product.id = :productId", RouteLine.class)
+               .setParameter("productId", productId)
+               .getResultList();
 
-        
-        //  Check if the country is linked to any RouteLine
-        List<RouteLine> routeLines = session.createQuery(
-        		"FROM RouteLine rl WHERE rl.product.id = :productId", RouteLine.class)
-                .setParameter("productId", productId)
-                .getResultList();
+       if (!routeLines.isEmpty()) {
+           System.out.println("Cannot delete product. It is linked to RouteLine.");
+           session.close();
+           databaseHelper.exit();
+           return ;
+       }
 
-        if (!routeLines.isEmpty()) {
-            System.out.println("Cannot delete product. It is linked to RouteLine.");
-            session.close();
-            databaseHelper.exit();
-            return ;
-        }
-	
-     // Proceed to delete the country from the list and the database
-        
-        // Delete from the list
-        ProductList.remove(productPos);
+       
+    // Retrieve the selected product object
+       Product product = ProductList.get(productPos);
+       
+    // Proceed to delete the country from the list and the database
+       
+       // Delete from the list
+       ProductList.remove(productPos);
 
-        // Delete the country from the database
-        session.beginTransaction();
-        session.remove(product); // Delete the country from the database
-        session.getTransaction().commit();
+       // Delete the country from the database
+       session.beginTransaction();
+       session.remove(product); // Delete the country from the database
+       session.getTransaction().commit();
 
-        session.close();
-        databaseHelper.exit();
+       session.close();
+       databaseHelper.exit();
 
-        System.out.println("Product successfully deleted.");
+       System.out.println("Product successfully deleted.");
 	}
 
 }
