@@ -133,57 +133,7 @@ public class Countries {
     	session.close();
     	DatabaseHelper.exit();
     }
-    /**
-     * readAllLogisticsSitesWithJplq
-     */
-    protected void readAllLogisticsSitesWithJplq() {
-    	DatabaseHelper DatabaseHelper = new DatabaseHelper();
-    	DatabaseHelper.setup();
-    	Session session = DatabaseHelper.getSessionFactory().openSession();
-    	
-    	List<LogisticsSite> sites = session.createQuery("SELECT l FROM LogisticsSite l",LogisticsSite.class).getResultList();
-    	
-
-        for (LogisticsSite l : sites) {
-            Hibernate.initialize(l.getSuppliedTransports());
-        }
-    	
-		for(Country c : this.countries) {
-			for(LogisticsSite l : sites) {
-				if(l.getCountry().getCountryId().equalsIgnoreCase(c.getCountryId())) {
-					c.addLogisticsSite(l);
-				}
-			}
-    	}
-    	
-    	session.close();
-    	DatabaseHelper.exit();
-    }
     
-    /**
-     * readAllLogisticsSitesWithJplq
-     */
-    protected void readAllProductsByCountrysWithJplq() {
-    	DatabaseHelper DatabaseHelper = new DatabaseHelper();
-    	DatabaseHelper.setup();
-    	Session session = DatabaseHelper.getSessionFactory().openSession();
-    	
-    	List<ProductsByCountry> products = session.createQuery("SELECT P FROM ProductsByCountry P",ProductsByCountry.class).getResultList();
-    	
-
-    	
-		for(Country c : this.countries) {
-			for(ProductsByCountry p : products) {
-				if(p.getCountry().getCountryId().equalsIgnoreCase(c.getCountryId())) {
-					c.addProductsByCountry(p);
-				}
-			}
-    	}
-    	
-    	session.close();
-    	DatabaseHelper.exit();
-    }
-  
      // DELETE Country by Id
     
     public void deleteCountryById() {
