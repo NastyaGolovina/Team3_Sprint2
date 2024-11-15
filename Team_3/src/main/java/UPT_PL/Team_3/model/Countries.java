@@ -294,6 +294,9 @@ public class Countries {
     	 return;
      }
      
+   //Get/Retrieve the selected ProductByCountry
+     ProductsByCountry selectedProductsByCountry = country.getProducts().get(indexProducts);
+     
      // remove the product by country from the ProductsByCountry list 
      country.getProducts().remove(indexProducts);
      System.out.println("Product removed successfully.");
@@ -303,9 +306,6 @@ public class Countries {
      for (int i = 0; i < country.getProducts().size(); i++) {
          System.out.println("(" + i + ") " + country.getProducts().get(i));
      }
-     
-     //Get/Retrieve the selected ProductByCountry
-     ProductsByCountry selectedProductsByCountry = country.getProducts().get(indexProducts);
      
      // Proceed to delete the country from the database
      // Set up database session for dependency checks

@@ -231,55 +231,49 @@ public class Products {
        			isProductUsed = true;
        			break;
        		}
-       		}
-       	// If the product was found to be in use, exit the outer loop
-           if (isProductUsed) {
-               System.out.println("The product with ID " + productId + " cannot be deleted because it is being used.");
-               break;  //Exit the outer loop as well, since we've confirmed product is being used
-           }
-     
-       }
-       
-    // Set up database session for dependency checks
-       DatabaseHelper databaseHelper = new DatabaseHelper();
-       databaseHelper.setup();
-       Session session = databaseHelper.getSessionFactory().openSession();
+		}
 
-       
-       //  Check if the country is linked to any RouteLine
-       List<RouteLine> routeLines = session.createQuery(
-       		"FROM RouteLine rl WHERE rl.product.id = :productId", RouteLine.class)
-               .setParameter("productId", productId)
-               .getResultList();
+		if (!isProductUsed) {
+			DatabaseHelper databaseHelper = new DatabaseHelper(); // Set up database session for dependency checks
+			databaseHelper.setup();
+			Session session = databaseHelper.getSessionFactory().openSession();
 
-       if (!routeLines.isEmpty()) {
-           System.out.println("Cannot delete product. It is linked to RouteLine.");
-           session.close();
-           databaseHelper.exit();
-           return ;
-       }
+			// Check if the country is linked to any RouteLine
+			List<RouteLine> routeLines = session
+					.createQuery("FROM RouteLine rl WHERE rl.product.id = :productId", RouteLine.class)
+					.setParameter("productId", productId).getResultList();
 
-       
-    // Retrieve the selected product object
-       Product product = ProductList.get(productPos);
-       
-    // Proceed to delete the country from the list and the database
-       
-       // Delete from the list
-       ProductList.remove(productPos);
+			if (!routeLines.isEmpty()) {
+				System.out.println("Cannot delete product. It is linked to RouteLine.");
+				session.close();
+				databaseHelper.exit();
+				return;
+			}
 
-       // Delete the country from the database
-       session.beginTransaction();
-       session.remove(product); // Delete the country from the database
-       session.getTransaction().commit();
+			// Retrieve the selected product object
+			Product product = ProductList.get(productPos);
 
-       session.close();
-       databaseHelper.exit();
+			// Proceed to delete the country from the list and the database
 
-       System.out.println("Product successfully deleted.");
+			// Delete from the list
+			ProductList.remove(productPos);
+
+			// Delete the country from the database
+			session.beginTransaction();
+			session.remove(product); // Delete the country from the database
+			session.getTransaction().commit();
+
+			session.close();
+			databaseHelper.exit();
+
+			System.out.println("Product successfully deleted.");
+		}
+
+   } 
 	}
-
+	
 }
+
 
 
 	
