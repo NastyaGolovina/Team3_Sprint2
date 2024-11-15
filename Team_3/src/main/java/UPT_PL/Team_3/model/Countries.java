@@ -117,23 +117,6 @@ public class Countries {
         }
     }
     
-    /**
-     * Method to read all countries from the database and update the countries list.
-     * @return A list of Country objects read from the database.
-     */
-    protected void readAllCountriesWithJplq() {
-    	DatabaseHelper DatabaseHelper = new DatabaseHelper();
-    	DatabaseHelper.setup();
-    	Session session = DatabaseHelper.getSessionFactory().openSession();
-    	
-    	List<Country> countries = session.createQuery("SELECT c FROM Country c",Country.class).getResultList();
-    	
-    	this.countries = (ArrayList<Country>)countries;
-    	
-    	session.close();
-    	DatabaseHelper.exit();
-    }
-    
      // DELETE Country by Id
     
     public void deleteCountryById() {
