@@ -112,18 +112,20 @@ public class Country {
         return -1;  
     }
 
-    /**
-     * Adds a product to the country's list of products.
-     *
-     * @param products The global product list available to choose from.
+  
+    /**Adds a product to the country's list of products.
+     * @param products
+     * @return
      */
-    public void addProductByCountry(Products products) {
+    public ProductsByCountry addProductByCountry(Products products) {
         ArrayList<Product> allProducts = products.getProductList();
 
         System.out.println("Available Products:");
         for (int i = 0; i < allProducts.size(); i++) {
             System.out.println("(" + (i + 1) + ") " + allProducts.get(i).toString());
         }
+
+        ProductsByCountry newProductByCountry = null; // Declare variable outside loop
 
         int inputUser = ProjectHelper.inputInt("Select the product number to add (or choose 0 to exit): ");
 
@@ -134,9 +136,6 @@ public class Country {
                 Product product = allProducts.get(inputUser - 1);
                 double production = ProjectHelper.inputDouble("Enter the production quantity: ");
                 double price = ProjectHelper.inputDouble("Enter the price of the product: ");
-
-                // Create a new ProductsByCountry object
-                ProductsByCountry newProductByCountry = new ProductsByCountry(product, production, price, this);
 
                 // Check if a product with the same name already exists in ProductsByCountry
                 boolean exists = false;
@@ -150,37 +149,31 @@ public class Country {
                 if (exists) {
                     System.out.println("The product '" + product.getName() + "' already exists in the country.");
                 } else {
+                    // Create a new ProductsByCountry object
+                    newProductByCountry = new ProductsByCountry(product, production, price, this);
                     this.products.add(newProductByCountry);
-                   
-                    //!!!!!!!!!!!!! DELETE THIS TOO
-                    DatabaseHelper DatabaseHelper = new DatabaseHelper();
-            		DatabaseHelper.setup();
-            		Session session = DatabaseHelper.getSessionFactory().openSession();
-            		session.beginTransaction();
-
-            		session.persist(newProductByCountry);
-
-            		session.getTransaction().commit();
-            		session.close();
-            		DatabaseHelper.exit();
-
-          
                     System.out.println("Product " + product.getName() + " added successfully.");
                 }
             }
 
             inputUser = ProjectHelper.inputInt("Select the product number to add (or choose 0 to exit): ");
         }
-        System.out.println("Product Addition Process Completed.");
+
+        if (newProductByCountry == null) {
+            System.out.println("No products were added.");
+        } else {
+            System.out.println("Product Addition Process Completed.");
+        }
+
+        return newProductByCountry; // Return the last added product or null if no product was added
     }
-    
-    
+
+ 
     /**
      * addProductsByCountry
      */
     
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-    public void addProductsByCountry(ProductsByCountry newProductByCountry) { //SHOULD BE CHANGED TO RETURN TYPE TO RETURN THE ADDED NEW PRODUCTSBYCOUNTRY
+    public void addProductsByCountry(ProductsByCountry newProductByCountry) { 
     	products.add(newProductByCountry);
     }
     
@@ -211,18 +204,7 @@ public class Country {
         this.sites.add(newLogisticsSite);
 
         newLogisticsSite.addSuppliedTransport(transports);
-        
-        DatabaseHelper DatabaseHelper = new DatabaseHelper();
-		DatabaseHelper.setup();
-		Session session = DatabaseHelper.getSessionFactory().openSession();
-		session.beginTransaction();
-
-		session.persist(newLogisticsSite);
-
-		session.getTransaction().commit();
-		session.close();
-		DatabaseHelper.exit();
-
+      
         System.out.println("Logistics site '" + name + "' added successfully.");
     }
 
