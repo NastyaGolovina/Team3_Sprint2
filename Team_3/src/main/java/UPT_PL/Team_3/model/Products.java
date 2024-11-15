@@ -17,7 +17,6 @@ public class Products {
 	// variable
 	private ArrayList<Product> ProductList; // list name ProductList to store all of the products from Product class
 
-
 	/**
 	 * Constructor to initialize the Products object with an empty list of products
 	 * 
@@ -93,12 +92,12 @@ public class Products {
 	 * @param healthyRate
 	 */
 
-	public void addProduct() {
+	public Product addProduct() {
 		String productId = ProjectHelper.inputStr("Input product ID : ");
 
 		if (productId.isEmpty()) {
 			System.out.println("The product ID can not be empty! ");
-			return; // stop execution if ID is empty
+			return null; // Indicate that no product was added
 		}
 
 		int productPos = searchProduct(productId); // Product position in the array list
@@ -108,49 +107,37 @@ public class Products {
 			// then move to the add product starting by name
 
 			System.out.println("Product already existed");
+			return null;
 		}
 
-		else { // starting to add new product follow by those variables
+		  // Starting to add new product follow by those variables
 			String name = ProjectHelper.inputStr("Input product name: ");
 			if (name.isEmpty()) {
 				System.out.println("The product name can not be empty, please insert the name! ");
-				return;
+				return null; // Indicate that no product was added
 			}
 			Integer expirationInDays = ProjectHelper.inputInt("Input the number of days before expiration date (positive number): ");
 			if (expirationInDays <= 0) {
-				System.out.println(
-						"The number of days before expiration date can't be negative, please insert a valid number!  ");
-				return;
+				System.out.println("The number of days before expiration date can't be negative, please insert a valid number!  ");
+				return null;
 			}
 			double recommenedRate = ProjectHelper.inputDouble("Input the recommended rate per year of that product : ");
 			if (recommenedRate <= 0) {
 				System.out.println("The recommended rate can't be negative, please insert a valid number!  ");
-				return;
-			} else {
-				
+				return null;
+			} 
+
 				// after validation, then add the new product to the list,// create object and
-				// put to array list  
+				// put to array list
 				Product product = new Product(productId, name, expirationInDays, recommenedRate);
 				ProductList.add(product);
-				
-				// then start to create a table in database
-				DatabaseHelper DatabaseHelper = new DatabaseHelper();
-			    DatabaseHelper.setup();
-			    Session session = DatabaseHelper.getSessionFactory().openSession();
-			    session.beginTransaction();
-				
-				session.persist(product);
-				
-				session.getTransaction().commit();
-				session.close();
-				DatabaseHelper.exit();
-				
+
 				System.out.println("ProductID: " + productId + ",Name:" + name + ",Expiration date" + expirationInDays
 						+ "Recommened rate " + recommenedRate + " is successfully added!");
-			}
+				return product;
+			
 		}
-
-	}
+		    
 
 	/**
 	 * This method builds a string that represents all the Product objects in the
@@ -168,7 +155,6 @@ public class Products {
 
 	}
 
-	
 	/**
 	 * Method to display the ProductList
 	 * 
@@ -183,97 +169,52 @@ public class Products {
 			}
 		}
 	}
-	/*
-	 * Read all products with Jplq and put in ProductList
-	 * The method's purpose is to read all products from the database by using Hibernate and store them in a ProductList.
-	 */
-	protected void readAllProductsWithJplq() {
-    	DatabaseHelper DatabaseHelper = new DatabaseHelper();
-	    DatabaseHelper.setup();
-	    Session session = DatabaseHelper.getSessionFactory().openSession();	
-		
-	    
-	    List<Product> products = session.createQuery("SELECT p FROM Product p",Product.class).getResultList();
-    	
-    	ProductList = (ArrayList<Product>)products;
-	    
-		session.close();
-		DatabaseHelper.exit();
-    }
-	
 
 	
-	
-	/** Delete Product by productId in both array list and database 
-	 * Delete a product by productID from the database using Hibernate.
+	/** Delete Product by productId in array list
+	 * 
 	 * Remove the product with the same productID from the ArrayList named ProductList.
 	 */
 	
 	public void deleteProduct(String productID,List<Country> countries, ArrayList<ProductsByCountry> products,String productByCountryId) {
 		
-		 // Ask for the product ID to delete
-       String productId = ProjectHelper.inputStr("Enter the product ID to delete: ");
-       
-	    // Check if product exists in the database or ProductList before proceeding
-	    int productPos = searchProduct(productID);
-	    if (productPos == -1) {
-	        System.out.println("Error: Product with ID " + productID + " does not exist. No product to delete.");
-	        
-	        return;
-	        }
-	    
-	// Check if the product is being used in ProductsByCountry 
-       boolean isProductUsed = false;  // Initially assume the product is not in use in ProductByCountry 
-       
-       for(Country country : countries) {  // Process each country to delete the product with the specified productId, go thru each country in countries list
-       	for(int i = 0; i < products.size(); i++) { // Iterate through the ProductByCountry list (products) to check if the product is being used
-       		if(products.get(i).getProduct().getProductID().equalsIgnoreCase(productId)) { 
-       			isProductUsed = true;
-       			break;
-       		}
+		// Ask for the product ID to delete
+		String productId = ProjectHelper.inputStr("Enter the product ID to delete: ");
+
+		// Check if product exists in the database or ProductList before proceeding
+		int productPos = searchProduct(productID);
+		if (productPos == -1) {
+			System.out.println("Error: Product with ID " + productID + " does not exist. No product to delete.");
+
+			return;
 		}
 
-		if (!isProductUsed) { //!!!!!!!!!!!!! DELETE DATABASE RELATED 
-			DatabaseHelper databaseHelper = new DatabaseHelper(); // Set up database session for dependency checks
-			databaseHelper.setup();
-			Session session = databaseHelper.getSessionFactory().openSession();
+		// Check if the product is being used in ProductsByCountry
+		boolean isProductUsed = false; // Initially assume the product is not in use in ProductByCountry
 
-			// Check if the country is linked to any RouteLine
-			List<RouteLine> routeLines = session
-					.createQuery("FROM RouteLine rl WHERE rl.product.id = :productId", RouteLine.class)
-					.setParameter("productId", productId).getResultList();
-
-			if (!routeLines.isEmpty()) {
-				System.out.println("Cannot delete product. It is linked to RouteLine.");
-				session.close();
-				databaseHelper.exit();
-				return;
+		for (Country country : countries) { // Process each country to delete the product with the specified productId,
+											// go thru each country in countries list
+			for (int i = 0; i < products.size(); i++) { // Iterate through the ProductByCountry list (products) to check
+														// if the product is being used
+				if (products.get(i).getProduct().getProductID().equalsIgnoreCase(productId)) {
+					isProductUsed = true;
+					break;
+				}
 			}
 
-			// Retrieve the selected product object
-			Product product = ProductList.get(productPos);
+			if (!isProductUsed) {
+				// Delete from the list
+				ProductList.remove(productPos);
+				System.out.println("Product with ID " + productID + " has been successfully deleted.");
+		    } else {
+		        System.out.println("Error: Product with ID " + productID + " is in use and cannot be deleted.");
+		    }
+			}
 
-			// Proceed to delete the country from the list and the database
-
-			// Delete from the list
-			ProductList.remove(productPos);
-            
-			//!!!!!!!!!!!!!!!! DELETE 
-			// Delete the country from the database
-			session.beginTransaction();
-			session.remove(product); // Delete the country from the database
-			session.getTransaction().commit();
-
-			session.close();
-			databaseHelper.exit();
-
-			System.out.println("Product successfully deleted.");
 		}
 
-   } 
 	}
-	
-}
+
 
 
 
