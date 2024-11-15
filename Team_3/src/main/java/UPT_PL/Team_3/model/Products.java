@@ -233,7 +233,7 @@ public class Products {
        		}
 		}
 
-		if (!isProductUsed) {
+		if (!isProductUsed) { //!!!!!!!!!!!!! DELETE DATABASE RELATED 
 			DatabaseHelper databaseHelper = new DatabaseHelper(); // Set up database session for dependency checks
 			databaseHelper.setup();
 			Session session = databaseHelper.getSessionFactory().openSession();
@@ -257,7 +257,8 @@ public class Products {
 
 			// Delete from the list
 			ProductList.remove(productPos);
-
+            
+			//!!!!!!!!!!!!!!!! DELETE 
 			// Delete the country from the database
 			session.beginTransaction();
 			session.remove(product); // Delete the country from the database

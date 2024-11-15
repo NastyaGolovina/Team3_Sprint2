@@ -152,7 +152,7 @@ public class Country {
                 } else {
                     this.products.add(newProductByCountry);
                    
-                    
+                    //!!!!!!!!!!!!! DELETE THIS TOO
                     DatabaseHelper DatabaseHelper = new DatabaseHelper();
             		DatabaseHelper.setup();
             		Session session = DatabaseHelper.getSessionFactory().openSession();
@@ -179,7 +179,8 @@ public class Country {
      * addProductsByCountry
      */
     
-    public void addProductsByCountry(ProductsByCountry newProductByCountry) {
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+    public void addProductsByCountry(ProductsByCountry newProductByCountry) { //SHOULD BE CHANGED TO RETURN TYPE TO RETURN THE ADDED NEW PRODUCTSBYCOUNTRY
     	products.add(newProductByCountry);
     }
     

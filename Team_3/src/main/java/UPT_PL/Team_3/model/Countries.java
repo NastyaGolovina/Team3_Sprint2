@@ -312,8 +312,10 @@ public class Countries {
      DatabaseHelper databaseHelper = new DatabaseHelper();
      databaseHelper.setup();
      Session session = databaseHelper.getSessionFactory().openSession();
+     
 
-    
+  // NEED TO DELETE THE DELETE FROM DATABASE KEEP THE DELETE IN LIST ONLY!!!!!!!!!!!!
+
      // Delete the country from the database
      session.beginTransaction();
      session.remove(selectedProductsByCountry); // Delete the country from the database
@@ -403,7 +405,7 @@ public class Countries {
 
         // Remove the logistics site from the country's list
         country.getSites().remove(siteIndex);
-
+       
         // Begin a database transaction for deletion
         session.beginTransaction();
         session.remove(selectedSite); // Remove the site from the database
