@@ -49,26 +49,25 @@ public class Countries {
     /**
      * Method to add a new country to the list of countries.
      */
-    public void addCountry() {
+    public Country addCountry() {
         String countryId = ProjectHelper.inputStr("Input Country ID: ");
 
         if (countryId.isEmpty()) {  
             System.out.println("The ID cannot be empty.");
-            return;  
-            
-          }  else if (!countryId.matches("^[a-zA-Z0-9].*")) {
-                System.out.println("The ID cannot begin with special characters.");
-                return;
-                
+            return null;  
+        } else if (!countryId.matches("^[a-zA-Z0-9].*")) {
+            System.out.println("The ID cannot begin with special characters.");
+            return null;  
         } else if (countryId.length() > 20) {
             System.out.println("The ID cannot exceed more than 20 characters.");
-            return; 
+            return null; 
         }
 
         int countryPos = searchCountry(countryId);
 
         if (countryPos != -1) { 
             System.out.println("Country already exists with ID: " + countryId);
+            return null;  
         } else {
             String name = ProjectHelper.inputStr("Input Country Name: ");
             int population = ProjectHelper.inputInt("Input Population (must be greater than 0): ");
@@ -83,20 +82,23 @@ public class Countries {
             Country newCountry = new Country(countryId, name, population);
             countries.add(newCountry);
             
-            DatabaseHelper DatabaseHelper = new DatabaseHelper();
-			DatabaseHelper.setup();
-			Session session = DatabaseHelper.getSessionFactory().openSession();
-			session.beginTransaction();
+            DatabaseHelper databaseHelper = new DatabaseHelper();
+            databaseHelper.setup();
+            Session session = databaseHelper.getSessionFactory().openSession();
+            session.beginTransaction();
 
-			session.persist(newCountry);
+            session.persist(newCountry);
 
-			session.getTransaction().commit();
-			session.close();
-			DatabaseHelper.exit();
-			
+            session.getTransaction().commit();
+            session.close();
+            databaseHelper.exit();
+            
             System.out.println("Country added successfully: " + newCountry);
+            
+            return newCountry;  
         }
     }
+
 
     @Override
     public String toString() {
