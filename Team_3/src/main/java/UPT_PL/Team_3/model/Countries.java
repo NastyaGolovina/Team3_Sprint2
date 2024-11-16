@@ -260,15 +260,15 @@ public class Countries {
      *
      * @param chains The LogisticsSupplyChains instance, used to access the list of supply chains and check for dependencies.
      */
-    public void deleteLogisticsSite(LogisticsSupplyChains chains) {
+    public boolean deleteLogisticsSite(LogisticsSupplyChains chains) {
         // Request the country ID
         String countryId = ProjectHelper.inputStr("Enter the country ID: ");
         int countryIndex = searchCountry(countryId);
 
-        // Verify if the country exists
+        // Check if the country exists
         if (countryIndex == -1) {
             System.out.println("Country with the specified ID not found.");
-            return;
+            return false;  // Return false if the country is not found
         }
 
         Country country = countries.get(countryIndex);
@@ -276,7 +276,7 @@ public class Countries {
         // Check if the country has any logistics sites
         if (country.getSites().isEmpty()) {
             System.out.println("There are no logistics sites in this country.");
-            return;
+            return false;  // Return false if there are no logistics sites
         }
 
         // Display the list of logistics sites in the country
@@ -291,29 +291,28 @@ public class Countries {
         // Validate the selected index
         if (siteIndex < 0 || siteIndex >= country.getSites().size()) {
             System.out.println("Invalid selection. Operation canceled.");
-            return;
+            return false;  // Return false if the selection is invalid
         }
 
         // Get the selected logistics site
         LogisticsSite selectedSite = country.getSites().get(siteIndex);
 
-        DatabaseHelper databaseHelper = new DatabaseHelper();
-        databaseHelper.setup();
-        Session session = databaseHelper.getSessionFactory().openSession();
+        // Check if the logistics site has any associated transport
+        if (selectedSite.getTransportArray() != null && !selectedSite.getTransportArray().isEmpty()) {
+            System.out.println("Error. The logistics site has associated transport. Deletion is not possible.");
+            return false;  // Return false if the site has associated transport
+        }
 
-        // Check if the selected site is part of any supply chain (sender or receiver)
+        // Check if the selected site is part of any active logistics supply chain
         boolean isPartOfChain = chains.getSupplyChains().stream()
                 .anyMatch(chain -> chain.getSender().equals(selectedSite) || chain.getReceiver().equals(selectedSite));
 
-        // If the site is part of a supply chain, prevent deletion
         if (isPartOfChain) {
             System.out.println("Error. The logistics site is part of an active supply chain. Deletion is not possible.");
-            session.close();
-            databaseHelper.exit();
-            return;
+            return false;  // Return false if the site is part of an active supply chain
         }
 
-        // Query route lines that are linked to the selected site as either origin or destination
+        // Query route lines that are linked to the selected site as origin or destination
         List<RouteLine> routeLines = session.createQuery(
                 "FROM RouteLine rl WHERE rl.originSite.id = :siteId OR rl.destinationSite.id = :siteId", RouteLine.class)
                 .setParameter("siteId", selectedSite.getSiteId())
@@ -322,23 +321,14 @@ public class Countries {
         // If there are route lines linked to the site, prevent deletion
         if (!routeLines.isEmpty()) {
             System.out.println("Error. You need to delete all the route lines associated with this logistics site before deleting it.");
-            session.close();
-            databaseHelper.exit();
-            return;
+            return false;  // Return false if there are linked route lines
         }
 
         // Remove the logistics site from the country's list
         country.getSites().remove(siteIndex);
-       
-        // Begin a database transaction for deletion
-        session.beginTransaction();
-        session.remove(selectedSite); // Remove the site from the database
-        session.getTransaction().commit(); // Commit the transaction to confirm deletion
-
-        session.close();
-        databaseHelper.exit();
-
+        
         System.out.println("Logistics site successfully deleted.");
+        return true;  // Return true if the deletion was successful
     }
 }
 
