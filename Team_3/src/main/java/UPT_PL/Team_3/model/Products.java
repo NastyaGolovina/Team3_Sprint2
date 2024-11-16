@@ -90,6 +90,7 @@ public class Products {
 	 * @param name
 	 * @param experiationIndays
 	 * @param healthyRate
+	 * @return 
 	 */
 
 	public Product addProduct() {
