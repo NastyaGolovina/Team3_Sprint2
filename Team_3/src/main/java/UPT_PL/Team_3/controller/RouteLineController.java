@@ -27,7 +27,7 @@ public class RouteLineController {
 		return routeLineService.getAllRouteLine();
 	}
 	
-	@GetMapping("/{calculationId}")
+	@GetMapping("/calculation/{calculationId}")
 	public List<RouteLine> getRouteLinesByCalculationId(@PathVariable long calculationId) {
 //		List<RouteLine> routeLine = routeLineService.getRouteLinesByCalculationId(calculationId);
 		return routeLineService.getRouteLinesByCalculationId(calculationId);

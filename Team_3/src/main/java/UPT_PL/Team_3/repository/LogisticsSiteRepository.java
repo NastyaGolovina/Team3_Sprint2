@@ -7,11 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import UPT_PL.Team_3.model.LogisticsSite;
-import UPT_PL.Team_3.model.RouteLine;
 
 @Repository
 public interface LogisticsSiteRepository extends JpaRepository<LogisticsSite, String> {
 	
 	@Query(value = "SELECT * FROM team_3.LogisticsSite where countryId =?1", nativeQuery = true)
-	List<RouteLine> getLogisticsSiteByCountry_Id(String countryId);
+	List<LogisticsSite> getLogisticsSiteByCountryId(String countryId);
 }
