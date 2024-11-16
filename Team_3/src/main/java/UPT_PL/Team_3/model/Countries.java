@@ -81,18 +81,7 @@ public class Countries {
             // Create and add new Country object
             Country newCountry = new Country(countryId, name, population);
             countries.add(newCountry);
-            
-            DatabaseHelper databaseHelper = new DatabaseHelper();
-            databaseHelper.setup();
-            Session session = databaseHelper.getSessionFactory().openSession();
-            session.beginTransaction();
-
-            session.persist(newCountry);
-
-            session.getTransaction().commit();
-            session.close();
-            databaseHelper.exit();
-            
+                        
             System.out.println("Country added successfully: " + newCountry);
             
             return newCountry;  
@@ -121,39 +110,39 @@ public class Countries {
     
  // DELETE Country by Id
     
-    public void deleteCountryById() {
+    public boolean deleteCountryById() {
         String countryId = ProjectHelper.inputStr("Enter the country ID to delete: ");
         int countryIndex = searchCountry(countryId);
 
         // Check if the country exists in the list
         if (countryIndex == -1) {
             System.out.println("Country with the specified ID not found.");
-            return;
+            return false;  
         }
 
-         Country country = countries.get(countryIndex);
+        Country country = countries.get(countryIndex);
 
-        // 1. Check if the country is linked to any ProductsByCountry (using the ArrayList)
+        // 1. Check if the country is linked to any ProductsByCountry
         for (ProductsByCountry product : country.getProducts()) {
             if (product.getCountry().getCountryId().equals(countryId)) {
                 System.out.println("Cannot delete country. It is linked to ProductsByCountry.");
-                return;  
+                return false;  
             }
         }
 
-        // 2. Check if the country is linked to any LogisticsSite (using the ArrayList)
+        // 2. Check if the country is linked to any LogisticsSite
         for (LogisticsSite site : country.getSites()) {
             if (site.getCountry().getCountryId().equals(countryId)) {
                 System.out.println("Cannot delete country. It is linked to LogisticsSite.");
-                return;  
+                return false;
             }
         }
 
-        // 3. Check if the country is linked to any RouteLine (using a query)
+        // 3. Check if the country is linked to any RouteLine
         DatabaseHelper databaseHelper = new DatabaseHelper();
         databaseHelper.setup();
         Session session = databaseHelper.getSessionFactory().openSession();
-        
+
         List<RouteLine> routeLines = session.createQuery(
                 "FROM RouteLine rl WHERE rl.countrySender.id = :countryId OR rl.countryReceiver.id = :countryId", RouteLine.class)
                 .setParameter("countryId", countryId)
@@ -163,21 +152,17 @@ public class Countries {
             System.out.println("Cannot delete country. It is linked to RouteLine.");
             session.close();
             databaseHelper.exit();
-            return;  // Prevent deletion
-        }
+            return false;  
+            }
 
-        // Proceed to delete the country from the list and the database
+        // Proceed to delete the country from the list 
         countries.remove(countryIndex);
-
-        // Delete the country from the database
-        session.beginTransaction();
-        session.remove(country); // Delete the country from the database
-        session.getTransaction().commit();
 
         session.close();
         databaseHelper.exit();
 
         System.out.println("Country successfully deleted.");
+        return true;  
     }
 
 
