@@ -1,40 +1,44 @@
 package UPT_PL.Team_3.controller;
 
 import UPT_PL.Team_3.model.LogisticsSupplyChain;
-import UPT_PL.Team_3.repository.LogisticsSupplyChainRepository;
+import UPT_PL.Team_3.service.LogisticsSupplyChainService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
-public class LogisticsSupplyChainService {
+@RestController
+@RequestMapping("/api/supply-chains")
+public class LogisticsSupplyChainController {
 
-    private final LogisticsSupplyChainRepository supplyChainRepository;
+    private final LogisticsSupplyChainService supplyChainService;
 
     @Autowired
-    public LogisticsSupplyChainService(LogisticsSupplyChainRepository supplyChainRepository) {
-        this.supplyChainRepository = supplyChainRepository;
+    public LogisticsSupplyChainController(LogisticsSupplyChainService supplyChainService) {
+        this.supplyChainService = supplyChainService;
     }
 
+    @GetMapping
     public List<LogisticsSupplyChain> getAllSupplyChains() {
-        return supplyChainRepository.findAll();
+        return supplyChainService.getAllSupplyChains();
     }
 
-    public Optional<LogisticsSupplyChain> getSupplyChainById(String id) {
-        return supplyChainRepository.findById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<LogisticsSupplyChain> getSupplyChainById(@PathVariable String id) {
+        Optional<LogisticsSupplyChain> supplyChain = supplyChainService.getSupplyChainById(id);
+        return supplyChain.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    public LogisticsSupplyChain createSupplyChain(LogisticsSupplyChain supplyChain) {
-        return supplyChainRepository.save(supplyChain);
+    @PostMapping
+    public LogisticsSupplyChain createSupplyChain(@RequestBody LogisticsSupplyChain supplyChain) {
+        return supplyChainService.createSupplyChain(supplyChain);
     }
 
-    public void deleteSupplyChain(String id) {
-        if (supplyChainRepository.existsById(id)) {
-            supplyChainRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Supply chain not found with id: " + id);
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSupplyChain(@PathVariable String id) {
+        supplyChainService.deleteSupplyChain(id);
+        return ResponseEntity.noContent().build();
     }
 }
