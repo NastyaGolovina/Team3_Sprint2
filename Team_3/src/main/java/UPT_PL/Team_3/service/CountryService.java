@@ -10,30 +10,30 @@ import java.util.Optional;
 
 @Service
 public class CountryService {
-    private final CountryRepository countryRepository;
+	private final CountryRepository countryRepository;
 
-    @Autowired
-    public CountryService(CountryRepository countryRepository) {
-        this.countryRepository = countryRepository;
-    }
+	@Autowired
+	public CountryService(CountryRepository countryRepository) {
+		this.countryRepository = countryRepository;
+	}
 
-    public List<Country> getAllCountries() {
-        return countryRepository.findAll();
-    }
+	public List<Country> getAllCountries() {
+		return countryRepository.findAll();
+	}
 
-    public Optional<Country> getCountryById(String id) {
-        return countryRepository.findById(id);
-    }
+	public Optional<Country> getCountryById(String id) {
+		return countryRepository.findById(id);
+	}
 
-    public Country createCountry(Country country) {
-        return countryRepository.save(country);
-    }
+	public Country createCountry(Country country) {
+		return countryRepository.save(country);
+	}
 
-    public void deleteCountry(String id) {
-        if (countryRepository.existsById(id)) {
-            countryRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Country not found with id: " + id);
-        }
-    }
+	public void deleteCountry(String id) {
+		if (countryRepository.existsById(id)) {
+			countryRepository.deleteById(id);
+		} else {
+			throw new RuntimeException("Country not found with id: " + id);
+		}
+	}
 }

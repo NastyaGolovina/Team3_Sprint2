@@ -11,30 +11,30 @@ import java.util.Optional;
 @Service
 public class TransportService {
 
-    private final TransportRepository transportRepository;
+	private final TransportRepository transportRepository;
 
-    @Autowired
-    public TransportService(TransportRepository transportRepository) {
-        this.transportRepository = transportRepository;
-    }
+	@Autowired
+	public TransportService(TransportRepository transportRepository) {
+		this.transportRepository = transportRepository;
+	}
 
-    public List<Transport> getAllTransports() {
-        return transportRepository.findAll();
-    }
+	public List<Transport> getAllTransports() {
+		return transportRepository.findAll();
+	}
 
-    public Optional<Transport> getTransportById(String id) {
-        return transportRepository.findById(id);
-    }
+	public Optional<Transport> getTransportById(String id) {
+		return transportRepository.findById(id);
+	}
 
-    public Transport createTransport(Transport transport) {
-        return transportRepository.save(transport);
-    }
+	public Transport createTransport(Transport transport) {
+		return transportRepository.save(transport);
+	}
 
-    public void deleteTransport(String id) {
-        if (transportRepository.existsById(id)) {
-            transportRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Transport not found with id: " + id);
-        }
-    }
+	public void deleteTransport(String id) {
+		if (transportRepository.existsById(id)) {
+			transportRepository.deleteById(id);
+		} else {
+			throw new RuntimeException("Transport not found with id: " + id);
+		}
+	}
 }
