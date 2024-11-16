@@ -13,28 +13,28 @@ import java.util.Optional;
 @RequestMapping("/api/countries")
 public class CountryController {
 
-    @Autowired
-    private CountryService countryService;
+	@Autowired
+	private CountryService countryService;
 
-    @GetMapping
-    public List<Country> getAllCountries() {
-        return countryService.getAllCountries();
-    }
+	@GetMapping
+	public List<Country> getAllCountries() {
+		return countryService.getAllCountries();
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Country> getCountryById(@PathVariable String id) {
-        Optional<Country> country = countryService.getCountryById(id);
-        return country.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+	@GetMapping("/{id}")
+	public ResponseEntity<Country> getCountryById(@PathVariable String id) {
+		Optional<Country> country = countryService.getCountryById(id);
+		return country.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+	}
 
-    @PostMapping
-    public Country createCountry(@RequestBody Country country) {
-        return countryService.createCountry(country);
-    }
+	@PostMapping
+	public Country createCountry(@RequestBody Country country) {
+		return countryService.createCountry(country);
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCountry(@PathVariable String id) {
-        countryService.deleteCountry(id);
-        return ResponseEntity.noContent().build();
-    }
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteCountry(@PathVariable String id) {
+		countryService.deleteCountry(id);
+		return ResponseEntity.noContent().build();
+	}
 }
