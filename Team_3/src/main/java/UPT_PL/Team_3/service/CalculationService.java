@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import UPT_PL.Team_3.model.Calculation;
 import UPT_PL.Team_3.repository.CalculationRepository;
 
+@Service
 public class CalculationService {
 	private final CalculationRepository calculationRepository;
 	
