@@ -53,36 +53,38 @@ public class Transports {
     /**
      * Method to add a new Transport object to the list of transports.
      */
-    public void addTransport() {
+    public Transport addTransport() {
         String transportId = ProjectHelper.inputStr("Input Transport ID:");
 
-        if (transportId.isEmpty()) {
-            System.out.println("The ID cannot be empty.");
-            return;
-            
+        // Check if the ID is null or empty
+        if (transportId == null || transportId.isEmpty()) {
+            System.out.println("The ID cannot be null or empty.");
+            return null;  
         } else if (!transportId.matches("^[a-zA-Z0-9].*")) {
-                System.out.println("The ID cannot begin with special characters.");
-                return;
-                
+            System.out.println("The ID cannot begin with special characters.");
+            return null;
         } else if (transportId.length() > 20) {
             System.out.println("The ID cannot exceed more than 20 characters.");
-            return;
+            return null;
         }
 
         int transportPos = searchTransport(transportId);
 
         if (transportPos != -1) {
             System.out.println("Transport already exists with ID: " + transportId);
+            return null;  
         } else {
             String name = ProjectHelper.inputStr("Input Transport Name: ");
             double pricePerTon = ProjectHelper.inputDouble("Input pricePerTon (must be greater than 0): ");
 
             if (pricePerTon <= 0) {
                 System.out.println("Price cannot be 0 or negative.");
+                return null;  
             } else {
                 Transport transport = new Transport(transportId, name, pricePerTon);
                 transports.add(transport);
                 
+                // Persist to the database
                 DatabaseHelper DatabaseHelper = new DatabaseHelper();
                 DatabaseHelper.setup();
                 Session session = DatabaseHelper.getSessionFactory().openSession();
@@ -96,9 +98,12 @@ public class Transports {
                 
                 System.out.println("Transport ID: " + transportId + ", Name: " + name + ", PricePerTon: " + pricePerTon
                         + " added to the list successfully.");
+                
+                return transport;  
             }
         }
     }
+
 
     /**
      * Finds a transport by its ID.
