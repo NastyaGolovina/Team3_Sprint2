@@ -185,16 +185,5 @@ public class LogisticsSupplyChain {
 				+ ", transport=" + transport + ", costPerTon=" + costPerTon + ", durationInDays=" + durationInDays
 				+ "]";
 	}
-	
-	public void testS() {
-		//lol;l
-	}
-	public void testSSS() {
-		
-	}
 
-    public void testFromVladFromEclipse(){
-    		//sfdsefbf
-    }
-    
 }
