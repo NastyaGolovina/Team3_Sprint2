@@ -193,8 +193,8 @@ public class LogisticsSupplyChain {
 		
 	}
 
-    public void testFromVlad(){
-
+    public void testFromVladFromEclipse(){
+    		//sfdse
     }
     
 }
