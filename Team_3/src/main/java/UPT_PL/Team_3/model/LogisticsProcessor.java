@@ -300,25 +300,5 @@ public class LogisticsProcessor {
 	    }
 	 
 	 
-	 
-	 /**
-	  * writeCurrentCalculationInDB
-	  */
-	  protected void writeCurrentCalculationInDB() {
-		  	DatabaseHelper DatabaseHelper = new DatabaseHelper();
-			DatabaseHelper.setup();
-			Session session = DatabaseHelper.getSessionFactory().openSession();
-			session.beginTransaction();
-			
-			session.persist(currentСalculation);
-			
-			for(RouteLine r : logisticsRoutes) {
-				session.persist(r);
-			}
-
-			session.getTransaction().commit();
-			session.close();
-			DatabaseHelper.exit();
-	  }
-}
+	 }
 
