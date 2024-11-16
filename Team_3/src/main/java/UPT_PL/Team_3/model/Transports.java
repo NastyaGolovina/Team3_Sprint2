@@ -84,18 +84,6 @@ public class Transports {
                 Transport transport = new Transport(transportId, name, pricePerTon);
                 transports.add(transport);
                 
-                // Persist to the database
-                DatabaseHelper DatabaseHelper = new DatabaseHelper();
-                DatabaseHelper.setup();
-                Session session = DatabaseHelper.getSessionFactory().openSession();
-                session.beginTransaction();
-                
-                session.persist(transport);
-                
-                session.getTransaction().commit();
-                session.close();
-                DatabaseHelper.exit();
-                
                 System.out.println("Transport ID: " + transportId + ", Name: " + name + ", PricePerTon: " + pricePerTon
                         + " added to the list successfully.");
                 
@@ -147,50 +135,45 @@ public class Transports {
 	public String toString() {
 		return "Transports [transports=" + transports + "]";
 	}
-    /**
-     * readAllTransportsWithJplq
-     */
-	protected void readAllTransportsWithJplq() {
-    	DatabaseHelper DatabaseHelper = new DatabaseHelper();
-    	DatabaseHelper.setup();
-    	Session session = DatabaseHelper.getSessionFactory().openSession();
-    	
-    	List<Transport> transports = session.createQuery("SELECT t FROM Transport t",Transport.class).getResultList();
-    	this.transports = (ArrayList<Transport>)transports;
-    	
-    	session.close();
-    	DatabaseHelper.exit();
-    }
+ 	
+	// Delete Transport From List
 	
-	// DELETE Transport by Id
-	public void deleteTransportById() {
+	public boolean deleteTransportById(ArrayList<Country>countries) {
 	    String transportId = ProjectHelper.inputStr("Enter the transport ID to delete: ");
-	    int transportIndex = searchTransport(transportId);  
+	    int transportIndex = searchTransport(transportId);
 
 	    // Check if the transport exists in the list
 	    if (transportIndex == -1) {
 	        System.out.println("Transport with the specified ID not found.");
-	        return;
+	        return false;  
 	    }
 
 	    Transport transport = transports.get(transportIndex);
 
 	    // 1. Check if the transport is linked to any LogisticsSupplyChain
-	    LogisticsSupplyChains logisticsSupplyChains = new LogisticsSupplyChains(); 
-	 
+	    LogisticsSupplyChains logisticsSupplyChains = new LogisticsSupplyChains();
 	    for (LogisticsSupplyChain supplyChain : logisticsSupplyChains.getSupplyChains()) {
 	        if (supplyChain.getTransport().getTransportId().equals(transportId)) {
 	            System.out.println("Cannot delete transport. It is linked to LogisticsSupplyChain.");
-	            return;  
+	            return false;  
 	        }
 	    }
 
-	    // 2. Check if the transport is linked to any RouteLine (using query)
+	    // 2. Check if the transport is linked to any LogisticsSite
+	    for (Country country : countries) {  
+	        for (LogisticsSite site : country.getSites()) {
+	            if (site.getSuppliedTransports().contains(transport)) {
+	                System.out.println("Cannot delete transport. It is linked to a LogisticsSite.");
+	                return false;
+	            }
+	        }
+	    }
+
+	    // 3. Check if the transport is linked to any RouteLine
 	    DatabaseHelper databaseHelper = new DatabaseHelper();
 	    databaseHelper.setup();
 	    Session session = databaseHelper.getSessionFactory().openSession();
-	    
-	    // Query to check if the transport is linked to any RouteLine
+
 	    List<RouteLine> routeLines = session.createQuery(
 	            "FROM RouteLine rl WHERE rl.transport.id = :transportId", RouteLine.class)
 	            .setParameter("transportId", transportId)
@@ -200,20 +183,15 @@ public class Transports {
 	        System.out.println("Cannot delete transport. It is linked to RouteLine.");
 	        session.close();
 	        databaseHelper.exit();
-	        return;  
+	        return false;  
 	    }
-
-	    // Proceed to delete the transport from the list and the database
-	    transports.remove(transportIndex);
-
-	    // Delete the transport from the database
-	    session.beginTransaction();
-	    session.remove(transport);  
-	    session.getTransaction().commit();
 
 	    session.close();
 	    databaseHelper.exit();
 
+	    // Proceed to delete the transport from the list
+	    transports.remove(transportIndex);
 	    System.out.println("Transport successfully deleted.");
+	    return true;
 	}
 }
