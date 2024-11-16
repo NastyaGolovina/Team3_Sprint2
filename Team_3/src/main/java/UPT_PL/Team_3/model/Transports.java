@@ -163,56 +163,57 @@ public class Transports {
     }
 	
 	// DELETE Transport by Id
-    public void deleteTransport(String transportId) {
-        DatabaseHelper databaseHelper = new DatabaseHelper();
-        databaseHelper.setup();
-        Session session = databaseHelper.getSessionFactory().openSession();
-        
-        // Fetch the transport by its ID
-        Transport transport = session.get(Transport.class, transportId);
-        
-        if (transport == null) {
-            System.out.println("Transport with ID " + transportId + " does not exist.");
-            return;
-        }
+	public void deleteTransportById() {
+	    String transportId = ProjectHelper.inputStr("Enter the transport ID to delete: ");
+	    int transportIndex = searchTransport(transportId);  
 
-        // Check if the transport is used in any LogisticsSite
-        List<LogisticsSite> logisticsSites = session.createQuery("SELECT l FROM LogisticsSite l JOIN l.suppliedTransports t WHERE t = :transport", LogisticsSite.class)
-                                                   .setParameter("transport", transport)
-                                                   .getResultList();
+	    // Check if the transport exists in the list
+	    if (transportIndex == -1) {
+	        System.out.println("Transport with the specified ID not found.");
+	        return;
+	    }
 
-        if (!logisticsSites.isEmpty()) {
-            System.out.println("Cannot delete transport with ID " + transportId + " because it is supplied by one or more logistics sites.");
-            return;
-        }
+	    Transport transport = transports.get(transportIndex);
 
-        // Check if the transport is linked to any RouteLine
-        List<RouteLine> routeLines = session.createQuery("FROM RouteLine r WHERE r.transport = :transport", RouteLine.class)
-                                            .setParameter("transport", transport)
-                                            .getResultList();
+	    // 1. Check if the transport is linked to any LogisticsSupplyChain
+	    LogisticsSupplyChains logisticsSupplyChains = new LogisticsSupplyChains(); 
+	 
+	    for (LogisticsSupplyChain supplyChain : logisticsSupplyChains.getSupplyChains()) {
+	        if (supplyChain.getTransport().getTransportId().equals(transportId)) {
+	            System.out.println("Cannot delete transport. It is linked to LogisticsSupplyChain.");
+	            return;  
+	        }
+	    }
 
-        if (!routeLines.isEmpty()) {
-            System.out.println("Cannot delete transport with ID " + transportId + " because it is used in one or more route lines.");
-            return;
-        }
+	    // 2. Check if the transport is linked to any RouteLine (using query)
+	    DatabaseHelper databaseHelper = new DatabaseHelper();
+	    databaseHelper.setup();
+	    Session session = databaseHelper.getSessionFactory().openSession();
+	    
+	    // Query to check if the transport is linked to any RouteLine
+	    List<RouteLine> routeLines = session.createQuery(
+	            "FROM RouteLine rl WHERE rl.transport.id = :transportId", RouteLine.class)
+	            .setParameter("transportId", transportId)
+	            .getResultList();
 
-        // Check if the transport is used in any LogisticsSupplyChain
-        List<LogisticsSupplyChain> supplyChains = session.createQuery("FROM LogisticsSupplyChain ls WHERE ls.transport = :transport", LogisticsSupplyChain.class)
-                                                         .setParameter("transport", transport)
-                                                         .getResultList();
+	    if (!routeLines.isEmpty()) {
+	        System.out.println("Cannot delete transport. It is linked to RouteLine.");
+	        session.close();
+	        databaseHelper.exit();
+	        return;  
+	    }
 
-        if (!supplyChains.isEmpty()) {
-            System.out.println("Cannot delete transport with ID " + transportId + " because it is used in one or more logistics supply chains.");
-            return;
-        }
+	    // Proceed to delete the transport from the list and the database
+	    transports.remove(transportIndex);
 
-        // If no dependencies exist, delete the transport
-        session.beginTransaction();
-        session.delete(transport);
-        session.getTransaction().commit();
-        System.out.println("Transport with ID " + transportId + " has been deleted successfully.");
+	    // Delete the transport from the database
+	    session.beginTransaction();
+	    session.remove(transport);  
+	    session.getTransaction().commit();
 
-        session.close();
-        databaseHelper.exit();
-    }
+	    session.close();
+	    databaseHelper.exit();
+
+	    System.out.println("Transport successfully deleted.");
+	}
 }
