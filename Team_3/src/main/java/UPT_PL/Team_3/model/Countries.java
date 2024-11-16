@@ -260,76 +260,76 @@ public class Countries {
      *
      * @param chains The LogisticsSupplyChains instance, used to access the list of supply chains and check for dependencies.
      */
-    public boolean deleteLogisticsSite(LogisticsSupplyChains chains) {
-        // Request the country ID
-        String countryId = ProjectHelper.inputStr("Enter the country ID: ");
-        int countryIndex = searchCountry(countryId);
-
-        // Check if the country exists
-        if (countryIndex == -1) {
-            System.out.println("Country with the specified ID not found.");
-            return false;  // Return false if the country is not found
-        }
-
-        Country country = countries.get(countryIndex);
-
-        // Check if the country has any logistics sites
-        if (country.getSites().isEmpty()) {
-            System.out.println("There are no logistics sites in this country.");
-            return false;  // Return false if there are no logistics sites
-        }
-
-        // Display the list of logistics sites in the country
-        System.out.println("List of logistics sites:");
-        for (int i = 0; i < country.getSites().size(); i++) {
-            System.out.println("(" + (i + 1) + ") " + country.getSites().get(i).getName());
-        }
-
-        // Request the logistics site number for deletion
-        int siteIndex = ProjectHelper.inputInt("Select the logistics site number to delete: ") - 1;
-
-        // Validate the selected index
-        if (siteIndex < 0 || siteIndex >= country.getSites().size()) {
-            System.out.println("Invalid selection. Operation canceled.");
-            return false;  // Return false if the selection is invalid
-        }
-
-        // Get the selected logistics site
-        LogisticsSite selectedSite = country.getSites().get(siteIndex);
-
-        // Check if the logistics site has any associated transport
-        if (selectedSite.getTransportArray() != null && !selectedSite.getTransportArray().isEmpty()) {
-            System.out.println("Error. The logistics site has associated transport. Deletion is not possible.");
-            return false;  // Return false if the site has associated transport
-        }
-
-        // Check if the selected site is part of any active logistics supply chain
-        boolean isPartOfChain = chains.getSupplyChains().stream()
-                .anyMatch(chain -> chain.getSender().equals(selectedSite) || chain.getReceiver().equals(selectedSite));
-
-        if (isPartOfChain) {
-            System.out.println("Error. The logistics site is part of an active supply chain. Deletion is not possible.");
-            return false;  // Return false if the site is part of an active supply chain
-        }
-
-        // Query route lines that are linked to the selected site as origin or destination
-        List<RouteLine> routeLines = session.createQuery(
-                "FROM RouteLine rl WHERE rl.originSite.id = :siteId OR rl.destinationSite.id = :siteId", RouteLine.class)
-                .setParameter("siteId", selectedSite.getSiteId())
-                .getResultList();
-
-        // If there are route lines linked to the site, prevent deletion
-        if (!routeLines.isEmpty()) {
-            System.out.println("Error. You need to delete all the route lines associated with this logistics site before deleting it.");
-            return false;  // Return false if there are linked route lines
-        }
-
-        // Remove the logistics site from the country's list
-        country.getSites().remove(siteIndex);
-        
-        System.out.println("Logistics site successfully deleted.");
-        return true;  // Return true if the deletion was successful
-    }
+//    public boolean deleteLogisticsSite(LogisticsSupplyChains chains) {
+//        // Request the country ID
+//        String countryId = ProjectHelper.inputStr("Enter the country ID: ");
+//        int countryIndex = searchCountry(countryId);
+//
+//        // Check if the country exists
+//        if (countryIndex == -1) {
+//            System.out.println("Country with the specified ID not found.");
+//            return false;  // Return false if the country is not found
+//        }
+//
+//        Country country = countries.get(countryIndex);
+//
+//        // Check if the country has any logistics sites
+//        if (country.getSites().isEmpty()) {
+//            System.out.println("There are no logistics sites in this country.");
+//            return false;  // Return false if there are no logistics sites
+//        }
+//
+//        // Display the list of logistics sites in the country
+//        System.out.println("List of logistics sites:");
+//        for (int i = 0; i < country.getSites().size(); i++) {
+//            System.out.println("(" + (i + 1) + ") " + country.getSites().get(i).getName());
+//        }
+//
+//        // Request the logistics site number for deletion
+//        int siteIndex = ProjectHelper.inputInt("Select the logistics site number to delete: ") - 1;
+//
+//        // Validate the selected index
+//        if (siteIndex < 0 || siteIndex >= country.getSites().size()) {
+//            System.out.println("Invalid selection. Operation canceled.");
+//            return false;  // Return false if the selection is invalid
+//        }
+//
+//        // Get the selected logistics site
+//        LogisticsSite selectedSite = country.getSites().get(siteIndex);
+//
+//        // Check if the logistics site has any associated transport
+//        if (selectedSite.getTransportArray() != null && !selectedSite.getTransportArray().isEmpty()) {
+//            System.out.println("Error. The logistics site has associated transport. Deletion is not possible.");
+//            return false;  // Return false if the site has associated transport
+//        }
+//
+//        // Check if the selected site is part of any active logistics supply chain
+//        boolean isPartOfChain = chains.getSupplyChains().stream()
+//                .anyMatch(chain -> chain.getSender().equals(selectedSite) || chain.getReceiver().equals(selectedSite));
+//
+//        if (isPartOfChain) {
+//            System.out.println("Error. The logistics site is part of an active supply chain. Deletion is not possible.");
+//            return false;  // Return false if the site is part of an active supply chain
+//        }
+//
+//        // Query route lines that are linked to the selected site as origin or destination
+//        List<RouteLine> routeLines = session.createQuery(
+//                "FROM RouteLine rl WHERE rl.originSite.id = :siteId OR rl.destinationSite.id = :siteId", RouteLine.class)
+//                .setParameter("siteId", selectedSite.getSiteId())
+//                .getResultList();
+//
+//        // If there are route lines linked to the site, prevent deletion
+//        if (!routeLines.isEmpty()) {
+//            System.out.println("Error. You need to delete all the route lines associated with this logistics site before deleting it.");
+//            return false;  // Return false if there are linked route lines
+//        }
+//
+//        // Remove the logistics site from the country's list
+//        country.getSites().remove(siteIndex);
+//        
+//        System.out.println("Logistics site successfully deleted.");
+//        return true;  // Return true if the deletion was successful
+//    }
 }
 
 

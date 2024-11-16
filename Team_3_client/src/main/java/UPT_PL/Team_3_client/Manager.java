@@ -1,16 +1,20 @@
 package UPT_PL.Team_3_client;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import UPT_PL.Team_3.model.Calculation;
 import UPT_PL.Team_3.model.Countries;
 import UPT_PL.Team_3.model.DatabaseHelper;
 import UPT_PL.Team_3.model.LogisticsProcessor;
 import UPT_PL.Team_3.model.LogisticsSupplyChains;
+import UPT_PL.Team_3.model.Product;
 import UPT_PL.Team_3.model.ProductRequestProcessor;
 import UPT_PL.Team_3.model.Products;
 import UPT_PL.Team_3.model.ProjectHelper;
@@ -25,6 +29,9 @@ public class Manager {
 	private LogisticsSupplyChains logisticsSupplyChains;
 	private ProductRequestProcessor productRequestProcessor;
 	private LogisticsProcessor logisticsProcessor;
+	// Class variable
+	private RestTemplate restTemplate = new RestTemplate();
+	private String rootAPIURL = "http://localhost:8080/api/";
 	
 	/**
 	 * Constructor
@@ -126,6 +133,7 @@ public class Manager {
 	 * read all date from DB
 	 */
 	public void readFromDB() {
+		readAllProducts();
 //		products.readAllProductsWithJplq();
 //		countries.readAllCountriesWithJplq();
 //		transports.readAllTransportsWithJplq();
@@ -135,11 +143,39 @@ public class Manager {
 //		readAllСalculationWithJplq();
 	}
 	
+	private void readAllProducts() {
+		ResponseEntity<Product[]> response = restTemplate.getForEntity(rootAPIURL + "products", Product[].class);
+		
+		if (response.getStatusCode().is2xxSuccessful()) {
+			Product[] productsArr = response.getBody();
+			if (productsArr != null) {		
+				List<Product> productList =  Arrays.asList(productsArr);
+				products.setProductList(new ArrayList<Product>(productList));
+			} 
+		} else {
+			System.out.println("Nothing found");
+		}
+	}
+	
 	/**
 	 * addProduct
 	 */
 	public void addProduct() {
-		products.addProduct();
+		Product newProduct = products.addProduct();
+		if(newProduct != null) {
+			ResponseEntity<Product> response = restTemplate.postForEntity(rootAPIURL + "products", newProduct, Product.class);
+			
+			if (response.getStatusCode().is2xxSuccessful()) {
+				Product body = response.getBody();
+				if (body != null) {		
+						System.out.println("Successful save in BD");
+				} else {
+					System.out.println("No body");
+				}
+			} else {
+				System.out.println("Nothing found");
+			}
+		}
 	}
 	/**
 	 * addCountry

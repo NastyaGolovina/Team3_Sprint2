@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-
 @RequestMapping("/api/products")
 public class ProductController {
 	@Autowired
@@ -21,8 +20,7 @@ public class ProductController {
 		return productService.getAllProducts();
 	}
 
-	@GetMapping("/{productID}")
-
+	@GetMapping("/{id}")
 	public ResponseEntity<Product> getProductById(@PathVariable String productID) {
 		Optional<Product> product = productService.getProductById(productID);
 
@@ -30,11 +28,11 @@ public class ProductController {
 	}
 
 	@PostMapping
-	public Product createBook(@RequestBody Product product) {
+	public Product createProduct(@RequestBody Product product) {
 		return productService.createProduct(product);
 	}
 
-	@DeleteMapping("/{productID}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteProduct(@PathVariable String productID) {
 		productService.deleteProduct(productID);
 		return ResponseEntity.noContent().build();
