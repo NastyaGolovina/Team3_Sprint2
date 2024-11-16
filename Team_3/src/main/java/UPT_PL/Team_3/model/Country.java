@@ -189,13 +189,13 @@ public class Country {
      * @param transports The list of available transports.
      * @param allCountries The list of all countries to check for duplicate site IDs.
      */
-    public void addLogisticsSite(Transports transports, ArrayList<Country> allCountries) { 
+    public LogisticsSite addLogisticsSite(Transports transports, ArrayList<Country> allCountries) { 
         String siteId = ProjectHelper.inputStr("Enter the unique ID for the logistics site:");
 
         // Check if the logistics site ID already exists across all countries
         if (checkIfLogisticsSiteIdExists(siteId, allCountries)) {
             System.out.println("A logistics site with this ID already exists.");
-            return; 
+            return null; 
         }
 
         String name = ProjectHelper.inputStr("Enter the name of the logistics site:");
@@ -204,8 +204,12 @@ public class Country {
         this.sites.add(newLogisticsSite);
 
         newLogisticsSite.addSuppliedTransport(transports);
-      
+        
         System.out.println("Logistics site '" + name + "' added successfully.");
+        
+        return newLogisticsSite;
+      
+        
     }
 
     /**
