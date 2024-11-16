@@ -35,15 +35,6 @@ public class LogisticsSupplyChain {
 
     @Column(name = "duration_in_days", nullable = false)
     private double durationInDays;
-    
-    //JUST FOR TEST!THEN REMOVE!!!
-    // Список для хранения цепей в памяти
-    //private static final List<LogisticsSupplyChain> chains = new ArrayList<>();
-
-    // Список для хранения логистических сайтов в памяти
-    //private static final List<LogisticsSite> logisticsSites = new ArrayList<>();
-    
-    
     /**
      * Constructor to initialize a LogisticsSupplyChain with all necessary details.
      *
@@ -195,86 +186,15 @@ public class LogisticsSupplyChain {
 				+ "]";
 	}
 	
-	
-	 // Новые методы для работы с массивом
+	public void testS() {
+		//lol;l
+	}
+	public void testSSS() {
+		
+	}
 
-    /**
-     * Добавление новой цепи в массив. Возвращает объект или null, если произошла ошибка.
-     * Checks if the chain is valid before adding to the in-memory list.
-     *
-     * @param chain The logistics supply chain to add.
-     * @return The added chain object or null if the chain is invalid.
-     */
-	/*
-	 * Операции полностью изолированы от базы данных, работают только с массивом. !ТЗ ВЫПОЛНЕНО*/
-	/*Метод addToMemory возвращает:
-Объект цепи (LogisticsSupplyChain), если добавление успешно.
-null, если объект не валиден (например, chain == null или логистические сайты не указаны). !ТЗ ВЫПОЛНЕНО!*/
-    public static LogisticsSupplyChain addToMemory(LogisticsSupplyChain chain) {
-        if (chain != null && chain.isLogisticsSitesValid()) {
-            chains.add(chain);
-            return chain; // Возвращаем добавленный объект
-        }
-        return null; // Если объект невалиден
+    public void testFromVladFromEclipse(){
+    		//sfdsefbf
     }
-
-    /**
-     * Удаление цепи из массива по chainId.
-     * Removes a supply chain from the in-memory list by its chainId.
-     * Returns true if the chain was successfully removed, false otherwise.
-     *
-     * @param chainId The unique ID of the supply chain to remove.
-     * @return true if the chain was removed, false otherwise.
-     */
-    /*
-	 * Операции полностью изолированы от базы данных, работают только с массивом. !ТЗ ВЫПОЛНЕНО*/
-    /*
-     * Возвращает true, если удаление прошло успешно.
-Возвращает false, если ничего не удалено. !ТЗ ВЫПОЛНЕНО!
-*/
-    public static boolean removeFromMemory(String chainId) {
-        return chains.removeIf(chain -> chain.getChainId().equals(chainId)); 
-    }
-
-    /**
-     * Получение всех цепей из массива.
-     * Retrieves all supply chains from the in-memory list.
-     *
-     * @return A list of all logistics supply chains in memory.
-     */
     
-    /*
-     * Метод работает только с массивом chains и возвращает его копию. !ТЗ ВЫПОЛНЕНО!*/
-    public static List<LogisticsSupplyChain> getAllFromMemory() {
-        return new ArrayList<>(chains);
-    }
-
-    // Новый метод для удаления LogisticsSite
-
-    /**
-     * Удаление логистического сайта, если к нему не привязаны объекты Transport.
-     * Checks for associated transport objects before deleting the logistics site.
-     *
-     * @param siteId The unique ID of the logistics site to remove.
-     * @return true if the site was removed, false if transports are associated or site not found.
-     */
-    /*
-     * . Метод проверяет наличие транспорта, связанного с сайтом. Если транспорты найдены, сайт не удаляется.! ТЗ ВЫПОЛНЕНО!*/
-    public static boolean removeLogisticsSiteIfNoTransports(String siteId) {
-        // Проверяем, есть ли транспорты, связанные с этим логистическим сайтом
-        boolean hasTransports = chains.stream().anyMatch(chain -> 
-            chain.getSender().getSiteId().equals(siteId) || 
-            chain.getReceiver().getSiteId().equals(siteId)
-        );
-
-        // Если транспорты найдены, удаление запрещено
-        if (hasTransports) {
-            return false;
-        }
-
-        // Иначе удаляем логистический сайт из списка
-        return logisticsSites.removeIf(site -> site.getSiteId().equals(siteId));
-    }
-    //ВСЕ ТЗ ПОЛНОСТЮ ВЫПОЛНЕНЫ!!
-	
 }
