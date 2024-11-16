@@ -119,54 +119,41 @@ public class Countries {
         }
     }
     
-     // DELETE Country by Id
+ // DELETE Country by Id
     
     public void deleteCountryById() {
-        // Prompt for the country ID to delete
         String countryId = ProjectHelper.inputStr("Enter the country ID to delete: ");
         int countryIndex = searchCountry(countryId);
 
-        // Check if the country exists
+        // Check if the country exists in the list
         if (countryIndex == -1) {
             System.out.println("Country with the specified ID not found.");
             return;
         }
 
-        // Retrieve the selected country object
-        Country country = countries.get(countryIndex);
+         Country country = countries.get(countryIndex);
 
-        // Set up database session for dependency checks
+        // 1. Check if the country is linked to any ProductsByCountry (using the ArrayList)
+        for (ProductsByCountry product : country.getProducts()) {
+            if (product.getCountry().getCountryId().equals(countryId)) {
+                System.out.println("Cannot delete country. It is linked to ProductsByCountry.");
+                return;  
+            }
+        }
+
+        // 2. Check if the country is linked to any LogisticsSite (using the ArrayList)
+        for (LogisticsSite site : country.getSites()) {
+            if (site.getCountry().getCountryId().equals(countryId)) {
+                System.out.println("Cannot delete country. It is linked to LogisticsSite.");
+                return;  
+            }
+        }
+
+        // 3. Check if the country is linked to any RouteLine (using a query)
         DatabaseHelper databaseHelper = new DatabaseHelper();
         databaseHelper.setup();
         Session session = databaseHelper.getSessionFactory().openSession();
-
-        // 1. Check if the country is linked to any ProductsByCountry
-        List<ProductsByCountry> productsByCountryList = session.createQuery(
-                "FROM ProductsByCountry pcb WHERE pcb.country.id = :countryId", ProductsByCountry.class)
-                .setParameter("countryId", countryId)
-                .getResultList();
-
-        if (!productsByCountryList.isEmpty()) {
-            System.out.println("Cannot delete country. It is linked to ProductsByCountry.");
-            session.close();
-            databaseHelper.exit();
-            return;
-        }
-
-        // 2. Check if the country is linked to any SupplyReceiveByCountry
-        List<SupplyReceiveCountryByProduct> supplyReceiveByCountryList = session.createQuery(
-                "FROM SupplyReceiveCountryByProduct srcbp WHERE srcbp.country.id = :countryId", SupplyReceiveCountryByProduct.class)
-                .setParameter("countryId", countryId)
-                .getResultList();
-
-        if (!supplyReceiveByCountryList.isEmpty()) {
-            System.out.println("Cannot delete country. It is linked to SupplyReceiveByCountry.");
-            session.close();
-            databaseHelper.exit();
-            return;
-        }
-
-        // 3. Check if the country is linked to any RouteLine (using query)
+        
         List<RouteLine> routeLines = session.createQuery(
                 "FROM RouteLine rl WHERE rl.countrySender.id = :countryId OR rl.countryReceiver.id = :countryId", RouteLine.class)
                 .setParameter("countryId", countryId)
@@ -176,12 +163,13 @@ public class Countries {
             System.out.println("Cannot delete country. It is linked to RouteLine.");
             session.close();
             databaseHelper.exit();
-            return;
+            return;  // Prevent deletion
         }
 
         // Proceed to delete the country from the list and the database
         countries.remove(countryIndex);
 
+        // Delete the country from the database
         session.beginTransaction();
         session.remove(country); // Delete the country from the database
         session.getTransaction().commit();
@@ -191,6 +179,7 @@ public class Countries {
 
         System.out.println("Country successfully deleted.");
     }
+
 
 // Method to delete product by country, delete product from a certain country
     
