@@ -11,14 +11,17 @@ import org.springframework.web.client.RestTemplate;
 
 import UPT_PL.Team_3.model.Calculation;
 import UPT_PL.Team_3.model.Countries;
+import UPT_PL.Team_3.model.Country;
 import UPT_PL.Team_3.model.DatabaseHelper;
 import UPT_PL.Team_3.model.LogisticsProcessor;
+import UPT_PL.Team_3.model.LogisticsSupplyChain;
 import UPT_PL.Team_3.model.LogisticsSupplyChains;
 import UPT_PL.Team_3.model.Product;
 import UPT_PL.Team_3.model.ProductRequestProcessor;
 import UPT_PL.Team_3.model.Products;
 import UPT_PL.Team_3.model.ProjectHelper;
 import UPT_PL.Team_3.model.RouteLine;
+import UPT_PL.Team_3.model.Transport;
 import UPT_PL.Team_3.model.Transports;
 
 public class Manager {
@@ -134,15 +137,16 @@ public class Manager {
 	 */
 	public void readFromDB() {
 		readAllProducts();
-//		products.readAllProductsWithJplq();
-//		countries.readAllCountriesWithJplq();
-//		transports.readAllTransportsWithJplq();
+		readAllCountries();
+		readAllTransports();
 //		countries.readAllLogisticsSitesWithJplq();
 //		countries.readAllProductsByCountrysWithJplq();
-//		logisticsSupplyChains.readAllSupplyChainsFromDB();
+		readAllSupplyChains();
 //		readAllСalculationWithJplq();
 	}
-	
+	/*
+	 * readAllProducts
+	 */
 	private void readAllProducts() {
 		ResponseEntity<Product[]> response = restTemplate.getForEntity(rootAPIURL + "products", Product[].class);
 		
@@ -151,6 +155,52 @@ public class Manager {
 			if (productsArr != null) {		
 				List<Product> productList =  Arrays.asList(productsArr);
 				products.setProductList(new ArrayList<Product>(productList));
+			} 
+		} else {
+			System.out.println("Nothing found");
+		}
+	}
+	
+	/**
+	 * readAllCountries
+	 */
+	private void readAllCountries() {
+		ResponseEntity<Country[]> response = restTemplate.getForEntity(rootAPIURL + "countries", Country[].class);
+		
+		if (response.getStatusCode().is2xxSuccessful()) {
+			Country[] countryArr = response.getBody();
+			if (countryArr != null) {	
+				countries.setCountries(new ArrayList<Country>(Arrays.asList(countryArr)));
+			} 
+		} else {
+			System.out.println("Nothing found");
+		}
+	}
+	/**
+	 * readAllTransports
+	 */
+	private void readAllTransports() {
+		ResponseEntity<Transport[]> response = restTemplate.getForEntity(rootAPIURL + "transports", Transport[].class);
+		
+		if (response.getStatusCode().is2xxSuccessful()) {
+			Transport[] transportArr = response.getBody();
+			if (transportArr != null) {		
+				transports.setTransports(new ArrayList<Transport>(Arrays.asList(transportArr)));
+			} 
+		} else {
+			System.out.println("Nothing found");
+		}
+	}
+	/**
+	 * readAllSupplyChains
+	 */
+	private void readAllSupplyChains() {
+		ResponseEntity<LogisticsSupplyChain[]> response = restTemplate.getForEntity(rootAPIURL + "supply-chains", LogisticsSupplyChain[].class);
+		
+		if (response.getStatusCode().is2xxSuccessful()) {
+			LogisticsSupplyChain[] logisticsSupplyChainArr = response.getBody();
+			if (logisticsSupplyChainArr != null) {	
+				logisticsSupplyChains.setSupplyChains(new ArrayList<LogisticsSupplyChain>(Arrays.asList(logisticsSupplyChainArr)));
 			} 
 		} else {
 			System.out.println("Nothing found");
@@ -177,20 +227,53 @@ public class Manager {
 			}
 		}
 	}
+	
 	/**
 	 * addCountry
 	 */
 	public void addCountry() {
-		countries.addCountry();
+		Country newCountry = countries.addCountry();
+
+		if (newCountry != null) {
+			ResponseEntity<Country> response = restTemplate.postForEntity(rootAPIURL + "countries", newCountry,
+					Country.class);
+
+			if (response.getStatusCode().is2xxSuccessful()) {
+				Country body = response.getBody();
+				if (body != null) {
+					System.out.println("Successful save in BD");
+				} else {
+					System.out.println("No body");
+				}
+			} else {
+				System.out.println("Nothing found");
+			}
+		}
 	}
 	/*
 	 * addTransport
 	 */
 	public void addTransport() {
-		transports.addTransport();
+		Transport newTransport =transports.addTransport();
+		
+		if (newTransport != null) {
+			ResponseEntity<Transport> response = restTemplate.postForEntity(rootAPIURL + "transports", newTransport,
+					Transport.class);
+
+			if (response.getStatusCode().is2xxSuccessful()) {
+				Transport body = response.getBody();
+				if (body != null) {
+					System.out.println("Successful save in BD");
+				} else {
+					System.out.println("No body");
+				}
+			} else {
+				System.out.println("Nothing found");
+			}
+		}
 	}
 	/**
-	 * addLogisticsSiteToCountry
+	 * addLogisticsSiteToCountry old
 	 */
 	public void addLogisticsSitesToCountry() {
 		if(!countries.getCountries().isEmpty()) {
@@ -207,6 +290,9 @@ public class Manager {
 		}
 	}
 	
+	/**
+	 * old
+	 */
 	public void addProductsToCountry() {
 		if(!countries.getCountries().isEmpty()) {
 			int CountryPos = countries.searchCountry(ProjectHelper.inputStr("Input country id :"));
@@ -221,16 +307,34 @@ public class Manager {
 			System.out.println("The countries list is empty.");
 		}
 	}
+	
+	
 	/**
 	 * addLogisticsSupplyChain
 	 */	
 	public void addLogisticsSupplyChain() {
-		logisticsSupplyChains.addNewSupplyChain(countries);
+		LogisticsSupplyChain newLogisticsSupplyChain = logisticsSupplyChains.addNewSupplyChain(countries);
+
+		if (newLogisticsSupplyChain != null) {
+			ResponseEntity<LogisticsSupplyChain> response = restTemplate.postForEntity(rootAPIURL + "supply-chains", newLogisticsSupplyChain,
+					LogisticsSupplyChain.class);
+
+			if (response.getStatusCode().is2xxSuccessful()) {
+				LogisticsSupplyChain body = response.getBody();
+				if (body != null) {
+					System.out.println("Successful save in BD");
+				} else {
+					System.out.println("No body");
+				}
+			} else {
+				System.out.println("Nothing found");
+			}
+		}
 	}
 	/**
 	 * calculateSuppyRequest
 	 */
-	public void calculateSupplyRequest() {
+	private void calculateSupplyRequest() {
 		productRequestProcessor.calcSupplyRequest(products, countries);
 	}
 	/**
