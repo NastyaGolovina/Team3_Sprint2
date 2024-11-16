@@ -152,10 +152,17 @@ public class LogisticsSupplyChains {
      *
      * @param chainId The ID of the supply chain to delete.
      */
-    public void deleteSupplyChainById(String chainId) {
-        // Remove the supply chain from the local array (list)
-        supplyChains.removeIf(chain -> chain.getChainId().equals(chainId));
-        System.out.println("Supply chain with ID " + chainId + " successfully deleted.");
+    public boolean deleteSupplyChainById(String chainId) {
+        // Найдем цепочку поставок по ID
+        boolean isRemoved = supplyChains.removeIf(chain -> chain.getChainId().equals(chainId));
+        
+        if (isRemoved) {
+            System.out.println("Supply chain with ID " + chainId + " successfully deleted.");
+            return true; // Возвращаем true, если цепочка была удалена
+        } else {
+            System.out.println("Supply chain with ID " + chainId + " not found.");
+            return false; // Возвращаем false, если цепочка не найдена
+        }
     }
 
     // Getter and setter methods for supplyChains
