@@ -130,7 +130,7 @@ public class LogisticsProcessor {
 	 * @param supplyReceiveCountryByProduct
 	 * @return
 	 */
-	public boolean calcTypeValidationCountry(CalcType calcType, String name, SupplyReceiveCountryByProduct supplyReceiveCountryByProduct) {
+	private boolean calcTypeValidationCountry(CalcType calcType, String name, SupplyReceiveCountryByProduct supplyReceiveCountryByProduct) {
 		switch(calcType) {
 		case Country :
 			return supplyReceiveCountryByProduct.getCountry().getName().equals(name);	
@@ -146,7 +146,7 @@ public class LogisticsProcessor {
 	 * @param supplyReceiveByProduct
 	 * @return
 	 */
-	public boolean calcTypeValidationProduct(CalcType calcType, String name, SupplyReceiveByProduct supplyReceiveByProduct) {
+	private boolean calcTypeValidationProduct(CalcType calcType, String name, SupplyReceiveByProduct supplyReceiveByProduct) {
 		switch(calcType) {
 		case Product :
 			return supplyReceiveByProduct.getProduct().getName().equals(name);	
@@ -207,7 +207,7 @@ public class LogisticsProcessor {
 	 * @param logisticsSupplyChains
 	 * @param productPos
 	 */
-	public void WayCalculator(SupplyCombinations supplyCombinations,LogisticsSupplyChains logisticsSupplyChains, int productPos, double request ) {
+	private void WayCalculator(SupplyCombinations supplyCombinations,LogisticsSupplyChains logisticsSupplyChains, int productPos, double request ) {
 		for(SupplyCombination receiver : supplyCombinations.getSupplyCombinations()) {
 			for(SupplyReceiveByCountry variant : receiver.getSupplyList()) {
 				double MinTotalAmount = 0;
