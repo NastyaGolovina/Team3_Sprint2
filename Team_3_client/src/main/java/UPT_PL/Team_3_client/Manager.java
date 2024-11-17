@@ -14,6 +14,7 @@ import UPT_PL.Team_3.model.Countries;
 import UPT_PL.Team_3.model.Country;
 import UPT_PL.Team_3.model.DatabaseHelper;
 import UPT_PL.Team_3.model.LogisticsProcessor;
+import UPT_PL.Team_3.model.LogisticsSite;
 import UPT_PL.Team_3.model.LogisticsSupplyChain;
 import UPT_PL.Team_3.model.LogisticsSupplyChains;
 import UPT_PL.Team_3.model.Product;
@@ -142,7 +143,7 @@ public class Manager {
 //		countries.readAllLogisticsSitesWithJplq();
 //		countries.readAllProductsByCountrysWithJplq();
 		readAllSupplyChains();
-//		readAllСalculationWithJplq();
+		readСalculation();
 	}
 	/*
 	 * readAllProducts
@@ -284,7 +285,24 @@ public class Manager {
 				CountryPos = countries.searchCountry(ProjectHelper.inputStr("Input country id :"));
 			}
 			
-			countries.getCountries().get(CountryPos).addLogisticsSite(transports, countries.getCountries());
+			LogisticsSite newLogisticsSite = countries.getCountries().get(CountryPos).addLogisticsSite(transports, countries.getCountries());
+			
+
+			if (newLogisticsSite != null) {
+				ResponseEntity<LogisticsSite> response = restTemplate.postForEntity(rootAPIURL + "logisticsSites", newLogisticsSite,
+						LogisticsSite.class);
+				if (response.getStatusCode().is2xxSuccessful()) {
+					LogisticsSite body = response.getBody();
+					if (body != null) {
+						System.out.println("Successful save in BD");
+					} else {
+						System.out.println("No body");
+					}
+				} else {
+					System.out.println("Nothing found");
+				}
+			}
+			
 		} else {
 			System.out.println("The countries list is empty.");
 		}
@@ -399,122 +417,187 @@ public class Manager {
 		
 	}
 	
-//	/**
-//	 * writeLogisticsProcessorInDB
-//	 */
-//	public void writeLogisticsProcessorInDB() {
-//		if(!logisticsProcessor.isCurrentСalculationEmpty()) {
-//			logisticsProcessor.writeCurrentCalculationInDB();
-//			productRequestProcessor = new ProductRequestProcessor();
-//			logisticsProcessor = new LogisticsProcessor();
-//		} else {
-//			System.out.println("Logistics processor empty.");
+	/**
+	 * writeLogisticsProcessorInDB
+	 */
+	public void writeLogisticsProcessorInDB() {
+		if(!logisticsProcessor.isCurrentСalculationEmpty()) {
+
+			ResponseEntity<Calculation> response = restTemplate.postForEntity(rootAPIURL + "calculations", 
+					logisticsProcessor.getCurrentСalculation(),
+					Calculation.class);
+
+			if (response.getStatusCode().is2xxSuccessful()) {
+				Calculation body = response.getBody();
+				if (body != null) {
+					for(RouteLine r : logisticsProcessor.getLogisticsRoutes()) {
+						ResponseEntity<RouteLine> routeLineResponse = restTemplate.postForEntity(rootAPIURL + "routeLines", 
+								r,
+								RouteLine.class);
+
+						if (routeLineResponse.getStatusCode().is2xxSuccessful()) {
+							RouteLine rBody = routeLineResponse.getBody();
+							if (rBody == null) {
+								System.out.println("No body");
+								break;
+							} 
+						} else {
+							System.out.println("Nothing found");
+							break;
+						}
+					}
+				} else {
+					System.out.println("No body");
+				}
+			} else {
+				System.out.println("Nothing found");
+			}
+			
+			productRequestProcessor = new ProductRequestProcessor();
+			logisticsProcessor = new LogisticsProcessor();
+		} else {
+			System.out.println("Logistics processor empty.");
+		}
+		
+	}
+	
+	/**
+	 * readAllСalculationWithJplq and read road lines
+	 */
+	protected void readСalculation() {
+		
+		ResponseEntity<Calculation[]> response = restTemplate.getForEntity(rootAPIURL + "calculations", Calculation[].class);
+
+		if (response.getStatusCode().is2xxSuccessful()) {
+			Calculation[] calculationsArr = response.getBody();
+			if (calculationsArr != null) {
+				List<Calculation> calculations = Arrays.asList(calculationsArr);
+				
+				int i = 1;
+				for (Calculation c : calculations) {
+					System.out.println("(" + i + ")" + c);
+					i++;
+				}
+				
+				System.out.println("Select the account you want to download or 0 if you don't want to download");
+				int calculationNum = ProjectHelper.inputInt("Input:");
+				while (calculationNum < 0 || calculationNum > calculations.size()) {
+					calculationNum = ProjectHelper.inputInt("Input:");
+				}
+				
+				if (calculationNum != 0) {
+					long calculationId = calculations.get(calculationNum - 1).getCalculationId();
+
+					
+					ResponseEntity<RouteLine[]> routeLineresponse = restTemplate.
+										getForEntity(rootAPIURL + "routeLines/calculation/"
+										+ calculationId, RouteLine[].class);
+					
+					if (routeLineresponse.getStatusCode().is2xxSuccessful()) {
+						RouteLine[] rBody = routeLineresponse.getBody();
+						if (rBody != null) {	
+							List<RouteLine> routeLines = Arrays.asList(rBody);
+							this.logisticsProcessor = new LogisticsProcessor();
+							logisticsProcessor.setLogisticsRoutes((ArrayList<RouteLine>) routeLines);
+							logisticsProcessor.setCurrentСalculation(calculations.get(calculationNum - 1));
+						} 
+					} else {
+						System.out.println("Nothing found");
+					}					
+				}				
+			}
+		} else {
+			System.out.println("Nothing found");
+		}
+
+	
+		
+		
+		
+		
+	}
+	/**
+	 * deleteCalculation
+	 */
+	protected void deleteCalculation() {
+		
+		ResponseEntity<Calculation[]> response = restTemplate.getForEntity(rootAPIURL + "calculations", Calculation[].class);
+
+		if (response.getStatusCode().is2xxSuccessful()) {
+			Calculation[] calculationsArr = response.getBody();
+			if (calculationsArr != null) {
+				List<Calculation> calculations = Arrays.asList(calculationsArr);
+				
+				int i = 1;
+				for (Calculation c : calculations) {
+					System.out.println("(" + i + ")" + c);
+					i++;
+				}
+				
+				System.out.println("Select the account you want to download or 0 if you don't want to download");
+				int calculationNum = ProjectHelper.inputInt("Input:");
+				while (calculationNum < 0 || calculationNum > calculations.size()) {
+					calculationNum = ProjectHelper.inputInt("Input:");
+				}
+				
+				
+				if (calculationNum != 0) {
+					long calculationId = calculations.get(calculationNum - 1).getCalculationId();
+			
+				    restTemplate.delete(rootAPIURL + "routeLines/calculation/" + calculationId);
+				    restTemplate.delete(rootAPIURL + "calculations/" + calculationId);
+
+		            if((!logisticsProcessor.isCurrentСalculationEmpty()) && (logisticsProcessor.getCurrentСalculation().getCalculationId() == calculationId)) {
+		            	productRequestProcessor = new ProductRequestProcessor();
+		    			logisticsProcessor = new LogisticsProcessor();
+		            }
+					
+				}			
+			}
+		} else {
+			System.out.println("Nothing found");
+		}
+	}
+	
+	
+//	public void deleteProduct() {
+//		String productID =ProjectHelper.inputStr("Inpit Product ID :");
+//		boolean idDeleted = products.deleteProduct(productID,
+//				countries.getCountries());
+//		if(idDeleted) {
+//			restTemplate.delete(rootAPIURL + "products/" + productID);
 //		}
-//		
-//	}
-//	/**
-//	 * readAllСalculationWithJplq and read road lines
-//	 */
-//	protected void readAllСalculationWithJplq() {
-//		DatabaseHelper DatabaseHelper = new DatabaseHelper();
-//		DatabaseHelper.setup();
-//		Session session = DatabaseHelper.getSessionFactory().openSession();
-//
-//		List<Calculation> calculations = session.createQuery("SELECT C FROM Calculation C", Calculation.class)
-//				.getResultList();
-//
-//		int i = 1;
-//		for (Calculation c : calculations) {
-//			System.out.println("(" + i + ")" + c);
-//			i++;
-//		}
-//		System.out.println("Select the account you want to download or 0 if you don't want to download");
-//		int calculationNum = ProjectHelper.inputInt("Input:");
-//		while (calculationNum < 0 || calculationNum > calculations.size()) {
-//			calculationNum = ProjectHelper.inputInt("Input:");
-//		}
-//		if (calculationNum != 0) {
-//			long calculationId = calculations.get(calculationNum - 1).getCalculationId();
-//
-//			Query<RouteLine> query = session
-//					.createQuery("FROM RouteLine rl WHERE rl.currentCalculation.id = :calculationId", RouteLine.class);
-//			query.setParameter("calculationId", calculationId);
-//
-//			List<RouteLine> routeLines = query.getResultList();
-//			this.logisticsProcessor = new LogisticsProcessor();
-//			logisticsProcessor.setLogisticsRoutes((ArrayList<RouteLine>) routeLines);
-//			logisticsProcessor.setCurrentСalculation(calculations.get(calculationNum - 1));
-//		}
-//		session.close();
-//		DatabaseHelper.exit();
-//	}
-//	/**
-//	 * 
-//	 */
-//	protected void deleteCalculation() {
-//		DatabaseHelper DatabaseHelper = new DatabaseHelper();
-//		DatabaseHelper.setup();
-//		Session session = DatabaseHelper.getSessionFactory().openSession();
-//		session.beginTransaction();
-//
-//		List<Calculation> calculations = session.createQuery("SELECT C FROM Calculation C", Calculation.class)
-//				.getResultList();
-//
-//		int i = 1;
-//		for (Calculation c : calculations) {
-//			System.out.println("(" + i + ")" + c);
-//			i++;
-//		}
-//		System.out.println("Select the account you want to download or 0 if you don't want to download");
-//		int calculationNum = ProjectHelper.inputInt("Input:");
-//		while (calculationNum < 0 || calculationNum > calculations.size()) {
-//			calculationNum = ProjectHelper.inputInt("Input:");
-//		}
-//		if (calculationNum != 0) {
-//			long calculationId = calculations.get(calculationNum - 1).getCalculationId();
-//
-////			Query<RouteLine> deleteItemsQuery = session
-////					.createQuery("DELETE FROM RouteLine rl WHERE rl.currentСalculation.id = :calculationId", RouteLine.class);
-////			deleteItemsQuery.setParameter("calculationId", calculationId);
-////		    deleteItemsQuery.executeUpdate();
-////		    
-////			Query<RouteLine> deletedRouteLines = session.createQuery("DELETE FROM RouteLine rl WHERE rl.currentСalculation.id = :calculationId",RouteLine.class);
-////			
-////			deletedRouteLines.setParameter("calculationId", calculationId)
-////            				 .executeUpdate();
-////		    
-//			int deletedRouteLines = session.createQuery("DELETE FROM RouteLine rl WHERE rl.currentCalculation.id = :calculationId")
-//									.setParameter("calculationId", calculationId)
-//									.executeUpdate();
-//			
-////		    Calculation calculation = new Calculation();
-////		    calculation.setCalculationId(calculationId);
-////		    session.beginTransaction();
-////		    session.remove(calculation);
-////			session.getTransaction().commit();
-////		   
-//		    Calculation calculation = session.get(Calculation.class, calculationId);
-//            if (calculation != null) {
-//                session.remove(calculation);
-//                System.out.println("Deleted Calculation object with ID:" + calculationId);
-//            }
-//		    
-//            
-//            if((!logisticsProcessor.isCurrentСalculationEmpty()) && (logisticsProcessor.getCurrentСalculation().getCalculationId() == calculationId)) {
-//            	productRequestProcessor = new ProductRequestProcessor();
-//    			logisticsProcessor = new LogisticsProcessor();
-//            }
-//			
-//		}
-//		session.getTransaction().commit();
-//		session.close();
-//		DatabaseHelper.exit();
 //	}
 	/**
-	 * 
+	 * deleteCountry
+	 */
+	public void deleteCountry() {
+		String countryID = ProjectHelper.inputStr("Inpit Country ID :");
+		boolean idDeleted =  countries.deleteCountryById();
+		if (idDeleted) {
+			restTemplate.delete(rootAPIURL + "countries/" + countryID);
+		}
+	}
+	/**
+	 * deleteTransport
+	 */
+	public void deleteTransport() {
+		String transporttID = ProjectHelper.inputStr("Inpit Transport ID :");
+		boolean idDeleted = transports.deleteTransportById(countries.getCountries(),logisticsSupplyChains);
+		if (idDeleted) {
+			restTemplate.delete(rootAPIURL + "transports/" + transporttID);
+		}
+	}
+	/**
+	 * deleteLogisticsSupplyChain
 	 */
 	public void deleteLogisticsSupplyChain() {
-		logisticsSupplyChains.deleteSupplyChainById(ProjectHelper.inputStr("Inpit Logistics Supply Chain ID :"));
+		String chainID =ProjectHelper.inputStr("Inpit Logistics Supply Chain ID :");
+		boolean idDeleted = logisticsSupplyChains.deleteSupplyChainById(chainID);
+		if(idDeleted) {
+			restTemplate.delete(rootAPIURL + "supply-chains/" + chainID);
+		}
+		
 	}
 	
 	/**

@@ -78,7 +78,7 @@ public class Main {
             	switch (deleteCommand) {
 				case 1: {
 					/** Delete calculation **/
-//					manager.deleteCalculation();
+					manager.deleteCalculation();
 					break;
 				}
 				case 2: {
@@ -92,18 +92,23 @@ public class Main {
 					break;
 				}
 				case 4: {
+					/** Delete country **/
+					manager.deleteCountry();
+					break;
+				}
+				case 5: {
 					/** Delete products by country **/
 					
 					break;
 				}
-				case 5: {
+				case 6: {
 					/** Delete logistics site **/
 					
 					break;
 				}
-				case 6: {
+				case 7: {
 					/** Delete transport **/
-					
+					manager.deleteTransport();
 					break;
 				}
 				default:
