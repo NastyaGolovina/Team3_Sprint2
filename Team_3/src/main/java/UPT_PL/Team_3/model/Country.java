@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 import org.hibernate.Session;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -26,11 +29,12 @@ public class Country {
     private int population;
     
     @Transient
+    @JsonIgnore
     private ArrayList<ProductsByCountry> products; 
     @Transient
+    @JsonIgnore
     private ArrayList<LogisticsSite> sites;  
-    
-    /**
+     /**
      * Default constructor required by JPA.
      */
     public Country() {
@@ -202,12 +206,15 @@ public class Country {
     
         LogisticsSite newLogisticsSite = new LogisticsSite(siteId, name, this, new ArrayList<>());
         this.sites.add(newLogisticsSite);
+       
 
         newLogisticsSite.addSuppliedTransport(transports);
         
         System.out.println("Logistics site '" + name + "' added successfully.");
         
         return newLogisticsSite;
+        
+        
       
         
     }

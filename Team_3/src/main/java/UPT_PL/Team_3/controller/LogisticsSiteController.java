@@ -17,13 +17,13 @@ import UPT_PL.Team_3.model.LogisticsSite;
 import UPT_PL.Team_3.service.LogisticsSiteService;
 
 @RestController
-@RequestMapping("/api/logisticsSites")
+@RequestMapping("/api/logistics-sites")
 public class LogisticsSiteController {
 	@Autowired
 	private LogisticsSiteService logisticsSiteService;
 
 	@GetMapping
-	public List<LogisticsSite> getAllBooks() {
+	public List<LogisticsSite> getAllLogisticsSites() {
 		return logisticsSiteService.getAllLogisticsSites();
 	}
 
@@ -39,12 +39,12 @@ public class LogisticsSiteController {
 	}
 	
 	@PostMapping
-	public LogisticsSite createBook(@RequestBody LogisticsSite logisticsSite) {
+	public LogisticsSite createLogisticsSite(@RequestBody LogisticsSite logisticsSite) {
 		return logisticsSiteService.createLogisticsSite(logisticsSite);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteBook(@PathVariable String id) {
+	public ResponseEntity<Void> deleteLogisticsSite(@PathVariable String id) {
 		logisticsSiteService.deleteLogisticsSite(id);
 		return ResponseEntity.noContent().build();
 	}

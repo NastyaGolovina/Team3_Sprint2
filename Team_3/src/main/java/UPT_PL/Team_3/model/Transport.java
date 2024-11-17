@@ -1,8 +1,14 @@
 package UPT_PL.Team_3.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 
@@ -19,8 +25,7 @@ public class Transport {
     @Column(name = "name", length = 20, nullable = false)
     private String name;
     @Column(name = "Price_Per_Ton", nullable = false)
-    private double pricePerTon;
-
+    private double pricePerTon;  
     /**
      * Default constructor required by JPA.
      */
@@ -66,7 +71,8 @@ public class Transport {
         this.pricePerTon = pricePerTon;
     }
 
-    @Override
+
+	@Override
     public String toString() {
         return "Transport [TransportId=" + transportId + ", name=" + name + ", pricePerTon=" + pricePerTon + "]";
     }

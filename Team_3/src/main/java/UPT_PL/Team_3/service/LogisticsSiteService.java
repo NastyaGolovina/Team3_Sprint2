@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import UPT_PL.Team_3.model.LogisticsSite;
+import UPT_PL.Team_3.model.Transport;
 import UPT_PL.Team_3.repository.LogisticsSiteRepository;
+import UPT_PL.Team_3.repository.TransportRepository;
 
 @Service
 public class LogisticsSiteService {
@@ -41,5 +43,4 @@ public class LogisticsSiteService {
 			throw new RuntimeException("LogisticsSite not found with id: " + id);
 		}
 	}
-	
 }

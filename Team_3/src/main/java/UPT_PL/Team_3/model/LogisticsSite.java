@@ -3,15 +3,18 @@ package UPT_PL.Team_3.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
@@ -29,11 +32,12 @@ public class LogisticsSite {
 	@ManyToOne
 	@JoinColumn(name = "Country_Id")
     private Country country;
-	@ManyToMany(cascade = CascadeType.MERGE)
+	
+	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     @JoinTable(
         name = "Supplied_Transport",
-        joinColumns = @JoinColumn(name = "Site_Id"), 
-        inverseJoinColumns = @JoinColumn(name = "Transport_Id") 
+        joinColumns = @JoinColumn(name = "Site_Id", referencedColumnName = "Site_Id"), 
+        inverseJoinColumns = @JoinColumn(name = "Transport_Id", referencedColumnName = "Transport_Id") 
     )
     private List<Transport>suppliedTransports; 
 	
