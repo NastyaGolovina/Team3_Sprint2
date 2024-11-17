@@ -265,7 +265,6 @@ public class Countries {
             return false;
         }
 
-        
         // Display the list of logistics sites in the country
         System.out.println("List of logistics sites:");
         for (int i = 0; i < country.getSites().size(); i++) {
