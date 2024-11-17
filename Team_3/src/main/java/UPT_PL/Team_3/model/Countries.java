@@ -283,7 +283,7 @@ public class Countries {
         LogisticsSite selectedSite = country.getSites().get(siteIndex);
 
         // Check if the logistics site has any associated transport
-        if (selectedSite.getTransportArray() != null && !selectedSite.getTransportArray().isEmpty()) {
+        if (selectedSite.getSuppliedTransports() != null && !selectedSite.getSuppliedTransports().isEmpty()) {
             System.out.println("Error. The logistics site has associated transport. Deletion is not possible.");
             return false;
         }
