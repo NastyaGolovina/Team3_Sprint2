@@ -3,7 +3,7 @@ package UPT_PL.Team_3.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Hibernate;
+
 import org.hibernate.Session;
 
 /**
@@ -138,9 +138,6 @@ public class Countries {
             }
         }
 
-        
-        
-        
         countries.remove(countryIndex);
 
         System.out.println("Country successfully deleted.");
