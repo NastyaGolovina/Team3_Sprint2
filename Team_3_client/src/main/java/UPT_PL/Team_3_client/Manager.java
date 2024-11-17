@@ -140,10 +140,11 @@ public class Manager {
 		readAllProducts();
 		readAllCountries();
 		readAllTransports();
+		readAllLogisticsSites();
 //		countries.readAllLogisticsSitesWithJplq();
 //		countries.readAllProductsByCountrysWithJplq();
-		readAllSupplyChains();
-		readСalculation();
+//		readAllSupplyChains();
+//		readСalculation();
 	}
 	/*
 	 * readAllProducts
@@ -178,8 +179,24 @@ public class Manager {
 		}
 	}
 	/**
-	 * readAllTransports
+	 * readAllLogisticsSites
 	 */
+	private void readAllLogisticsSites() {
+		ResponseEntity<LogisticsSite[]> response = restTemplate.getForEntity(rootAPIURL + "logisticsSites", LogisticsSite[].class);
+		
+		if (response.getStatusCode().is2xxSuccessful()) {
+			LogisticsSite[] logisticsSiteArr = response.getBody();
+			if (logisticsSiteArr != null) {		
+				for (LogisticsSite ls : logisticsSiteArr) {
+					System.out.println(ls.toString());
+				}
+			} 
+		} else {
+			System.out.println("Nothing found");
+		}
+	}
+	
+	
 	private void readAllTransports() {
 		ResponseEntity<Transport[]> response = restTemplate.getForEntity(rootAPIURL + "transports", Transport[].class);
 		
@@ -192,6 +209,7 @@ public class Manager {
 			System.out.println("Nothing found");
 		}
 	}
+	
 	/**
 	 * readAllSupplyChains
 	 */

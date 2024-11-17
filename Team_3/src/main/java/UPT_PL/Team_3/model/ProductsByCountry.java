@@ -12,7 +12,7 @@ import java.util.UUID;
 
 //Use the @Entity and @Table annotations before the class to map it to the table:
 @Entity
-@Table (name = "Products by Country")
+@Table (name = "Products_by_Country")
 public class ProductsByCountry {
 	@Id
 	@Column(name = "productByCountry_Id", length = 40, nullable = false )

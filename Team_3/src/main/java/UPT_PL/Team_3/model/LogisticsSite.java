@@ -19,7 +19,7 @@ import jakarta.persistence.Table;
  * which manages and supplies various types of transport.
  */
 @Entity
-@Table(name = "LogisticsSites")
+@Table(name = "Logistics_Sites")
 public class LogisticsSite {
 	@Id                                                    
 	@Column(name = "Site_Id",length = 20, nullable = false)
@@ -31,7 +31,7 @@ public class LogisticsSite {
     private Country country;
 	@ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
-        name = "SuppliedTransport",
+        name = "Supplied_Transport",
         joinColumns = @JoinColumn(name = "Site_Id"), 
         inverseJoinColumns = @JoinColumn(name = "Transport_Id") 
     )
