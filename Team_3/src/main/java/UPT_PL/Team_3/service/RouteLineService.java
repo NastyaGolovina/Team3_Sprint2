@@ -36,7 +36,22 @@ public class RouteLineService {
 		}
 		
 	}
+	
+	public boolean existsByCountryId(String countryId) {
+		return routeLineRepository.existsByCountryId(countryId);
+	}
 
+	public boolean existsByTransportId(String transportId) {
+		return routeLineRepository.existsByTransportId(transportId);
+	}
+
+	public boolean getRouteLineBySiteId(String siteId) {
+		return routeLineRepository.getRouteLineBySiteId(siteId);
+	}
+
+	public boolean getRouteLineByProductId(String productId) {
+		return routeLineRepository.getRouteLineByProductId(productId);
+	}
 }
 
 

@@ -138,28 +138,10 @@ public class Countries {
             }
         }
 
-        // 3. Check if the country is linked to any RouteLine
-        DatabaseHelper databaseHelper = new DatabaseHelper();
-        databaseHelper.setup();
-        Session session = databaseHelper.getSessionFactory().openSession();
-
-        List<RouteLine> routeLines = session.createQuery(
-                "FROM RouteLine rl WHERE rl.countrySender.id = :countryId OR rl.countryReceiver.id = :countryId", RouteLine.class)
-                .setParameter("countryId", countryId)
-                .getResultList();
-
-        if (!routeLines.isEmpty()) {
-            System.out.println("Cannot delete country. It is linked to RouteLine.");
-            session.close();
-            databaseHelper.exit();
-            return false;  
-            }
-
-        // Proceed to delete the country from the list 
+        
+        
+        
         countries.remove(countryIndex);
-
-        session.close();
-        databaseHelper.exit();
 
         System.out.println("Country successfully deleted.");
         return true;  
@@ -209,31 +191,6 @@ public class Countries {
      // remove the product by country from the ProductsByCountry list 
      country.getProducts().remove(indexProducts);
      System.out.println("Product removed successfully.");
-     
-     // Display remaining products
-     System.out.println("Updated list of products:");
-     for (int i = 0; i < country.getProducts().size(); i++) {
-         System.out.println("(" + i + ") " + country.getProducts().get(i));
-     }
-     
-     // Proceed to delete the country from the database
-     // Set up database session for dependency checks
-     DatabaseHelper databaseHelper = new DatabaseHelper();
-     databaseHelper.setup();
-     Session session = databaseHelper.getSessionFactory().openSession();
-     
-
-  // NEED TO DELETE THE DELETE FROM DATABASE KEEP THE DELETE IN LIST ONLY!!!!!!!!!!!!
-
-     // Delete the country from the database
-     session.beginTransaction();
-     session.remove(selectedProductsByCountry); // Delete the country from the database
-     session.getTransaction().commit();
-
-     session.close();
-     databaseHelper.exit();
-
-     System.out.println("Product successfully deleted.");
 	}
     
 
