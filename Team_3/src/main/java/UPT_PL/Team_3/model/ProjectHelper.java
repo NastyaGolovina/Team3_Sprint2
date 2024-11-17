@@ -102,9 +102,10 @@ public class ProjectHelper {
     	System.out.println("(1) - Delete calculation");
     	System.out.println("(2) - Delete logistics supply chain");
     	System.out.println("(3) - Delete product");
-    	System.out.println("(4) - Delete products by country");
-    	System.out.println("(5) - Delete logistics site");
-    	System.out.println("(6) - Delete transport");
+    	System.out.println("(4) - Delete country");
+    	System.out.println("(5) - Delete products by country");
+    	System.out.println("(6) - Delete logistics site");
+    	System.out.println("(7) - Delete transport");
     	System.out.println("\n******************************");
     }
 }
