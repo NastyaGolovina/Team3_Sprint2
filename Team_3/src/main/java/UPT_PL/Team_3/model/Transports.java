@@ -138,7 +138,7 @@ public class Transports {
  	
 	// Delete Transport From List
 	
-	public boolean deleteTransportById(ArrayList<Country>countries) {
+	public boolean deleteTransportById(ArrayList<Country>countries, LogisticsSupplyChains logisticsSupplyChains) {
 	    String transportId = ProjectHelper.inputStr("Enter the transport ID to delete: ");
 	    int transportIndex = searchTransport(transportId);
 
@@ -151,7 +151,7 @@ public class Transports {
 	    Transport transport = transports.get(transportIndex);
 
 	    // 1. Check if the transport is linked to any LogisticsSupplyChain
-	    LogisticsSupplyChains logisticsSupplyChains = new LogisticsSupplyChains();
+	    
 	    for (LogisticsSupplyChain supplyChain : logisticsSupplyChains.getSupplyChains()) {
 	        if (supplyChain.getTransport().getTransportId().equals(transportId)) {
 	            System.out.println("Cannot delete transport. It is linked to LogisticsSupplyChain.");

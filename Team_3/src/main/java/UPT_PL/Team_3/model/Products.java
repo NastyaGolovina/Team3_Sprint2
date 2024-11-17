@@ -177,7 +177,7 @@ public class Products {
 	 * Remove the product with the same productID from the ArrayList named ProductList.
 	 */
 	
-	public void deleteProduct(String productID,List<Country> countries, ArrayList<ProductsByCountry> products,String productByCountryId) {
+	public void deleteProduct(String productID,ArrayList<Country> countries) {
 		
 		// Ask for the product ID to delete
 		String productId = ProjectHelper.inputStr("Enter the product ID to delete: ");
@@ -195,9 +195,9 @@ public class Products {
 
 		for (Country country : countries) { // Process each country to delete the product with the specified productId,
 											// go thru each country in countries list
-			for (int i = 0; i < products.size(); i++) { // Iterate through the ProductByCountry list (products) to check
+			for (int i = 0; i < country.getProducts().size(); i++) { // Iterate through the ProductByCountry list (products) to check
 														// if the product is being used
-				if (products.get(i).getProduct().getProductID().equalsIgnoreCase(productId)) {
+				if (country.getProducts().get(i).getProduct().getProductID().equalsIgnoreCase(productId)) {
 					isProductUsed = true;
 					break;
 				}

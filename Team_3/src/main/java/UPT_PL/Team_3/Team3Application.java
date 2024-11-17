@@ -9,8 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = "UPT_PL.Team_3.repository")
 @EntityScan(basePackages = "UPT_PL.Team_3.model")
 public class Team3Application {
-    public static void main(String[] args) {
-        SpringApplication.run(Team3Application.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(Team3Application.class, args);
+	}
 }
-

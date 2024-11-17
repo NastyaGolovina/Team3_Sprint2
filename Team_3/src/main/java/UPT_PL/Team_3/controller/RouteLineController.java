@@ -38,7 +38,7 @@ public class RouteLineController {
 		return routeLineService.createRouteLine(routeLine);
 	}
 
-	@DeleteMapping("/{calculationId}")
+	@DeleteMapping("/calculation/{calculationId}")
 	public ResponseEntity<Void> deleteRouteLine(@PathVariable long calculationId) {
 		routeLineService.deleteRouteLine(calculationId);
 		return ResponseEntity.noContent().build();
