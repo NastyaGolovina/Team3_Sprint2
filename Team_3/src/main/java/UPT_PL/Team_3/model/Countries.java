@@ -236,7 +236,6 @@ public class Countries {
      System.out.println("Product successfully deleted.");
 	}
     
-<<<<<<< HEAD
 
     /**
      * Deletes a logistics site from the specified country if no dependencies are found.
