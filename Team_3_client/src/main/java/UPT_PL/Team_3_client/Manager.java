@@ -140,8 +140,7 @@ public class Manager {
 		readAllProducts();
 		readAllCountries();
 		readAllTransports();
-//		readAllLogisticsSites();
-//		countries.readAllLogisticsSitesWithJplq();
+		readAllLogisticsSites();
 //		countries.readAllProductsByCountrysWithJplq();
 		readAllSupplyChains();
 		readСalculation();
@@ -178,24 +177,28 @@ public class Manager {
 			System.out.println("Nothing found");
 		}
 	}
-//	/**
-//	 * readAllLogisticsSites 
-//	 */
-//	private void readAllLogisticsSites() {
-//		ResponseEntity<LogisticsSite[]> response = restTemplate.getForEntity(rootAPIURL + "logisticsSites", LogisticsSite[].class);
-//		
-//		if (response.getStatusCode().is2xxSuccessful()) {
-//			LogisticsSite[] logisticsSiteArr = response.getBody();
-//			if (logisticsSiteArr != null) {		
-//				for (LogisticsSite ls : logisticsSiteArr) {
-//					System.out.println(ls.toString());
-//				}
-//			} 
-//		} else {
-//			System.out.println("Nothing found");
-//		}
-//	}
-//	
+	/**
+	 * readAllLogisticsSites 
+	 */
+	private void readAllLogisticsSites() {
+		for(Country c : countries.getCountries()) {
+			ResponseEntity<LogisticsSite[]> response = restTemplate.getForEntity(rootAPIURL 
+					+ "logistics-sites/country/" 
+					+ c.getCountryId(),
+					LogisticsSite[].class);
+			
+			
+			if (response.getStatusCode().is2xxSuccessful()) {
+				LogisticsSite[] logisticsSiteArr = response.getBody();
+				if (logisticsSiteArr != null) {		
+					c.setSites(new ArrayList<LogisticsSite>(Arrays.asList(logisticsSiteArr)));
+				} 
+			} else {
+				System.out.println("Nothing found");
+			}
+		}	
+	}
+	
 	
 	private void readAllTransports() {
 		ResponseEntity<Transport[]> response = restTemplate.getForEntity(rootAPIURL + "transports", Transport[].class);
@@ -292,7 +295,7 @@ public class Manager {
 		}
 	}
 	/**
-	 * addLogisticsSiteToCountry old
+	 * addLogisticsSiteToCountry
 	 */
 	public void addLogisticsSitesToCountry() {
 		if(!countries.getCountries().isEmpty()) {
@@ -525,13 +528,7 @@ public class Manager {
 			}
 		} else {
 			System.out.println("Nothing found");
-		}
-
-	
-		
-		
-		
-		
+		}	
 	}
 	/**
 	 * deleteCalculation
