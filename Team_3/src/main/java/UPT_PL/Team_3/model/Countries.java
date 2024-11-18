@@ -267,34 +267,34 @@ public class Countries {
             return null;
         }
 
-        // Use DatabaseHelper for checking route lines linked to the site
-        DatabaseHelper databaseHelper = new DatabaseHelper();
-        databaseHelper.setup();
-        Session session = databaseHelper.getSessionFactory().openSession();
+       
+      
+        // Use RestAPIHelper to check for route lines linked to the logistics site
+        RestAPIHelper restAPIHelper = new RestAPIHelper();
+        ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate()
+                .getForEntity(restAPIHelper.getRootAPIURL() 
+                              + "routeLines/site/" 
+                              + selectedSite.getSiteId(), 
+                              RouteLine[].class);
 
-        try {
-            List<RouteLine> routeLines = session.createQuery(
-                    "FROM RouteLine rl WHERE rl.originSite.id = :siteId OR rl.destinationSite.id = :siteId", RouteLine.class)
-                    .setParameter("siteId", selectedSite.getSiteId())
-                    .getResultList();
-
-            // If there are route lines linked to the site, prevent deletion
-            if (!routeLines.isEmpty()) {
+        if (response.getStatusCode().is2xxSuccessful()) {
+            RouteLine[] routeLineArr = response.getBody();
+            if (routeLineArr != null && routeLineArr.length > 0) {
                 System.out.println("Error. You need to delete all the route lines associated with this logistics site before deleting it.");
                 return null;
             }
-
-            // If all checks pass, remove the logistics site from the country's list
-            String deletedSiteId = selectedSite.getSiteId();
-            country.getSites().remove(siteIndex);
-
-            System.out.println("Logistics site successfully deleted.");
-            return deletedSiteId;
-        } finally {
-            // Ensure session is closed properly
-            session.close();
-            databaseHelper.exit();
+        } else {
+            System.out.println("Failed to check route lines. Server returned status: " + response.getStatusCode());
+            return null;
         }
+
+        // If all checks pass, remove the logistics site from the country's list
+        String deletedSiteId = selectedSite.getSiteId();
+        country.getSites().remove(siteIndex);
+
+        System.out.println("Logistics site successfully deleted.");
+        return deletedSiteId;
+        
     }
 
 }
