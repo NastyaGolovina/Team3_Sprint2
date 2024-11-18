@@ -21,8 +21,8 @@ public class ProductController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Product> getProductById(@PathVariable String productID) {
-		Optional<Product> product = productService.getProductById(productID);
+	public ResponseEntity<Product> getProductById(@PathVariable String id) {
+		Optional<Product> product = productService.getProductById(id);
 
 		return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
@@ -33,8 +33,8 @@ public class ProductController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteProduct(@PathVariable String productID) {
-		productService.deleteProduct(productID);
+	public ResponseEntity<Void> deleteProduct(@PathVariable String id) {
+		productService.deleteProduct(id);
 		return ResponseEntity.noContent().build();
 	}
 }
