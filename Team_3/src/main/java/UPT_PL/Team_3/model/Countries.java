@@ -201,9 +201,6 @@ public class Countries {
     	 return;
      }
      
-   //Get/Retrieve the selected ProductByCountry
-     ProductsByCountry selectedProductsByCountry = country.getProducts().get(indexProducts);
-     
      // remove the product by country from the ProductsByCountry list 
      country.getProducts().remove(indexProducts);
      System.out.println("Product removed successfully.");
