@@ -1,7 +1,6 @@
 package UPT_PL.Team_3.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -139,12 +138,29 @@ public class Countries {
             }
         }
         
+        RestAPIHelper restAPIHelper = new RestAPIHelper();
+		ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate().
+												getForEntity(restAPIHelper.getRootAPIURL() 
+												+ "routeLines/country/" 
+														+ countryId,
+														RouteLine[].class);
+							
+		if (response.getStatusCode().is2xxSuccessful()) {
+			RouteLine[] routeLineArr = response.getBody();
+			if (routeLineArr != null) {	
+				if(routeLineArr.length == 0) {
+					countries.remove(countryIndex);
 
-        
-        countries.remove(countryIndex);
-
-        System.out.println("Country successfully deleted.");
-        return true;  
+			        System.out.println("Country successfully deleted.");
+			        return true;
+				}
+			}  else {
+				System.out.println("Cannot delete country. It is linked to RouteLine.");
+			}
+		}
+		
+		return false;
+  
     }
 
 
