@@ -7,22 +7,6 @@ import java.util.List;
  * The LogisticsSupplyChains class manages a collection of LogisticsSupplyChain objects.
  */
 
-//!!!!!!!!!!!!!!!!!!!S
-/*
- * Key changes and comments:
- * 1. Removed database-related methods:
- * All methods now only work with the supplyChains array, not the database.
- * 
- * 2. The addNewSupplyChain method now returns an object or null:
- * If all checks pass, the method creates a new LogisticsSupplyChain object and adds it to the supplyChains list.
- * If any check fails (e.g., invalid ID or transport), the method returns null.
- * 
- * 3. The deleteSupplyChainById method:
- * The method now deletes a supply chain by its ID from the supplyChains array without interacting with the database.
- * 
- * 4.!!!!!!!These changes fully comply with the requirements and do not affect other parts of the code.
- */
-
 public class LogisticsSupplyChains {
     private ArrayList<LogisticsSupplyChain> supplyChains; // List to store all supply chains
     
@@ -153,15 +137,15 @@ public class LogisticsSupplyChains {
      * @param chainId The ID of the supply chain to delete.
      */
     public boolean deleteSupplyChainById(String chainId) {
-        // Найдем цепочку поставок по ID
+        // find the supply chain by ID
         boolean isRemoved = supplyChains.removeIf(chain -> chain.getChainId().equals(chainId));
         
         if (isRemoved) {
             System.out.println("Supply chain with ID " + chainId + " successfully deleted.");
-            return true; // Возвращаем true, если цепочка была удалена
+            return true; // Return true if the chain has been deleted
         } else {
             System.out.println("Supply chain with ID " + chainId + " not found.");
-            return false; // Возвращаем false, если цепочка не найдена
+            return false; // Return false if the chain not founded
         }
     }
 
