@@ -20,15 +20,15 @@ public interface RouteLineRepository extends JpaRepository<RouteLine, String> {
 	@Query(value = "SELECT COUNT(*) > 0 FROM team_3.Route_Line WHERE calculationId = ?1", nativeQuery = true)
 	boolean existsByCalculationId(long calculationId);
 
-	@Query(value = "SELECT COUNT(*) > 0 FROM team_3.Route_Line WHERE countrySenderId = ?1 OR countryReceiverId = ?1", nativeQuery = true)
+	@Query(value = "SELECT COUNT(*) > 0 FROM team_3.Route_Line WHERE Country_Sender_Id = ?1 OR Country_Receiver_Id = ?1", nativeQuery = true)
 	boolean existsByCountryId(String countryId);
 
-	@Query(value = "SELECT COUNT(*) > 0 FROM team_3.Route_Line WHERE transportId = ?1", nativeQuery = true)
+	@Query(value = "SELECT COUNT(*) > 0 FROM team_3.Route_Line WHERE Transport_Id = ?1", nativeQuery = true)
 	boolean existsByTransportId(String transportId);
 
-	@Query(value = "SELECT COUNT(*) > 0 FROM team_3.Route_Line WHERE originSiteId = ?1 OR destinationSiteId = ?1", nativeQuery = true)
+	@Query(value = "SELECT COUNT(*) > 0 FROM team_3.Route_Line WHERE Logistics_Site_Sender_Id = ?1 OR Logistics_Site_Receiver_Id = ?1", nativeQuery = true)
 	boolean getRouteLineBySiteId(String siteId);
 
-	@Query(value = "SELECT COUNT(*) > FROM team_3.Route_Line WHERE productId = ?1", nativeQuery = true)
+	@Query(value = "SELECT COUNT(*) > FROM team_3.Route_Line WHERE Product_Id = ?1", nativeQuery = true)
 	boolean getRouteLineByProductId(String productId);
 }

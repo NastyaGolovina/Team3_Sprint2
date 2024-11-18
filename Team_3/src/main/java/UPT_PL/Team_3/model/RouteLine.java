@@ -40,7 +40,7 @@ public class RouteLine {
 	@JoinColumn(name = "Product_Id")
 	private Product product;
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn
+	@JoinColumn(name = "Transport_Id")
 	private Transport transport;
 	@Column(name = "quantity", nullable = false)
 	private double quantity;
