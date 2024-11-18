@@ -121,7 +121,8 @@ public class Country {
      * @param products
      * @return
      */
-    public ProductsByCountry addProductByCountry(Products products) {
+    public ArrayList<ProductsByCountry> addProductByCountry(Products products) {
+    	ArrayList<ProductsByCountry> successfullyAddedProducts = new ArrayList<ProductsByCountry>();
         ArrayList<Product> allProducts = products.getProductList();
 
         System.out.println("Available Products:");
@@ -156,6 +157,7 @@ public class Country {
                     // Create a new ProductsByCountry object
                     newProductByCountry = new ProductsByCountry(product, production, price, this);
                     this.products.add(newProductByCountry);
+                    successfullyAddedProducts.add(newProductByCountry);
                     System.out.println("Product " + product.getName() + " added successfully.");
                 }
             }
@@ -169,7 +171,7 @@ public class Country {
             System.out.println("Product Addition Process Completed.");
         }
 
-        return newProductByCountry; // Return the last added product or null if no product was added
+        return successfullyAddedProducts; // Return the last added product or null if no product was added
     }
 
  
