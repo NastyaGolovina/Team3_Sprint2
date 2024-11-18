@@ -279,22 +279,19 @@ public class Countries {
 
         if (response.getStatusCode().is2xxSuccessful()) {
             RouteLine[] routeLineArr = response.getBody();
-            if (routeLineArr != null && routeLineArr.length > 0) {
-                System.out.println("Error. You need to delete all the route lines associated with this logistics site before deleting it.");
-                return null;
+            if (routeLineArr != null && routeLineArr.length == 0) {
+            
+            	 String deletedSiteId = selectedSite.getSiteId();
+                 country.getSites().remove(siteIndex);
+
+                 System.out.println("Logistics site successfully deleted.");
+                 return deletedSiteId;
             }
         } else {
             System.out.println("Failed to check route lines. Server returned status: " + response.getStatusCode());
             return null;
         }
-
-        // If all checks pass, remove the logistics site from the country's list
-        String deletedSiteId = selectedSite.getSiteId();
-        country.getSites().remove(siteIndex);
-
-        System.out.println("Logistics site successfully deleted.");
-        return deletedSiteId;
-        
+        return null;
     }
 
 }
