@@ -49,7 +49,7 @@ public class Main {
                 break;
             case 8:
             	/**  Save logistics routes in DB **/
-//            	manager.writeLogisticsProcessorInDB();
+            	manager.writeLogisticsProcessorInDB();
                 break;
             case 9:
             	/** Print Products **/
