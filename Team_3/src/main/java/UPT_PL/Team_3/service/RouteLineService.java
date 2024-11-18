@@ -29,27 +29,27 @@ public class RouteLineService {
 	}
 	
 	public void deleteRouteLine(long calculationId) {
-		if (routeLineRepository.existsByCalculationId(calculationId)) {
-			deleteRouteLine(calculationId);
-		} else {
-			throw new RuntimeException("Book not found with id: " + calculationId);
-		}
-		
+//		if (routeLineRepository.existsByCalculationId(calculationId)) {
+//			deleteRouteLine(calculationId);
+//		} else {
+//			throw new RuntimeException("Book not found with id: " + calculationId);
+//		}
+		deleteRouteLine(calculationId);
 	}
 	
-	public boolean existsByCountryId(String countryId) {
+	public List<RouteLine> existsByCountryId(String countryId) {
 		return routeLineRepository.existsByCountryId(countryId);
 	}
 
-	public boolean existsByTransportId(String transportId) {
+	public List<RouteLine> existsByTransportId(String transportId) {
 		return routeLineRepository.existsByTransportId(transportId);
 	}
 
-	public boolean getRouteLineBySiteId(String siteId) {
+	public List<RouteLine> getRouteLineBySiteId(String siteId) {
 		return routeLineRepository.getRouteLineBySiteId(siteId);
 	}
 
-	public boolean getRouteLineByProductId(String productId) {
+	public List<RouteLine> getRouteLineByProductId(String productId) {
 		return routeLineRepository.getRouteLineByProductId(productId);
 	}
 }

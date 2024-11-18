@@ -45,28 +45,24 @@ public class RouteLineController {
 	
 	
     @GetMapping("/country/{countryId}")
-    public ResponseEntity<Boolean> existsByCountryId(@PathVariable String countryId) {
-        boolean exists = routeLineService.existsByCountryId(countryId);
-        return ResponseEntity.ok(exists);
+    public List<RouteLine> existsByCountryId(@PathVariable String countryId) {
+    	return routeLineService.existsByCountryId(countryId);
     }
 
     @GetMapping("/transport/{transportId}")
-    public ResponseEntity<Boolean> existsByTransportId(@PathVariable String transportId) {
-        boolean exists = routeLineService.existsByTransportId(transportId);
-        return ResponseEntity.ok(exists);
+    public List<RouteLine> existsByTransportId(@PathVariable String transportId) {
+        return routeLineService.existsByTransportId(transportId);
     }
 
 
     @GetMapping("/site/{siteId}")
-    public ResponseEntity<Boolean> getRouteLineBySiteId(@PathVariable String siteId) {
-        boolean exists = routeLineService.getRouteLineBySiteId(siteId);
-        return ResponseEntity.ok(exists);
+    public List<RouteLine> getRouteLineBySiteId(@PathVariable String siteId) {
+        return routeLineService.getRouteLineBySiteId(siteId);
     }
 
     @GetMapping("/product/{productId}")
-    public ResponseEntity<Boolean> getRouteLineByProductId(@PathVariable String productId) {
-        boolean exists = routeLineService.getRouteLineByProductId(productId);
-        return ResponseEntity.ok(exists);
+    public List<RouteLine> getRouteLineByProductId(@PathVariable String productId) {
+        return routeLineService.getRouteLineByProductId(productId);
     }
 }
 
