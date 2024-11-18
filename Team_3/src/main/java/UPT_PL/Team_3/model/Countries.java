@@ -215,7 +215,7 @@ public class Countries {
      *
      * @param chains The LogisticsSupplyChains instance, used to access the list of supply chains and check for dependencies.
      */
-    public boolean deleteLogisticsSite(LogisticsSupplyChains chains) {
+    public String deleteLogisticsSite(LogisticsSupplyChains chains) {
         // Request the country ID
         String countryId = ProjectHelper.inputStr("Enter the country ID: ");
         int countryIndex = searchCountry(countryId);
@@ -223,7 +223,7 @@ public class Countries {
         // Check if the country exists
         if (countryIndex == -1) {
             System.out.println("Country with the specified ID not found.");
-            return false;
+            return null;
         }
 
         Country country = countries.get(countryIndex);
@@ -231,7 +231,7 @@ public class Countries {
         // Check if the country has any logistics sites
         if (country.getSites().isEmpty()) {
             System.out.println("There are no logistics sites in this country.");
-            return false;
+            return null;
         }
 
         // Display the list of logistics sites in the country
@@ -246,7 +246,7 @@ public class Countries {
         // Validate the selected index
         if (siteIndex < 0 || siteIndex >= country.getSites().size()) {
             System.out.println("Invalid selection. Operation canceled.");
-            return false;
+            return null;
         }
 
         // Get the selected logistics site
@@ -255,7 +255,7 @@ public class Countries {
         // Check if the logistics site has any associated transport
         if (selectedSite.getSuppliedTransports() != null && !selectedSite.getSuppliedTransports().isEmpty()) {
             System.out.println("Error. The logistics site has associated transport. Deletion is not possible.");
-            return false;
+            return null;
         }
 
         // Check if the selected site is part of any active logistics supply chain
@@ -264,7 +264,7 @@ public class Countries {
 
         if (isPartOfChain) {
             System.out.println("Error. The logistics site is part of an active supply chain. Deletion is not possible.");
-            return false;
+            return null;
         }
 
         // Use DatabaseHelper for checking route lines linked to the site
@@ -281,20 +281,22 @@ public class Countries {
             // If there are route lines linked to the site, prevent deletion
             if (!routeLines.isEmpty()) {
                 System.out.println("Error. You need to delete all the route lines associated with this logistics site before deleting it.");
-                return false;
+                return null;
             }
 
             // If all checks pass, remove the logistics site from the country's list
+            String deletedSiteId = selectedSite.getSiteId();
             country.getSites().remove(siteIndex);
 
             System.out.println("Logistics site successfully deleted.");
-            return true;
+            return deletedSiteId;
         } finally {
             // Ensure session is closed properly
             session.close();
             databaseHelper.exit();
         }
     }
+
 }
 
 
