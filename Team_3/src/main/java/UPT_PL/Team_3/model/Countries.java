@@ -166,7 +166,7 @@ public class Countries {
 
 // Method to delete product by country, delete product from a certain country
     
-    public void deleteProductsByCountry() {
+    public String deleteProductsByCountry() {
     	
     	 // Prompt for the country ID to delete
         String countryId = ProjectHelper.inputStr("Enter the country ID to delete: ");
@@ -175,7 +175,7 @@ public class Countries {
         // Check if the country exists
         if (countryPos == -1) {
             System.out.println("Country with the specified ID not found.");
-            return;
+            return null;
         }
 
        Country country = countries.get(countryPos);
@@ -183,7 +183,7 @@ public class Countries {
        // check if country has any products
        if(country.getProducts().isEmpty()) {
     	   System.out.println("There are no products list in this country.");
-          return;
+          return null;
        }
        // Display the list of products in the country
        System.out.println("List of products :");
@@ -198,12 +198,14 @@ public class Countries {
      // validation for the index of product
      if(indexProducts < 0 || indexProducts >= country.getProducts().size()) {
     	 System.out.println("Invalid index of Product, try again");
-    	 return;
+    	 return null;
      }
      
      // remove the product by country from the ProductsByCountry list 
      country.getProducts().remove(indexProducts);
      System.out.println("Product removed successfully.");
+     return country.getProducts().get(indexProducts).getProductByCountryId();
+    
 	}
     
 
