@@ -110,8 +110,7 @@ public class Countries {
     
  // DELETE Country by Id
     
-    public boolean deleteCountryById() {
-        String countryId = ProjectHelper.inputStr("Enter the country ID to delete: ");
+    public boolean deleteCountryById(String countryId) {
         int countryIndex = searchCountry(countryId);
 
         // Check if the country exists in the list

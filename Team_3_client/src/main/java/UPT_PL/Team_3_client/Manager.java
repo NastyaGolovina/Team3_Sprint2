@@ -585,7 +585,7 @@ public class Manager {
 	 */
 	public void deleteCountry() {
 		String countryID = ProjectHelper.inputStr("Inpit Country ID :");
-		boolean idDeleted =  countries.deleteCountryById();
+		boolean idDeleted =  countries.deleteCountryById(countryID);
 		if (idDeleted) {
 			restTemplate.delete(rootAPIURL + "countries/" + countryID);
 		}
