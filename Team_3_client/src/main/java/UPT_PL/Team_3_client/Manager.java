@@ -595,7 +595,7 @@ public class Manager {
 	 */
 	public void deleteTransport() {
 		String transporttID = ProjectHelper.inputStr("Inpit Transport ID :");
-		boolean idDeleted = transports.deleteTransportById(countries.getCountries(),logisticsSupplyChains);
+		boolean idDeleted = transports.deleteTransportById(transporttID, countries.getCountries(),logisticsSupplyChains);
 		if (idDeleted) {
 			restTemplate.delete(rootAPIURL + "transports/" + transporttID);
 		}

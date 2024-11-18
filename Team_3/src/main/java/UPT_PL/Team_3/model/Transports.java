@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.springframework.http.ResponseEntity;
 
 /**
  * The Transports class represents a collection of Transport objects. It
@@ -138,8 +139,8 @@ public class Transports {
  	
 	// Delete Transport From List
 	
-	public boolean deleteTransportById(ArrayList<Country>countries, LogisticsSupplyChains logisticsSupplyChains) {
-	    String transportId = ProjectHelper.inputStr("Enter the transport ID to delete: ");
+	public boolean deleteTransportById( String transportId, ArrayList<Country>countries, LogisticsSupplyChains logisticsSupplyChains) {
+	    
 	    int transportIndex = searchTransport(transportId);
 
 	    // Check if the transport exists in the list
@@ -169,29 +170,30 @@ public class Transports {
 	        }
 	    }
 
-	    // 3. Check if the transport is linked to any RouteLine
-	    DatabaseHelper databaseHelper = new DatabaseHelper();
-	    databaseHelper.setup();
-	    Session session = databaseHelper.getSessionFactory().openSession();
+	   
+	    
+	    RestAPIHelper restAPIHelper = new RestAPIHelper();
+		ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate().
+												getForEntity(restAPIHelper.getRootAPIURL() 
+												+ "routeLines/transport/" 
+														+ transportId,
+														RouteLine[].class);
+							
+		if (response.getStatusCode().is2xxSuccessful()) {
+			RouteLine[] routeLineArr = response.getBody();
+			if (routeLineArr != null) {	
+				if(routeLineArr.length == 0) {
+					// Proceed to delete the transport from the list
+				    transports.remove(transportIndex);
+				    System.out.println("Transport successfully deleted.");
+				    return true;
+				}
+			}  else {
+				System.out.println("Cannot delete country. It is linked to RouteLine.");
+			}
+		}
+	    
+	    return false;
 
-	    List<RouteLine> routeLines = session.createQuery(
-	            "FROM RouteLine rl WHERE rl.transport.id = :transportId", RouteLine.class)
-	            .setParameter("transportId", transportId)
-	            .getResultList();
-
-	    if (!routeLines.isEmpty()) {
-	        System.out.println("Cannot delete transport. It is linked to RouteLine.");
-	        session.close();
-	        databaseHelper.exit();
-	        return false;  
-	    }
-
-	    session.close();
-	    databaseHelper.exit();
-
-	    // Proceed to delete the transport from the list
-	    transports.remove(transportIndex);
-	    System.out.println("Transport successfully deleted.");
-	    return true;
 	}
 }
