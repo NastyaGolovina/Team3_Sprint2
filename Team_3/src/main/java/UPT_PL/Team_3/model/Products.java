@@ -218,7 +218,7 @@ public class Products {
 					return true;
 				}
 			} else {
-				System.out.println("Cannot delete country. It is linked to RouteLine.");
+				System.out.println("Cannot delete product. It is linked to RouteLine.");
 			}
 		}
 

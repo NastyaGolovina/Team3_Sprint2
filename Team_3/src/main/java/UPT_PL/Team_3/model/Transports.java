@@ -189,7 +189,7 @@ public class Transports {
 				    return true;
 				}
 			}  else {
-				System.out.println("Cannot delete country. It is linked to RouteLine.");
+				System.out.println("Cannot delete transport. It is linked to RouteLine.");
 			}
 		}
 	    
