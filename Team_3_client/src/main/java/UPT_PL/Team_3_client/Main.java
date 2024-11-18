@@ -88,7 +88,7 @@ public class Main {
 				}
 				case 3: {
 					/** Delete product **/
-					
+//					manager.deleteProduct();
 					break;
 				}
 				case 4: {

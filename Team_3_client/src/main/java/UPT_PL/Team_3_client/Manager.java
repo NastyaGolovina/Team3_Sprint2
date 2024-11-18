@@ -572,14 +572,14 @@ public class Manager {
 	}
 	
 	
-//	public void deleteProduct() {
-//		String productID =ProjectHelper.inputStr("Inpit Product ID :");
-//		boolean idDeleted = products.deleteProduct(productID,
-//				countries.getCountries());
-//		if(idDeleted) {
-//			restTemplate.delete(rootAPIURL + "products/" + productID);
-//		}
-//	}
+	public void deleteProduct() {
+		String productID =ProjectHelper.inputStr("Inpit Product ID :");
+		boolean idDeleted = products.deleteProduct(productID,
+				countries.getCountries());
+		if(idDeleted) {
+			restTemplate.delete(rootAPIURL + "products/" + productID);
+		}
+	}
 	/**
 	 * deleteCountry
 	 */

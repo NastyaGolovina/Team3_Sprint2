@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.springframework.http.ResponseEntity;
 
 
 /**
@@ -172,49 +173,58 @@ public class Products {
 	}
 
 	
-	/** Delete Product by productId in array list
+	/**
+	 * Delete Product by productId in array list
 	 * 
-	 * Remove the product with the same productID from the ArrayList named ProductList.
+	 * Remove the product with the same productID from the ArrayList named
+	 * ProductList.
 	 */
-	
-	public void deleteProduct(String productID,ArrayList<Country> countries) {
-		
-		// Ask for the product ID to delete
-		String productId = ProjectHelper.inputStr("Enter the product ID to delete: ");
+
+	public boolean deleteProduct(String productID, ArrayList<Country> countries) {
 
 		// Check if product exists in the database or ProductList before proceeding
 		int productPos = searchProduct(productID);
 		if (productPos == -1) {
 			System.out.println("Error: Product with ID " + productID + " does not exist. No product to delete.");
 
-			return;
+			return false;
 		}
 
 		// Check if the product is being used in ProductsByCountry
-		boolean isProductUsed = false; // Initially assume the product is not in use in ProductByCountry
 
 		for (Country country : countries) { // Process each country to delete the product with the specified productId,
 											// go thru each country in countries list
-			for (int i = 0; i < country.getProducts().size(); i++) { // Iterate through the ProductByCountry list (products) to check
-														// if the product is being used
-				if (country.getProducts().get(i).getProduct().getProductID().equalsIgnoreCase(productId)) {
-					isProductUsed = true;
-					break;
+			for (int i = 0; i < country.getProducts().size(); i++) { // Iterate through the ProductByCountry list
+																		// (products) to check
+				// if the product is being used
+				if (country.getProducts().get(i).getProduct().getProductID().equalsIgnoreCase(productID)) {
+					System.out.println("Error: Product with ID " + productID + " is in use and cannot be deleted.");
+					return false;
 				}
 			}
-
-			if (!isProductUsed) {
-				// Delete from the list
-				ProductList.remove(productPos);
-				System.out.println("Product with ID " + productID + " has been successfully deleted.");
-		    } else {
-		        System.out.println("Error: Product with ID " + productID + " is in use and cannot be deleted.");
-		    }
-			}
-
 		}
 
+		RestAPIHelper restAPIHelper = new RestAPIHelper();
+		ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate()
+				.getForEntity(restAPIHelper.getRootAPIURL() + "routeLines/product/" + productID, RouteLine[].class);
+
+		if (response.getStatusCode().is2xxSuccessful()) {
+			RouteLine[] routeLineArr = response.getBody();
+			if (routeLineArr != null) {
+				if (routeLineArr.length == 0) {
+					// Delete from the list
+					ProductList.remove(productPos);
+					System.out.println("Product with ID " + productID + " has been successfully deleted.");
+					return true;
+				}
+			} else {
+				System.out.println("Cannot delete country. It is linked to RouteLine.");
+			}
+		}
+
+		return false;
 	}
+}
 
 
 
