@@ -1,10 +1,12 @@
 package UPT_PL.Team_3.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
 import org.hibernate.Session;
+import org.springframework.http.ResponseEntity;
 
 /**
  * The Countries class represents a collection of Country objects. It provides
@@ -136,7 +138,9 @@ public class Countries {
                 return false;
             }
         }
+        
 
+        
         countries.remove(countryIndex);
 
         System.out.println("Country successfully deleted.");

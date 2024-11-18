@@ -2,11 +2,12 @@ package UPT_PL.Team_3.model;
 
 import java.util.Scanner;
 
+
 public class ProjectHelper {
 	/** Static variable Scanner **/
 	private static Scanner input = new Scanner(System.in);
 	
-	
+
 	/**
      * Input string
      * 
@@ -25,7 +26,8 @@ public class ProjectHelper {
         return line;
     }
 
-    /**
+   
+	/**
      * Input Double
      * 
      * @param massage which will output during the ask
