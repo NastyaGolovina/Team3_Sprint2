@@ -103,7 +103,7 @@ public class Main {
 				}
 				case 6: {
 					/** Delete logistics site **/
-					
+					manager.deleteLogisticsSite();
 					break;
 				}
 				case 7: {

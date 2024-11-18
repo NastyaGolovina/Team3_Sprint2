@@ -611,7 +611,15 @@ public class Manager {
 		}
 		
 	}
-	
+	/**
+	 * deleteCountry
+	 */
+	public void deleteLogisticsSite() {
+		String siteID = countries.deleteLogisticsSite(logisticsSupplyChains);	
+		if (siteID != null) {
+			restTemplate.delete(rootAPIURL + "logistics-sites/" + siteID);
+		}
+	}
 	/**
 	 * printProducts
 	 */
