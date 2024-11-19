@@ -76,6 +76,8 @@ public class Main {
             	ProjectHelper.showDeleteMenuInfo();
             	int deleteCommand = ProjectHelper.inputInt("Input delete option : ");
             	switch (deleteCommand) {
+            	case 0:
+                    break;
 				case 1: {
 					/** Delete calculation **/
 					manager.deleteCalculation();
