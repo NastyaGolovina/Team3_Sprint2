@@ -28,7 +28,7 @@ public class CalculationController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Calculation> getCalculationById(@PathVariable Long id) {
+	public ResponseEntity<Calculation> getCalculationById(@PathVariable String id) {
 		Optional<Calculation> book = calculationService.getCalculationById(id);
 		return book.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
@@ -39,7 +39,7 @@ public class CalculationController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteCalculation(@PathVariable Long id) {
+	public ResponseEntity<Void> deleteCalculation(@PathVariable String id) {
 		calculationService.deleteCalculation(id);
 		return ResponseEntity.noContent().build();
 	}

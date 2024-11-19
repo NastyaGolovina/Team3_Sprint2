@@ -18,6 +18,7 @@ import UPT_PL.Team_3.model.LogisticsSupplyChains;
 import UPT_PL.Team_3.model.Product;
 import UPT_PL.Team_3.model.ProductRequestProcessor;
 import UPT_PL.Team_3.model.Products;
+import UPT_PL.Team_3.model.ProductsByCountry;
 import UPT_PL.Team_3.model.ProjectHelper;
 import UPT_PL.Team_3.model.RouteLine;
 import UPT_PL.Team_3.model.Transport;
@@ -139,7 +140,7 @@ public class Manager {
 		readAllCountries();
 		readAllTransports();
 		readAllLogisticsSites();
-//		countries.readAllProductsByCountrysWithJplq();
+		readAllProductsByCountrys();
 		readAllSupplyChains();
 		readСalculation();
 	}
@@ -176,7 +177,29 @@ public class Manager {
 		}
 	}
 	/**
-	 * readAllLogisticsSites 
+	 * readAllProductsByCountrys 
+	 */
+	private void readAllProductsByCountrys() {
+		for(Country c : countries.getCountries()) {
+			ResponseEntity<ProductsByCountry[]> response = restTemplate.getForEntity(rootAPIURL 
+					+ "products-by-country/country/" 
+					+ c.getCountryId(),
+					ProductsByCountry[].class);
+			
+			
+			if (response.getStatusCode().is2xxSuccessful()) {
+				ProductsByCountry[] productsByCountryArr = response.getBody();
+				if (productsByCountryArr != null) {		
+					c.setProducts(new ArrayList<ProductsByCountry>(Arrays.asList(productsByCountryArr)));
+				} 
+			} else {
+				System.out.println("Nothing found");
+			}
+		}	
+	}
+	
+	/**
+	 * 
 	 */
 	private void readAllLogisticsSites() {
 		for(Country c : countries.getCountries()) {
@@ -196,7 +219,6 @@ public class Manager {
 			}
 		}	
 	}
-	
 	
 	private void readAllTransports() {
 		ResponseEntity<Transport[]> response = restTemplate.getForEntity(rootAPIURL + "transports", Transport[].class);
@@ -327,7 +349,7 @@ public class Manager {
 	}
 	
 	/**
-	 * old
+	 * addProductsToCountry
 	 */
 	public void addProductsToCountry() {
 		if(!countries.getCountries().isEmpty()) {
@@ -337,8 +359,28 @@ public class Manager {
 				System.out.println("Country doesn't exist");
 				CountryPos = countries.searchCountry(ProjectHelper.inputStr("Input country id :"));
 			}
+						
+			ArrayList<ProductsByCountry> newProductsByCountry = countries.getCountries().get(CountryPos).addProductByCountry(products);
 			
-			countries.getCountries().get(CountryPos).addProductByCountry(products);
+			if(!newProductsByCountry.isEmpty()) {
+				for(ProductsByCountry p : newProductsByCountry) {
+					
+					ResponseEntity<ProductsByCountry> response = restTemplate.postForEntity(rootAPIURL + "products-by-country", p,
+							ProductsByCountry.class);
+					if (response.getStatusCode().is2xxSuccessful()) {
+						ProductsByCountry body = response.getBody();
+						if (body != null) {
+							System.out.println(p.getProductByCountryId() + " successful save in BD");
+						} else {
+							System.out.println("No body");
+						}
+					} else {
+						System.out.println("Nothing found");
+					}
+					
+				}
+			}
+	
 		} else {
 			System.out.println("The countries list is empty.");
 		}
@@ -457,11 +499,9 @@ public class Manager {
 							RouteLine rBody = routeLineResponse.getBody();
 							if (rBody == null) {
 								System.out.println("No body");
-								break;
 							} 
 						} else {
 							System.out.println("Nothing found");
-							break;
 						}
 					}
 				} else {
@@ -504,7 +544,7 @@ public class Manager {
 				}
 				
 				if (calculationNum != 0) {
-					long calculationId = calculations.get(calculationNum - 1).getCalculationId();
+					String calculationId = calculations.get(calculationNum - 1).getCalculationId();
 
 					
 					ResponseEntity<RouteLine[]> routeLineresponse = restTemplate.
@@ -513,10 +553,9 @@ public class Manager {
 					
 					if (routeLineresponse.getStatusCode().is2xxSuccessful()) {
 						RouteLine[] rBody = routeLineresponse.getBody();
-						if (rBody != null) {	
-							List<RouteLine> routeLines = Arrays.asList(rBody);
+						if (rBody != null) {
 							this.logisticsProcessor = new LogisticsProcessor();
-							logisticsProcessor.setLogisticsRoutes((ArrayList<RouteLine>) routeLines);
+							logisticsProcessor.setLogisticsRoutes(new ArrayList<RouteLine>(Arrays.asList(rBody)) );
 							logisticsProcessor.setCurrentСalculation(calculations.get(calculationNum - 1));
 						} 
 					} else {
@@ -554,12 +593,12 @@ public class Manager {
 				
 				
 				if (calculationNum != 0) {
-					long calculationId = calculations.get(calculationNum - 1).getCalculationId();
+					String calculationId = calculations.get(calculationNum - 1).getCalculationId();
 			
 				    restTemplate.delete(rootAPIURL + "routeLines/calculation/" + calculationId);
 				    restTemplate.delete(rootAPIURL + "calculations/" + calculationId);
 
-		            if((!logisticsProcessor.isCurrentСalculationEmpty()) && (logisticsProcessor.getCurrentСalculation().getCalculationId() == calculationId)) {
+		            if((!logisticsProcessor.isCurrentСalculationEmpty()) && (logisticsProcessor.getCurrentСalculation().getCalculationId().equalsIgnoreCase(calculationId))) {
 		            	productRequestProcessor = new ProductRequestProcessor();
 		    			logisticsProcessor = new LogisticsProcessor();
 		            }
@@ -618,6 +657,16 @@ public class Manager {
 		String siteID = countries.deleteLogisticsSite(logisticsSupplyChains);	
 		if (siteID != null) {
 			restTemplate.delete(rootAPIURL + "logistics-sites/" + siteID);
+		}
+	}
+	
+	/**
+	 * deleteCountry
+	 */
+	public void deleteProductsByCountry() {
+		String productsByCountryID = countries.deleteProductsByCountry();	
+		if (productsByCountryID != null) {
+			restTemplate.delete(rootAPIURL + "products-by-country/" + productsByCountryID);
 		}
 	}
 	/**

@@ -98,7 +98,7 @@ public class Main {
 				}
 				case 5: {
 					/** Delete products by country **/
-					
+					manager.deleteProductsByCountry();
 					break;
 				}
 				case 6: {

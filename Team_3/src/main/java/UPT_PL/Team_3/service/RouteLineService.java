@@ -20,7 +20,7 @@ public class RouteLineService {
 		return routeLineRepository.findAll();
 	}
 	
-	public List<RouteLine> getRouteLinesByCalculationId(long calculationId) {
+	public List<RouteLine> getRouteLinesByCalculationId(String calculationId) {
         return routeLineRepository.getRouteLineByCalculationID(calculationId);
     }
 
@@ -28,20 +28,15 @@ public class RouteLineService {
 		return routeLineRepository.save(routeLine);
 	}
 	
-	public void deleteRouteLine(long calculationId) {
-//		if (routeLineRepository.existsByCalculationId(calculationId)) {
-//			deleteRouteLine(calculationId);
-//		} else {
-//			throw new RuntimeException("Book not found with id: " + calculationId);
-//		}
-		deleteRouteLine(calculationId);
+	public void deleteRouteLine(String calculationId) {
+		routeLineRepository.deleteRouteLineByCalculationID(calculationId);
 	}
 	
-	public List<RouteLine> existsByCountryId(String countryId) {
+	public List<RouteLine> getRouteLineCountryId(String countryId) {
 		return routeLineRepository.existsByCountryId(countryId);
 	}
 
-	public List<RouteLine> existsByTransportId(String transportId) {
+	public List<RouteLine> getRouteLineTransportId(String transportId) {
 		return routeLineRepository.existsByTransportId(transportId);
 	}
 

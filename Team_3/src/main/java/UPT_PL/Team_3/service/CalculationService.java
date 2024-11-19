@@ -22,7 +22,7 @@ public class CalculationService {
 		return calculationRepository.findAll();
 	}
 
-	public Optional<Calculation> getCalculationById(long id) {
+	public Optional<Calculation> getCalculationById(String id) {
 		return calculationRepository.findById(id);
 	}
 
@@ -30,7 +30,7 @@ public class CalculationService {
 		return calculationRepository.save(calculation);
 	}
 
-	public void deleteCalculation(Long id) {
+	public void deleteCalculation(String id) {
 		if (calculationRepository.existsById(id)) {
 			calculationRepository.deleteById(id);
 		} else {

@@ -1,6 +1,7 @@
 package UPT_PL.Team_3.model;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,10 +17,9 @@ public class Calculation {
 	//	Instance variable
 	@Id                                                    
 	@Column(name = "Calculation_Id", nullable = false)
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long calculationId;	
+	private String calculationId;	
 	@Column(name = "calculationDate", nullable = false)
-	private LocalDate calculationDate;
+	private String calculationDate;
 	@Column(name = "calculationDescription",length = 255, nullable = false)
 	private String calculationDescription;
 	@Column(name = "sortBy",length = 50, nullable = false)
@@ -40,7 +40,8 @@ public class Calculation {
 	 * @param calculationDescription
 	 */
 	public Calculation(String calculationDescription) {
-		this.calculationDate = LocalDate.now() ;
+		this.calculationId = UUID.randomUUID().toString();
+		this.calculationDate = LocalDate.now().toString() ;
 		this.calculationDescription = calculationDescription;
 	}
 	
@@ -67,25 +68,25 @@ public class Calculation {
 	/**
 	 * @return the calculationId
 	 */
-	public long getCalculationId() {
+	public String getCalculationId() {
 		return calculationId;
 	}
 	/**
 	 * @param calculationId the calculationId to set
 	 */
-	public void setCalculationId(long calculationId) {
+	public void setCalculationId(String calculationId) {
 		this.calculationId = calculationId;
 	}
 	/**
 	 * @return the calculationDate
 	 */
-	public LocalDate getCalculationDate() {
+	public String getCalculationDate() {
 		return calculationDate;
 	}
 	/**
 	 * @param calculationDate the calculationDate to set
 	 */
-	public void setCalculationDate(LocalDate calculationDate) {
+	public void setCalculationDate(String calculationDate) {
 		this.calculationDate = calculationDate;
 	}
 	/**

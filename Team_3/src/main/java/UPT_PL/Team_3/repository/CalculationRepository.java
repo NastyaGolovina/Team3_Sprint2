@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import UPT_PL.Team_3.model.Calculation;
 
 @Repository
-public interface CalculationRepository extends JpaRepository<Calculation, Long> {
+public interface CalculationRepository extends JpaRepository<Calculation, String> {
 }

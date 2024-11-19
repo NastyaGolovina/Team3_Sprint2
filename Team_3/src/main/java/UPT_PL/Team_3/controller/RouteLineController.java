@@ -28,30 +28,30 @@ public class RouteLineController {
 	}
 	
 	@GetMapping("/calculation/{calculationId}")
-	public List<RouteLine> getRouteLinesByCalculationId(@PathVariable long calculationId) {
+	public List<RouteLine> getRouteLinesByCalculationId(@PathVariable String calculationId) {
 		return routeLineService.getRouteLinesByCalculationId(calculationId);
 	}
 
 	@PostMapping
-	public RouteLine createBook(@RequestBody RouteLine routeLine) {
+	public RouteLine createRouteLine(@RequestBody RouteLine routeLine) {
 		return routeLineService.createRouteLine(routeLine);
 	}
 
 	@DeleteMapping("/calculation/{calculationId}")
-	public ResponseEntity<Void> deleteRouteLine(@PathVariable long calculationId) {
+	public ResponseEntity<Void> deleteRouteLine(@PathVariable String calculationId) {
 		routeLineService.deleteRouteLine(calculationId);
 		return ResponseEntity.noContent().build();
 	}
 	
 	
     @GetMapping("/country/{countryId}")
-    public List<RouteLine> existsByCountryId(@PathVariable String countryId) {
-    	return routeLineService.existsByCountryId(countryId);
+    public List<RouteLine> getRouteLineCountryId(@PathVariable String countryId) {
+    	return routeLineService.getRouteLineCountryId(countryId);
     }
 
     @GetMapping("/transport/{transportId}")
-    public List<RouteLine> existsByTransportId(@PathVariable String transportId) {
-        return routeLineService.existsByTransportId(transportId);
+    public List<RouteLine> getRouteLineTransportId(@PathVariable String transportId) {
+        return routeLineService.getRouteLineTransportId(transportId);
     }
 
 

@@ -202,9 +202,10 @@ public class Countries {
      }
      
      // remove the product by country from the ProductsByCountry list 
+     String productsByCountryID = country.getProducts().get(indexProducts).getProductByCountryId();
      country.getProducts().remove(indexProducts);
      System.out.println("Product removed successfully.");
-     return country.getProducts().get(indexProducts).getProductByCountryId();
+     return productsByCountryID;
     
 	}
     
@@ -254,11 +255,11 @@ public class Countries {
         // Get the selected logistics site
         LogisticsSite selectedSite = country.getSites().get(siteIndex);
 
-        // Check if the logistics site has any associated transport
-        if (selectedSite.getSuppliedTransports() != null && !selectedSite.getSuppliedTransports().isEmpty()) {
-            System.out.println("Error. The logistics site has associated transport. Deletion is not possible.");
-            return null;
-        }
+//        // Check if the logistics site has any associated transport
+//        if (selectedSite.getSuppliedTransports() != null && !selectedSite.getSuppliedTransports().isEmpty()) {
+//            System.out.println("Error. The logistics site has associated transport. Deletion is not possible.");
+//            return null;
+//        }
 
         // Check if the selected site is part of any active logistics supply chain
         boolean isPartOfChain = chains.getSupplyChains().stream()
