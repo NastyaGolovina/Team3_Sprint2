@@ -101,6 +101,7 @@ public class ProjectHelper {
      */
     public static void showDeleteMenuInfo() {
     	System.out.println("\n******************************");
+    	System.out.println("(0) - Exit");
     	System.out.println("(1) - Delete calculation");
     	System.out.println("(2) - Delete logistics supply chain");
     	System.out.println("(3) - Delete product");
