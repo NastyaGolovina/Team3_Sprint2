@@ -142,7 +142,7 @@ public class Manager {
 		readAllLogisticsSites();
 		readAllProductsByCountrys();
 		readAllSupplyChains();
-		readСalculation();
+//		readСalculation();
 	}
 	/*
 	 * readAllProducts
