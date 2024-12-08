@@ -2,12 +2,14 @@ package UPT_PL.Team_3_GraphUI;
 
 
 import UPT_PL.Team_3.model.Country;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -21,6 +23,7 @@ public class CountriesStage extends Stage {
 	private TextField countryIdField;
 	private TextField nameField;
 	private TextField populationField;
+	private ListView<String> listViewCtrl;
 	
 	/**
 	 * Constructor
@@ -49,7 +52,7 @@ public class CountriesStage extends Stage {
 		Button btnSite = new Button("Site");
 		Button btnProductsByCountry = new Button("ProductsByCountry");
 		
-		VBox VBoxList = new VBox();
+//		VBox VBoxList = new VBox();
 		VBox VBoxResult = new VBox();
 		
 		
@@ -76,26 +79,38 @@ public class CountriesStage extends Stage {
 		});
 		
 		root.getChildren().addAll(new HBox[] { HButtonsBox, HInfoBox});
-		root.setMargin(HButtonsBox, new Insets(10, 0, 0, 0));
-		HButtonsBox.getChildren().addAll(new Button[] {btnNew, btnEdit, btnDelete, btnSite, btnProductsByCountry});
-		HInfoBox.getChildren().addAll(new VBox[] {VBoxList,VBoxResult});
-		ListView listView = fillListView(manager);	
-		VBoxList.getChildren().add(listView);
-		VBoxList.setPadding(new Insets(0, 0, 0, 20));
+		VBox.setMargin(HButtonsBox, new Insets(10, 0, 0, 0));
 		VBox.setVgrow(HInfoBox, Priority.ALWAYS);
+		
+		HButtonsBox.getChildren().addAll(new Button[] {btnNew, btnEdit, btnDelete, btnSite, btnProductsByCountry});
+		//HInfoBox.getChildren().addAll(new VBox[] {VBoxList,VBoxResult});
+		listViewCtrl = fillListView(manager);
+		listViewCtrl.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+		HInfoBox.getChildren().add(listViewCtrl);
+		HInfoBox.getChildren().add(VBoxResult);
+		HBox.setMargin(listViewCtrl, new Insets(0,10,10,10));
+		//VBoxList.getChildren().add(listView);
+		//VBoxList.setPadding(new Insets(0, 0, 0, 20));
 		VBoxResult.getChildren().add(buildUICountryFilds());
 		
-		listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+		listViewCtrl.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
             	fillGrid(String.valueOf(newValue), manager);
             }
 		});
 		
-		this.setScene(new Scene(root, 500, 500));
+		this.setScene(new Scene(root,750,750));
+		
+		this.setOnShown(event -> {
+			Platform.runLater(() -> {
+				listViewCtrl.requestFocus();
+				listViewCtrl.getSelectionModel().select(0);
+			});
+		});
 	}
 	
-	public ListView fillListView(Manager manager) {
-		ListView listView = new ListView();
+	public ListView<String> fillListView(Manager manager) {
+		ListView<String> listView = new ListView<String>();
 		for(Country c : manager.getCountries().getCountries()) {
 			listView.getItems().add(c.getCountryId()); 
 		}
