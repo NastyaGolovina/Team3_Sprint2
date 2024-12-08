@@ -4,8 +4,8 @@ import org.springframework.web.client.RestTemplate;
 
 public class RestAPIHelper {
 	// Static variable
-	private String rootAPIURL = "http://localhost:8080/api/";
-	private RestTemplate restTemplate = new RestTemplate();
+	private static String rootAPIURL = "http://localhost:8080/api/";
+	private static RestTemplate restTemplate = new RestTemplate();
 	
 	
 

@@ -33,8 +33,8 @@ public class Manager {
 	private ProductRequestProcessor productRequestProcessor;
 	private LogisticsProcessor logisticsProcessor;
 	// Class variable
-	private RestTemplate restTemplate = new RestTemplate();
-	private String rootAPIURL = "http://localhost:8080/api/";
+	private static RestTemplate restTemplate = new RestTemplate();
+	private static String rootAPIURL = "http://localhost:8080/api/";
 	
 	/**
 	 * Constructor
