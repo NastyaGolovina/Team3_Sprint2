@@ -19,10 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class CountriesStage extends Stage {
-	
-	private TextField countryIdField;
-	private TextField nameField;
-	private TextField populationField;
+
 	private ListView<String> listViewCtrl;
 	
 	/**
@@ -58,7 +55,7 @@ public class CountriesStage extends Stage {
 		
 
 		btnNew.setOnAction(ae -> {
-			CountryCreateStage countryCreateStage = new CountryCreateStage(manager);
+			CountryUpdateCreateStage countryCreateStage = new CountryUpdateCreateStage(manager);
 			countryCreateStage.show();
 		});
 		
@@ -91,11 +88,12 @@ public class CountriesStage extends Stage {
 		HBox.setMargin(listViewCtrl, new Insets(0,10,10,10));
 		//VBoxList.getChildren().add(listView);
 		//VBoxList.setPadding(new Insets(0, 0, 0, 20));
-		VBoxResult.getChildren().add(buildUICountryFilds());
+		CountryGridPane countryGridPane = buildUICountryFilds();
+		VBoxResult.getChildren().add(countryGridPane.getGrid());
 		
 		listViewCtrl.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-            	fillGrid(String.valueOf(newValue), manager);
+            	countryGridPane.fillGrid(String.valueOf(newValue), manager);
             }
 		});
 		
@@ -117,45 +115,42 @@ public class CountriesStage extends Stage {
 		return listView;
 	}
 	
-	public GridPane buildUICountryFilds() {
-		Label countryIdLabel = new Label("Country Id");
-		Label nameLabel = new Label("Name");
-		Label populationLabel = new Label("Population");
-		this.countryIdField = new TextField();
-		this.countryIdField.setEditable(false);
-		this.nameField = new TextField();
-		this.nameField.setEditable(false);
-		this.populationField = new TextField();
-		this.populationField.setEditable(false);
+	public CountryGridPane buildUICountryFilds() {
+		CountryGridPane countryGridPane = new CountryGridPane();
 		
-		GridPane grid = new GridPane();
-		grid.setHgap(10);
-		grid.setVgap(5);
+		countryGridPane.getCountryIdField().setEditable(false);
+		countryGridPane.getNameField().setEditable(false);
+		countryGridPane.getPopulationField().setEditable(false);
+		
+//		Label countryIdLabel = new Label("Country Id");
+//		Label nameLabel = new Label("Name");
+//		Label populationLabel = new Label("Population");
+//		this.countryIdField = new TextField();
+//		this.countryIdField.setEditable(false);
+//		this.nameField = new TextField();
+//		this.nameField.setEditable(false);
+//		this.populationField = new TextField();
+//		this.populationField.setEditable(false);
+//		
+//		GridPane grid = new GridPane();
+//		grid.setHgap(10);
+//		grid.setVgap(5);
+//
+//		grid.add(countryIdLabel, 0, 0);
+//		grid.add(nameLabel, 0, 1);
+//		grid.add(populationLabel, 0, 2);
+//		grid.add(this.countryIdField, 1, 0);
+//		grid.add(this.nameField, 1, 1);
+//		grid.add(this.populationField, 1, 2);
+//
+//		GridPane.setHgrow(this.countryIdField, Priority.ALWAYS);
+//		GridPane.setHgrow(this.nameField, Priority.ALWAYS);
+//		GridPane.setHgrow(this.populationField, Priority.ALWAYS);
 
-		grid.add(countryIdLabel, 0, 0);
-		grid.add(nameLabel, 0, 1);
-		grid.add(populationLabel, 0, 2);
-		grid.add(this.countryIdField, 1, 0);
-		grid.add(this.nameField, 1, 1);
-		grid.add(this.populationField, 1, 2);
-
-		GridPane.setHgrow(this.countryIdField, Priority.ALWAYS);
-		GridPane.setHgrow(this.nameField, Priority.ALWAYS);
-		GridPane.setHgrow(this.populationField, Priority.ALWAYS);
-
-		return grid;
+		return countryGridPane;
 	}
 	
 	
-	public void fillGrid(String newValue, Manager manager) {
-		int countryPos = manager.getCountries().searchCountry(newValue);
-		if(countryPos != -1) {
-			Country country = manager.getCountries().getCountries().get(countryPos);
-			this.countryIdField.setText(country.getCountryId()); ;
-			this.nameField.setText(country.getName());
-			this.populationField.setText(String.valueOf(country.getPopulation()));
-		}
-		
-	}
+	
 }
 

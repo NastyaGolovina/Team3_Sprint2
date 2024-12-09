@@ -1,5 +1,6 @@
 package UPT_PL.Team_3_GraphUI;
 
+import UPT_PL.Team_3.model.Country;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,7 +13,7 @@ import javafx.scene.layout.Priority;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class CountryCreateStage extends Stage {
+public class CountryUpdateCreateStage extends Stage {
 	
 	private TextField countryIdField;
 	private TextField nameField;
@@ -21,7 +22,7 @@ public class CountryCreateStage extends Stage {
 	/**
 	 * Constructor
 	 */
-	public CountryCreateStage(Manager manage) {
+	public CountryUpdateCreateStage(Manager manage) {
 		buildUI(manage);
 	}
 	
@@ -74,5 +75,7 @@ public class CountryCreateStage extends Stage {
 		
 		this.setScene(new Scene(grid, 500, 500));
 	}
+	
+	
 	
 }
