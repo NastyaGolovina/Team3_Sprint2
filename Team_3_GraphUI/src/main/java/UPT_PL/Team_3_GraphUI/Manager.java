@@ -620,12 +620,8 @@ public class Manager {
 	/**
 	 * deleteCountry
 	 */
-	public void deleteCountry() {
-		String countryID = ProjectHelper.inputStr("Inpit Country ID :");
-		boolean idDeleted =  countries.deleteCountryById(countryID);
-		if (idDeleted) {
-			restTemplate.delete(rootAPIURL + "countries/" + countryID);
-		}
+	public void deleteCountry(String countryID) {
+		restTemplate.delete(rootAPIURL + "countries/" + countryID);
 	}
 	/**
 	 * deleteTransport

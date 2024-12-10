@@ -2,10 +2,12 @@ package UPT_PL.Team_3_GraphUI;
 
 
 import UPT_PL.Team_3.model.Country;
+import UPT_PL.Team_3_GraphUI.CountryGridPane.TextFieldName;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
@@ -18,7 +20,7 @@ import javafx.stage.Stage;
 public class CountriesStage extends Stage {
 
 	private ListView<String> listViewCtrl;
-	
+	private CountryGridPane countryGridPane;
 	/**
 	 * Constructor
 	 */
@@ -63,13 +65,54 @@ public class CountriesStage extends Stage {
 		});
 		
 		btnEdit.setOnAction(ae -> {
-			
+			String selectedCountry = listViewCtrl.getSelectionModel().getSelectedItem();
+			if (selectedCountry != null) {
+				CountryUpdateCreateStage countryUpdateStage = new CountryUpdateCreateStage(manager);
+				countryUpdateStage.getCountryGridPane().getCountryIdField().setEditable(false);
+				countryUpdateStage.getCountryGridPane().fillGrid(selectedCountry,manager);
+				countryUpdateStage.show();
+				fillListView(manager);
+			} else {
+
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Warning");
+				alert.setHeaderText("No country selected");
+				alert.setContentText("Please select a country to delete.");
+				alert.showAndWait();
+
+			}
+//			countryGridPane.getCountryIdField().setEditable(false);
 		});
 		
 		btnDelete.setOnAction(ae -> {
-			
+			String selectedCountry = listViewCtrl.getSelectionModel().getSelectedItem();
+			if (selectedCountry != null) {
+				String output = manager.getCountries().deleteCountry(selectedCountry);
+				if (output == "") {
+					manager.deleteCountry(selectedCountry);
+					fillListView(manager);
+					countryGridPane.setValueToTextField(TextFieldName.СountryIdField, "");
+		    		countryGridPane.setValueToTextField(TextFieldName.NameField, "");
+		    		countryGridPane.setValueToTextField(TextFieldName.PopulationField,"");
+				} else {
+					Alert alert = new Alert(Alert.AlertType.ERROR);
+					alert.setTitle("Error");
+					alert.setHeaderText("Failed to delete country");
+					alert.setContentText(output);
+					alert.showAndWait();
+				}
+			} else {
+
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Warning");
+				alert.setHeaderText("No country selected");
+				alert.setContentText("Please select a country to delete.");
+				alert.showAndWait();
+
+			}
+
 		});
-		
+
 		btnSite.setOnAction(ae -> {
 			
 		});
@@ -91,7 +134,7 @@ public class CountriesStage extends Stage {
 		HBox.setMargin(listViewCtrl, new Insets(0,10,10,10));
 		//VBoxList.getChildren().add(listView);
 		//VBoxList.setPadding(new Insets(0, 0, 0, 20));
-		CountryGridPane countryGridPane = buildUICountryFilds();
+		countryGridPane = buildUICountryFilds();
 		VBoxResult.getChildren().add(countryGridPane.getGrid());
 		
 		listViewCtrl.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {

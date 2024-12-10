@@ -22,6 +22,26 @@ public class CountryUpdateCreateStage extends Stage {
 		buildUI(manage);
 	}
 	
+	
+	
+	/**
+	 * @return the countryGridPane
+	 */
+	public CountryGridPane getCountryGridPane() {
+		return countryGridPane;
+	}
+
+
+
+	/**
+	 * @param countryGridPane the countryGridPane to set
+	 */
+	public void setCountryGridPane(CountryGridPane countryGridPane) {
+		this.countryGridPane = countryGridPane;
+	}
+
+
+
 	public void buildUI(Manager manager) {
 		this.setTitle("Create Country"); 
 		this.initModality(Modality.APPLICATION_MODAL);
@@ -65,11 +85,33 @@ public class CountryUpdateCreateStage extends Stage {
 	            alert.setHeaderText("Failed to add country");
 	            alert.setContentText(output);
 	            alert.showAndWait();
-	            countryGridPane.setValueToTextField(TextFieldName.СountryIdField,"");
-				countryGridPane.setValueToTextField(TextFieldName.NameField,"");
-				countryGridPane.setValueToTextField(TextFieldName.PopulationField,"");
+	            countryGridPane.setValueToTextField(TextFieldName.СountryIdField, "");
+	    		countryGridPane.setValueToTextField(TextFieldName.NameField, "");
+	    		countryGridPane.setValueToTextField(TextFieldName.PopulationField,"");
 			}
 		});
 		this.showAndWait();
 	}
+	
+	public void updateCountry(Manager manager) {
+		btnOK.setOnAction(ae -> {
+			String countryId = countryGridPane.getValueFromTextField(TextFieldName.СountryIdField);
+			String name = countryGridPane.getValueFromTextField(TextFieldName.NameField);
+			String population = countryGridPane.getValueFromTextField(TextFieldName.PopulationField);
+			Country newCountry = new Country();
+			String output = manager.getCountries().addCountry(countryId, name, population,newCountry);
+			if(output == "") {
+				manager.addCountry(newCountry);
+				this.close();
+			} else {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+	            alert.setTitle("Error");
+	            alert.setHeaderText("Failed to add country");
+	            alert.setContentText(output);
+	            alert.showAndWait();
+			}
+		});
+		this.showAndWait();
+	}
+
 }

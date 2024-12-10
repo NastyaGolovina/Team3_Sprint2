@@ -162,58 +162,108 @@ public class Countries {
     
  // DELETE Country by Id
     
-    public boolean deleteCountryById(String countryId) {
-        int countryIndex = searchCountry(countryId);
+//    public boolean deleteCountryById(String countryId) {
+//        int countryIndex = searchCountry(countryId);
+//
+//        // Check if the country exists in the list
+//        if (countryIndex == -1) {
+//            System.out.println("Country with the specified ID not found.");
+//            return false;  
+//        }
+//
+//        Country country = countries.get(countryIndex);
+//
+//        // 1. Check if the country is linked to any ProductsByCountry
+//        for (ProductsByCountry product : country.getProducts()) {
+//            if (product.getCountry().getCountryId().equals(countryId)) {
+//                System.out.println("Cannot delete country. It is linked to ProductsByCountry.");
+//                return false;  
+//            }
+//        }
+//
+//        // 2. Check if the country is linked to any LogisticsSite
+//        for (LogisticsSite site : country.getSites()) {
+//            if (site.getCountry().getCountryId().equals(countryId)) {
+//                System.out.println("Cannot delete country. It is linked to LogisticsSite.");
+//                return false;
+//            }
+//        }
+//        
+//        RestAPIHelper restAPIHelper = new RestAPIHelper();
+//		ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate().
+//												getForEntity(restAPIHelper.getRootAPIURL() 
+//												+ "routeLines/country/" 
+//														+ countryId,
+//														RouteLine[].class);
+//							
+//		if (response.getStatusCode().is2xxSuccessful()) {
+//			RouteLine[] routeLineArr = response.getBody();
+//			if (routeLineArr != null) {	
+//				if(routeLineArr.length == 0) {
+//					countries.remove(countryIndex);
+//
+//			        System.out.println("Country successfully deleted.");
+//			        return true;
+//				}
+//			}  else {
+//				System.out.println("Cannot delete country. It is linked to RouteLine.");
+//			}
+//		}
+//		
+//		return false;
+//  
+//    }
+//    public String deleteCountry(String countryId) {
+//    	countries.remove(countryIndex);
+//    }
+	public String deleteCountry(String countryId) {
+		String output = "";
 
-        // Check if the country exists in the list
-        if (countryIndex == -1) {
-            System.out.println("Country with the specified ID not found.");
-            return false;  
-        }
+		if (countryId != null && !countryId.isBlank()) {
+			int countryIndex = searchCountry(countryId);
+			// Check if the country exists in the list
+			if (countryIndex != -1) {
 
-        Country country = countries.get(countryIndex);
-
-        // 1. Check if the country is linked to any ProductsByCountry
-        for (ProductsByCountry product : country.getProducts()) {
-            if (product.getCountry().getCountryId().equals(countryId)) {
-                System.out.println("Cannot delete country. It is linked to ProductsByCountry.");
-                return false;  
-            }
-        }
-
-        // 2. Check if the country is linked to any LogisticsSite
-        for (LogisticsSite site : country.getSites()) {
-            if (site.getCountry().getCountryId().equals(countryId)) {
-                System.out.println("Cannot delete country. It is linked to LogisticsSite.");
-                return false;
-            }
-        }
-        
-        RestAPIHelper restAPIHelper = new RestAPIHelper();
-		ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate().
-												getForEntity(restAPIHelper.getRootAPIURL() 
-												+ "routeLines/country/" 
-														+ countryId,
-														RouteLine[].class);
-							
-		if (response.getStatusCode().is2xxSuccessful()) {
-			RouteLine[] routeLineArr = response.getBody();
-			if (routeLineArr != null) {	
-				if(routeLineArr.length == 0) {
-					countries.remove(countryIndex);
-
-			        System.out.println("Country successfully deleted.");
-			        return true;
+				Country country = countries.get(countryIndex);
+				// 1. Check if the country is linked to any ProductsByCountry
+				for (ProductsByCountry product : country.getProducts()) {
+					if (product.getCountry().getCountryId().equals(countryId)) {
+						return "Cannot delete country. It is linked to ProductsByCountry.";
+					}
 				}
-			}  else {
-				System.out.println("Cannot delete country. It is linked to RouteLine.");
-			}
-		}
-		
-		return false;
-  
-    }
 
+				// 2. Check if the country is linked to any LogisticsSite
+				for (LogisticsSite site : country.getSites()) {
+					if (site.getCountry().getCountryId().equals(countryId)) {
+						return "Cannot delete country. It is linked to LogisticsSite.";
+					}
+				}
+
+				RestAPIHelper restAPIHelper = new RestAPIHelper();
+				ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate().getForEntity(
+						restAPIHelper.getRootAPIURL() + "routeLines/country/" + countryId, RouteLine[].class);
+
+				if (response.getStatusCode().is2xxSuccessful()) {
+					RouteLine[] routeLineArr = response.getBody();
+					if (routeLineArr != null) {
+						if (routeLineArr.length == 0) {
+							countries.remove(countryIndex);
+							System.out.println("Country successfully deleted.");
+
+						}
+					} else {
+						output = "Cannot delete country. It is linked to RouteLine.";
+					}
+				}
+			} else {
+				output = "Country with the specified ID not found.";
+			}
+		} else {
+			output = "The ID cannot be empty.";
+		}
+
+		return output;
+	}
 
 // Method to delete product by country, delete product from a certain country
     
