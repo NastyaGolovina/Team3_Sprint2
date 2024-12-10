@@ -7,11 +7,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -26,6 +23,7 @@ public class CountriesStage extends Stage {
 	 * Constructor
 	 */
 	public CountriesStage(Manager manage) {
+		listViewCtrl = new ListView<String>();
 		buildUI(manage);
 	}
 
@@ -56,7 +54,12 @@ public class CountriesStage extends Stage {
 
 		btnNew.setOnAction(ae -> {
 			CountryUpdateCreateStage countryCreateStage = new CountryUpdateCreateStage(manager);
-			countryCreateStage.show();
+			countryCreateStage.createNewCountry(manager);
+			
+			
+			fillListView(manager);
+  
+
 		});
 		
 		btnEdit.setOnAction(ae -> {
@@ -81,7 +84,7 @@ public class CountriesStage extends Stage {
 		
 		HButtonsBox.getChildren().addAll(new Button[] {btnNew, btnEdit, btnDelete, btnSite, btnProductsByCountry});
 		//HInfoBox.getChildren().addAll(new VBox[] {VBoxList,VBoxResult});
-		listViewCtrl = fillListView(manager);
+		fillListView(manager);
 		listViewCtrl.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		HInfoBox.getChildren().add(listViewCtrl);
 		HInfoBox.getChildren().add(VBoxResult);
@@ -101,18 +104,19 @@ public class CountriesStage extends Stage {
 		
 		this.setOnShown(event -> {
 			Platform.runLater(() -> {
-				listViewCtrl.requestFocus();
-				listViewCtrl.getSelectionModel().select(0);
+				if(!manager.getCountries().getCountries().isEmpty()) {
+					listViewCtrl.requestFocus();
+					listViewCtrl.getSelectionModel().select(0);
+				}
 			});
 		});
 	}
 	
-	public ListView<String> fillListView(Manager manager) {
-		ListView<String> listView = new ListView<String>();
+	public void fillListView(Manager manager) {
+		listViewCtrl.getItems().clear();
 		for(Country c : manager.getCountries().getCountries()) {
-			listView.getItems().add(c.getCountryId()); 
+			listViewCtrl.getItems().add(c.getCountryId()); 
 		}
-		return listView;
 	}
 	
 	public CountryGridPane buildUICountryFilds() {
@@ -121,31 +125,6 @@ public class CountriesStage extends Stage {
 		countryGridPane.getCountryIdField().setEditable(false);
 		countryGridPane.getNameField().setEditable(false);
 		countryGridPane.getPopulationField().setEditable(false);
-		
-//		Label countryIdLabel = new Label("Country Id");
-//		Label nameLabel = new Label("Name");
-//		Label populationLabel = new Label("Population");
-//		this.countryIdField = new TextField();
-//		this.countryIdField.setEditable(false);
-//		this.nameField = new TextField();
-//		this.nameField.setEditable(false);
-//		this.populationField = new TextField();
-//		this.populationField.setEditable(false);
-//		
-//		GridPane grid = new GridPane();
-//		grid.setHgap(10);
-//		grid.setVgap(5);
-//
-//		grid.add(countryIdLabel, 0, 0);
-//		grid.add(nameLabel, 0, 1);
-//		grid.add(populationLabel, 0, 2);
-//		grid.add(this.countryIdField, 1, 0);
-//		grid.add(this.nameField, 1, 1);
-//		grid.add(this.populationField, 1, 2);
-//
-//		GridPane.setHgrow(this.countryIdField, Priority.ALWAYS);
-//		GridPane.setHgrow(this.nameField, Priority.ALWAYS);
-//		GridPane.setHgrow(this.populationField, Priority.ALWAYS);
 
 		return countryGridPane;
 	}

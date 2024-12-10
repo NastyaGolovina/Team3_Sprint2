@@ -273,9 +273,7 @@ public class Manager {
 	/**
 	 * addCountry
 	 */
-	public void addCountry() {
-		Country newCountry = countries.addCountry();
-
+	public void addCountry(Country newCountry) {
 		if (newCountry != null) {
 			ResponseEntity<Country> response = restTemplate.postForEntity(rootAPIURL + "countries", newCountry,
 					Country.class);

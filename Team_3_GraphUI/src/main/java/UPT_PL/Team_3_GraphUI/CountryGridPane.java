@@ -15,7 +15,12 @@ public class CountryGridPane extends GridPane {
 	private TextField nameField;
 	private TextField populationField;
 	
-	
+	/**
+	 * CalcType
+	 */
+	public enum TextFieldName {
+		СountryIdField,NameField,PopulationField;
+	}
 	
 	public CountryGridPane() {
 		buildUI();
@@ -138,5 +143,31 @@ public class CountryGridPane extends GridPane {
 			this.populationField.setText(String.valueOf(country.getPopulation()));
 		}
 		
+	}
+	
+	public String getValueFromTextField(TextFieldName textFieldName) {
+		switch(textFieldName) {
+		case СountryIdField :
+			return countryIdField.getText();
+		case NameField :
+			return nameField.getText();
+		case PopulationField :
+			return populationField.getText();
+		default :
+			return "";
+		}		
+	}
+	
+	
+	public void setValueToTextField(TextFieldName textFieldName, String text) {
+		switch(textFieldName) {
+		case СountryIdField :
+			countryIdField.setText(text);
+		case NameField :
+			nameField.setText(text);
+		case PopulationField :
+			populationField.setText(text);
+		default :
+		}		
 	}
 }

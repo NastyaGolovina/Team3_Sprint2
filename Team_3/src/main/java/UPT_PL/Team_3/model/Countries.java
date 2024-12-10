@@ -50,45 +50,96 @@ public class Countries {
     /**
      * Method to add a new country to the list of countries.
      */
-    public Country addCountry() {
-        String countryId = ProjectHelper.inputStr("Input Country ID: ");
+//    public Country addCountry() {
+//        String countryId = ProjectHelper.inputStr("Input Country ID: ");
+//
+//        if (countryId.isEmpty()) {  
+//            System.out.println("The ID cannot be empty.");
+//            return null;  
+//        } else if (!countryId.matches("^[a-zA-Z0-9].*")) {
+//            System.out.println("The ID cannot begin with special characters.");
+//            return null;  
+//        } else if (countryId.length() > 20) {
+//            System.out.println("The ID cannot exceed more than 20 characters.");
+//            return null; 
+//        }
+//
+//        int countryPos = searchCountry(countryId);
+//
+//        if (countryPos != -1) { 
+//            System.out.println("Country already exists with ID: " + countryId);
+//            return null;  
+//        } else {
+//            String name = ProjectHelper.inputStr("Input Country Name: ");
+//            int population = ProjectHelper.inputInt("Input Population (must be greater than 0): ");
+//
+//            // Validate Population
+//            while (population <= 0) {
+//                System.out.println("Population must be greater than 0. Please try again.");
+//                population = ProjectHelper.inputInt("Input Population: ");
+//            }
+//
+//            // Create and add new Country object
+//            Country newCountry = new Country(countryId, name, population);
+//            countries.add(newCountry);
+//                        
+//            System.out.println("Country added successfully: " + newCountry);
+//            
+//            return newCountry;  
+//        }
+//    }
+	public String addCountry(String countryId, String name, String population, Country newCountry) {
+		String output = "";
 
-        if (countryId.isEmpty()) {  
-            System.out.println("The ID cannot be empty.");
-            return null;  
-        } else if (!countryId.matches("^[a-zA-Z0-9].*")) {
-            System.out.println("The ID cannot begin with special characters.");
-            return null;  
-        } else if (countryId.length() > 20) {
-            System.out.println("The ID cannot exceed more than 20 characters.");
-            return null; 
-        }
+		if (countryId != null && !countryId.isBlank()) {
+			if (countryId.matches("^[a-zA-Z0-9].*")) {
+				if (countryId.length() <= 20) {
+					int countryPos = searchCountry(countryId);
+					if (countryPos == -1) {
 
-        int countryPos = searchCountry(countryId);
+						if (name != null && !name.isBlank()) {
+							if (population != null && !population.isBlank()) {
+								if (population.matches("-?\\d+")) {
+									int populationInt = Integer.parseInt(population);
+									if (populationInt > 0) {
+										newCountry.setCountryId(countryId);
+										newCountry.setName(name);
+										newCountry.setPopulation(populationInt);
+										countries.add(newCountry);
+									} else {
+										output = "Population must be greater than 0.";
 
-        if (countryPos != -1) { 
-            System.out.println("Country already exists with ID: " + countryId);
-            return null;  
-        } else {
-            String name = ProjectHelper.inputStr("Input Country Name: ");
-            int population = ProjectHelper.inputInt("Input Population (must be greater than 0): ");
+									}
+								} else {
+									output = "The population must be an integer";
 
-            // Validate Population
-            while (population <= 0) {
-                System.out.println("Population must be greater than 0. Please try again.");
-                population = ProjectHelper.inputInt("Input Population: ");
-            }
+								}
+							} else {
+								output = "The population cannot be empty.";
+							}
+						} else {
+							output = "The name cannot be empty.";
+						}
 
-            // Create and add new Country object
-            Country newCountry = new Country(countryId, name, population);
-            countries.add(newCountry);
-                        
-            System.out.println("Country added successfully: " + newCountry);
-            
-            return newCountry;  
-        }
-    }
+					} else {
+						output = "Country already exists with ID: " + countryId;
+					}
+				} else {
+					output = "The ID cannot exceed more than 20 characters.";
 
+				}
+			} else {
+				output = "The ID cannot begin with special characters.";
+
+			}
+		} else {
+			output = "The ID cannot be empty.";
+
+		}
+
+		return output;
+		
+	}
 
     @Override
     public String toString() {
