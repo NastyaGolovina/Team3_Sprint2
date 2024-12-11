@@ -252,8 +252,7 @@ public class Manager {
 	/**
 	 * addProduct
 	 */
-	public void addProduct() {
-		Product newProduct = products.addProduct();
+	public void addProduct(Product newProduct) {
 		if(newProduct != null) {
 			ResponseEntity<Product> response = restTemplate.postForEntity(rootAPIURL + "products", newProduct, Product.class);
 			
@@ -293,9 +292,7 @@ public class Manager {
 	/*
 	 * addTransport
 	 */
-	public void addTransport() {
-		Transport newTransport =transports.addTransport();
-		
+	public void addTransport(Transport newTransport) {
 		if (newTransport != null) {
 			ResponseEntity<Transport> response = restTemplate.postForEntity(rootAPIURL + "transports", newTransport,
 					Transport.class);
@@ -315,85 +312,54 @@ public class Manager {
 	/**
 	 * addLogisticsSiteToCountry
 	 */
-	public void addLogisticsSitesToCountry() {
-		if(!countries.getCountries().isEmpty()) {
-			int CountryPos = countries.searchCountry(ProjectHelper.inputStr("Input country id :"));
-			
-			while(CountryPos == -1) {
-				System.out.println("Country doesn't exist");
-				CountryPos = countries.searchCountry(ProjectHelper.inputStr("Input country id :"));
-			}
-			
-			LogisticsSite newLogisticsSite = countries.getCountries().get(CountryPos).addLogisticsSite(transports, countries.getCountries());
-			
-			if (newLogisticsSite != null) {
-				ResponseEntity<LogisticsSite> response = restTemplate.postForEntity(rootAPIURL + "logistics-sites", newLogisticsSite,
-						LogisticsSite.class);
-				if (response.getStatusCode().is2xxSuccessful()) {
-					LogisticsSite body = response.getBody();
-					if (body != null) {
-						System.out.println("Successful save in BD");
-					} else {
-						System.out.println("No body");
-					}
+	public void addLogisticsSitesToCountry(LogisticsSite newLogisticsSite) {
+
+		if (newLogisticsSite != null) {
+			ResponseEntity<LogisticsSite> response = restTemplate.postForEntity(rootAPIURL + "logistics-sites",
+					newLogisticsSite, LogisticsSite.class);
+			if (response.getStatusCode().is2xxSuccessful()) {
+				LogisticsSite body = response.getBody();
+				if (body != null) {
+					System.out.println("Successful save in BD");
 				} else {
-					System.out.println("Nothing found");
+					System.out.println("No body");
 				}
+			} else {
+				System.out.println("Nothing found");
 			}
-			
-		} else {
-			System.out.println("The countries list is empty.");
 		}
+
 	}
 	
 	/**
 	 * addProductsToCountry
 	 */
-	public void addProductsToCountry() {
-		if(!countries.getCountries().isEmpty()) {
-			int CountryPos = countries.searchCountry(ProjectHelper.inputStr("Input country id :"));
-			
-			while(CountryPos == -1) {
-				System.out.println("Country doesn't exist");
-				CountryPos = countries.searchCountry(ProjectHelper.inputStr("Input country id :"));
-			}
-						
-			ArrayList<ProductsByCountry> newProductsByCountry = countries.getCountries().get(CountryPos).addProductByCountry(products);
-			
-			if(!newProductsByCountry.isEmpty()) {
-				for(ProductsByCountry p : newProductsByCountry) {
-					
-					ResponseEntity<ProductsByCountry> response = restTemplate.postForEntity(rootAPIURL + "products-by-country", p,
-							ProductsByCountry.class);
-					if (response.getStatusCode().is2xxSuccessful()) {
-						ProductsByCountry body = response.getBody();
-						if (body != null) {
-							System.out.println(p.getProductByCountryId() + " successful save in BD");
-						} else {
-							System.out.println("No body");
-						}
-					} else {
-						System.out.println("Nothing found");
-					}
-					
+	public void addProductsToCountry(ProductsByCountry newProductsByCountry) {
+		if (productRequestProcessor != null) {
+			ResponseEntity<ProductsByCountry> response = restTemplate.postForEntity(rootAPIURL + "products-by-country",
+					newProductsByCountry, ProductsByCountry.class);
+			if (response.getStatusCode().is2xxSuccessful()) {
+				ProductsByCountry body = response.getBody();
+				if (body != null) {
+					System.out.println(newProductsByCountry.getProductByCountryId() + " successful save in BD");
+				} else {
+					System.out.println("No body");
 				}
+			} else {
+				System.out.println("Nothing found");
 			}
-	
-		} else {
-			System.out.println("The countries list is empty.");
+
 		}
+
 	}
-	
 	
 	/**
 	 * addLogisticsSupplyChain
 	 */	
-	public void addLogisticsSupplyChain() {
-		LogisticsSupplyChain newLogisticsSupplyChain = logisticsSupplyChains.addNewSupplyChain(countries);
-
+	public void addLogisticsSupplyChain(LogisticsSupplyChain newLogisticsSupplyChain) {
 		if (newLogisticsSupplyChain != null) {
-			ResponseEntity<LogisticsSupplyChain> response = restTemplate.postForEntity(rootAPIURL + "supply-chains", newLogisticsSupplyChain,
-					LogisticsSupplyChain.class);
+			ResponseEntity<LogisticsSupplyChain> response = restTemplate.postForEntity(rootAPIURL + "supply-chains",
+					newLogisticsSupplyChain, LogisticsSupplyChain.class);
 
 			if (response.getStatusCode().is2xxSuccessful()) {
 				LogisticsSupplyChain body = response.getBody();
@@ -609,59 +575,51 @@ public class Manager {
 	}
 	
 	
-	public void deleteProduct() {
-		String productID =ProjectHelper.inputStr("Inpit Product ID :");
-		boolean idDeleted = products.deleteProduct(productID,
-				countries.getCountries());
-		if(idDeleted) {
-			restTemplate.delete(rootAPIURL + "products/" + productID);
-		}
+	public void deleteProduct(String productID) {
+		restTemplate.delete(rootAPIURL + "products/" + productID);
 	}
+
 	/**
 	 * deleteCountry
 	 */
 	public void deleteCountry(String countryID) {
 		restTemplate.delete(rootAPIURL + "countries/" + countryID);
 	}
+
 	/**
 	 * deleteTransport
 	 */
-	public void deleteTransport() {
-		String transporttID = ProjectHelper.inputStr("Inpit Transport ID :");
-		boolean idDeleted = transports.deleteTransportById(transporttID, countries.getCountries(),logisticsSupplyChains);
-		if (idDeleted) {
-			restTemplate.delete(rootAPIURL + "transports/" + transporttID);
-		}
+	public void deleteTransport(String transporttID) {
+
+		restTemplate.delete(rootAPIURL + "transports/" + transporttID);
+
 	}
+
 	/**
 	 * deleteLogisticsSupplyChain
 	 */
-	public void deleteLogisticsSupplyChain() {
-		String chainID =ProjectHelper.inputStr("Inpit Logistics Supply Chain ID :");
-		boolean idDeleted = logisticsSupplyChains.deleteSupplyChainById(chainID);
-		if(idDeleted) {
-			restTemplate.delete(rootAPIURL + "supply-chains/" + chainID);
-		}
-		
+	public void deleteLogisticsSupplyChain(String chainID) {
+
+		restTemplate.delete(rootAPIURL + "supply-chains/" + chainID);
+
 	}
+
 	/**
 	 * deleteCountry
 	 */
-	public void deleteLogisticsSite() {
-		String siteID = countries.deleteLogisticsSite(logisticsSupplyChains);	
-		if (siteID != null) {
-			restTemplate.delete(rootAPIURL + "logistics-sites/" + siteID);
-		}
+	public void deleteLogisticsSite(String siteID) {
+
+		restTemplate.delete(rootAPIURL + "logistics-sites/" + siteID);
+
 	}
-	
+
 	/**
 	 * deleteCountry
 	 */
-	public void deleteProductsByCountry() {
-		String productsByCountryID = countries.deleteProductsByCountry();	
-		if (productsByCountryID != null) {
-			restTemplate.delete(rootAPIURL + "products-by-country/" + productsByCountryID);
-		}
+	public void deleteProductsByCountry(String productsByCountryID) {
+
+		restTemplate.delete(rootAPIURL + "products-by-country/" + productsByCountryID);
+
 	}
 	/**
 	 * printProducts
