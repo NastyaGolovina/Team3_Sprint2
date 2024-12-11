@@ -32,7 +32,7 @@ public class CountryGridPane extends GridPane {
 	/**
 	 * @return the grid
 	 */
-	public GridPane getGrid() {
+	public GridPane getMyGrid() {
 		return grid;
 	}
 

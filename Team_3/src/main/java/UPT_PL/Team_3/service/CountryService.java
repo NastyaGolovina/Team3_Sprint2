@@ -28,6 +28,10 @@ public class CountryService {
 	public Country createCountry(Country country) {
 		return countryRepository.save(country);
 	}
+	
+	public Country updateCountry(Country country) {
+		return countryRepository.save(country);
+	}
 
 	public void deleteCountry(String id) {
 		if (countryRepository.existsById(id)) {

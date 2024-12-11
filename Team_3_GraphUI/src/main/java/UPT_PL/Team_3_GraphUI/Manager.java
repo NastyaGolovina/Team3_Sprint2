@@ -1,10 +1,14 @@
 package UPT_PL.Team_3_GraphUI;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -35,6 +39,7 @@ public class Manager {
 	// Class variable
 	private static RestTemplate restTemplate = new RestTemplate();
 	private static String rootAPIURL = "http://localhost:8080/api/";
+	private static HttpHeaders headers = new HttpHeaders();
 	
 	/**
 	 * Constructor
@@ -621,6 +626,25 @@ public class Manager {
 		restTemplate.delete(rootAPIURL + "products-by-country/" + productsByCountryID);
 
 	}
+	
+	
+	
+	
+	
+	public void updateCountry(Country country) {
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		HttpEntity<Country> requestEntity = new HttpEntity<Country>(country, headers);
+		ResponseEntity<Country> response = restTemplate.exchange(rootAPIURL + "countries", HttpMethod.PUT, requestEntity, Country.class);
+		
+		if (response.getStatusCode().is2xxSuccessful()) {
+			System.out.println("Updated");
+		} else {
+			System.out.println("Nothing found");
+		}
+	}
+	
+	
 	/**
 	 * printProducts
 	 */

@@ -264,6 +264,57 @@ public class Countries {
 
 		return output;
 	}
+	
+	
+	
+	
+	
+	
+	
+	public String updateCountry(String countryId, String name, String population,Country country) {
+		String output = "";
+		
+		if (countryId != null && !countryId.isBlank()) {
+			int countryPos = searchCountry(countryId);
+			if (countryPos != -1) {
+				Country editedCountry = countries.get(countryPos);
+				if (name != null && !name.isBlank()) {
+					if (population != null && !population.isBlank()) {
+						if (population.matches("-?\\d+")) {
+							int populationInt = Integer.parseInt(population);
+							if (populationInt > 0) {
+								editedCountry.setName(name);
+								editedCountry.setPopulation(populationInt);
+								country.setName(name);
+								country.setPopulation(populationInt);
+							} else {
+								output = "Population must be greater than 0.";
+
+							}
+						} else {
+							output = "The population must be an integer";
+
+						}
+					} else {
+						output = "The population cannot be empty.";
+					}
+				} else {
+					output = "The name cannot be empty.";
+				}
+
+			} else {
+				output = "Country with ID  (" + countryId + ") doesn't exist";
+			}
+		} else {
+			output = "The ID cannot be empty.";
+			
+		}
+		
+		return output;
+		
+	}
+	
+	
 
 // Method to delete product by country, delete product from a certain country
     

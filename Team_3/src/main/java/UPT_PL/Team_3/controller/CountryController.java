@@ -26,7 +26,12 @@ public class CountryController {
 		Optional<Country> country = countryService.getCountryById(id);
 		return country.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
-
+	
+	@PutMapping
+	public Country updateCountry(@RequestBody Country country) {
+		return countryService.createCountry(country);
+	}
+	
 	@PostMapping
 	public Country createCountry(@RequestBody Country country) {
 		return countryService.createCountry(country);

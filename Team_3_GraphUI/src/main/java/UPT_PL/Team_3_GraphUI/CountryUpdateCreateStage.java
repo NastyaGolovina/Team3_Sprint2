@@ -47,8 +47,8 @@ public class CountryUpdateCreateStage extends Stage {
 		this.initModality(Modality.APPLICATION_MODAL);
 		
 		countryGridPane = new CountryGridPane();
-		countryGridPane.getGrid().setPadding(new Insets(20, 20, 20, 20));
-		countryGridPane.getGrid().setAlignment(Pos.TOP_CENTER);
+		countryGridPane.getMyGrid().setPadding(new Insets(20, 20, 20, 20));
+		countryGridPane.getMyGrid().setAlignment(Pos.TOP_CENTER);
 		
 
 		HBox HButtonsBox = new HBox();
@@ -65,8 +65,8 @@ public class CountryUpdateCreateStage extends Stage {
 		
 		
 		HButtonsBox.getChildren().addAll(new Button[] {btnOK,btnCancel});
-		countryGridPane.getGrid().add(HButtonsBox, 1, 3);
-		this.setScene(new Scene(countryGridPane.getGrid(), 500, 500));
+		countryGridPane.getMyGrid().add(HButtonsBox, 1, 3);
+		this.setScene(new Scene(countryGridPane.getMyGrid(), 500, 500));
 	}
 	
 	public void createNewCountry(Manager manager) {
@@ -94,24 +94,25 @@ public class CountryUpdateCreateStage extends Stage {
 	}
 	
 	public void updateCountry(Manager manager) {
-//		btnOK.setOnAction(ae -> {
-//			String countryId = countryGridPane.getValueFromTextField(TextFieldName.СountryIdField);
-//			String name = countryGridPane.getValueFromTextField(TextFieldName.NameField);
-//			String population = countryGridPane.getValueFromTextField(TextFieldName.PopulationField);
-//			Country newCountry = new Country();
-//			String output = manager.getCountries().addCountry(countryId, name, population,newCountry);
-//			if(output == "") {
-//				manager.addCountry(newCountry);
-//				this.close();
-//			} else {
-//				Alert alert = new Alert(Alert.AlertType.ERROR);
-//	            alert.setTitle("Error");
-//	            alert.setHeaderText("Failed to add country");
-//	            alert.setContentText(output);
-//	            alert.showAndWait();
-//			}
-//		});
-//		this.showAndWait();
+		btnOK.setOnAction(ae -> {
+			String countryId = countryGridPane.getValueFromTextField(TextFieldName.СountryIdField);
+			String name = countryGridPane.getValueFromTextField(TextFieldName.NameField);
+			String population = countryGridPane.getValueFromTextField(TextFieldName.PopulationField);
+			Country editedCountry = new Country();
+			editedCountry.setCountryId(countryId);
+			String output = manager.getCountries().updateCountry(countryId, name, population,editedCountry);
+			if(output == "") {
+				manager.updateCountry(editedCountry);
+				this.close();
+			} else {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+	            alert.setTitle("Error");
+	            alert.setHeaderText("Failed to add country");
+	            alert.setContentText(output);
+	            alert.showAndWait();
+			}
+		});
+		this.showAndWait();
 	}
 
 	

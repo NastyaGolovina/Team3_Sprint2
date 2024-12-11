@@ -70,12 +70,19 @@ public class CountriesStage extends Stage {
 		
 		btnEdit.setOnAction(ae -> {
 			String selectedCountry = listViewCtrl.getSelectionModel().getSelectedItem();
+			int selectedCountryPos = listViewCtrl.getSelectionModel().getSelectedIndex();
 			if (selectedCountry != null) {
 				CountryUpdateCreateStage countryUpdateStage = new CountryUpdateCreateStage(manager);
 				countryUpdateStage.getCountryGridPane().getCountryIdField().setEditable(false);
 				countryUpdateStage.getCountryGridPane().fillGrid(selectedCountry,manager);
-				countryUpdateStage.show();
+				
+				countryUpdateStage.updateCountry(manager);
+				
 				fillListView(manager);
+				if(!manager.getCountries().getCountries().isEmpty()) {
+					listViewCtrl.requestFocus();
+					listViewCtrl.getSelectionModel().select(selectedCountryPos);
+				}
 			} else {
 
 				Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -85,7 +92,7 @@ public class CountriesStage extends Stage {
 				alert.showAndWait();
 
 			}
-//			countryGridPane.getCountryIdField().setEditable(false);
+
 		});
 		
 		btnDelete.setOnAction(ae -> {
@@ -95,9 +102,7 @@ public class CountriesStage extends Stage {
 				if (output == "") {
 					manager.deleteCountry(selectedCountry);
 					fillListView(manager);
-//					countryGridPane.setValueToTextField(TextFieldName.СountryIdField, "");
-//		    		countryGridPane.setValueToTextField(TextFieldName.NameField, "");
-//		    		countryGridPane.setValueToTextField(TextFieldName.PopulationField,"");
+
 		    		if(!manager.getCountries().getCountries().isEmpty()) {
 						listViewCtrl.requestFocus();
 						listViewCtrl.getSelectionModel().select(0);
@@ -143,7 +148,7 @@ public class CountriesStage extends Stage {
 		//VBoxList.getChildren().add(listView);
 		//VBoxList.setPadding(new Insets(0, 0, 0, 20));
 		countryGridPane = buildUICountryFilds();
-		VBoxResult.getChildren().add(countryGridPane.getGrid());
+		VBoxResult.getChildren().add(countryGridPane.getMyGrid());
 		
 		listViewCtrl.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
