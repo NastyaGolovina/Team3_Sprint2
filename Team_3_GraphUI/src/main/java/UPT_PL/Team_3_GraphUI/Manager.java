@@ -380,58 +380,49 @@ public class Manager {
 	/**
 	 * calculateSuppyRequest
 	 */
-	private void calculateSupplyRequest() {
-		productRequestProcessor.calcSupplyRequest(products, countries);
-	}
+//	private void calculateSupplyRequest() {
+//		productRequestProcessor.calcSupplyRequest(products, countries);
+//	}
 	/**
 	 * calculateLogisticsRoute
 	 */
-	public void calculateLogisticsRoute() {
-		int isContinue = 1;
-		if(!logisticsProcessor.isCurrentСalculationEmpty()) {
-			isContinue = ProjectHelper.inputInt("The previous calculation will be deleted before adding to"
-					+ " the database do you want to continue (yes-(1), no-(0)) :");
-			while(isContinue != 0 && isContinue != 1) {
-				isContinue = ProjectHelper.inputInt("The previous calculation will be deleted before adding to"
-						+ " the database do you want to continue (yes-(1), no-(0)) :");
-			}
-		}
-		if(isContinue == 1) {
-			productRequestProcessor = new ProductRequestProcessor();
-			logisticsProcessor = new LogisticsProcessor();
-			logisticsProcessor.setCurrentСalculation(new Calculation(ProjectHelper.inputStr("Input current calculation description :"))); 
-			calculateSupplyRequest();
+//	public void calculateLogisticsRoute() {
+//		
+//			productRequestProcessor = new ProductRequestProcessor();
+//			logisticsProcessor = new LogisticsProcessor();
+//			logisticsProcessor.setCurrentСalculation(new Calculation(ProjectHelper.inputStr("Input current calculation description :"))); 
+//			calculateSupplyRequest();
+//			
+//			ProjectHelper.printTypes();
+//			String name;
+//			int calcType = ProjectHelper.inputInt("Input calculated type : ");
+//			while (calcType < 1 || calcType > 3) {
+//				System.out.println("Wrong type");
+//				calcType = ProjectHelper.inputInt("Input calculated type : ");
+//			}
+//			
+//			switch (calcType) {
+//			case 1: {
+//				name = "";
+//				logisticsProcessor.calcLogisticsRoute(productRequestProcessor, logisticsSupplyChains, LogisticsProcessor.CalcType.AllCountry, name);
+//				break;
+//			}
+//			case 2: {
+//				name = ProjectHelper.inputStr("Input country name : ");
+//				
+//				logisticsProcessor.calcLogisticsRoute(productRequestProcessor, logisticsSupplyChains, LogisticsProcessor.CalcType.Country, name);
+//				break;
+//				}
+//			case 3: {
+//				name = ProjectHelper.inputStr("Input country product : ");
+//				logisticsProcessor.calcLogisticsRoute(productRequestProcessor, logisticsSupplyChains, LogisticsProcessor.CalcType.Product, name);
+//				break;
+//				}
+//			}
+//			}
 			
-			ProjectHelper.printTypes();
-			String name;
-			int calcType = ProjectHelper.inputInt("Input calculated type : ");
-			while (calcType < 1 || calcType > 3) {
-				System.out.println("Wrong type");
-				calcType = ProjectHelper.inputInt("Input calculated type : ");
-			}
 			
-			switch (calcType) {
-			case 1: {
-				name = "";
-				logisticsProcessor.calcLogisticsRoute(productRequestProcessor, logisticsSupplyChains, LogisticsProcessor.CalcType.AllCountry, name);
-				break;
-			}
-			case 2: {
-				name = ProjectHelper.inputStr("Input country name : ");
-				
-				logisticsProcessor.calcLogisticsRoute(productRequestProcessor, logisticsSupplyChains, LogisticsProcessor.CalcType.Country, name);
-				break;
-				}
-			case 3: {
-				name = ProjectHelper.inputStr("Input country product : ");
-				logisticsProcessor.calcLogisticsRoute(productRequestProcessor, logisticsSupplyChains, LogisticsProcessor.CalcType.Product, name);
-				break;
-				}
-			}
-			
-			printRouteLines();
-		}
-	}	
+		
 	
 	/**
 	 * printRouteLines
@@ -490,7 +481,7 @@ public class Manager {
 	/**
 	 * readAllСalculationWithJplq and read road lines
 	 */
-	public List<Calculation> readCalculation() {
+	public List<Calculation> readCalculations() {
 		
 		ResponseEntity<Calculation[]> response = restTemplate.getForEntity(rootAPIURL + "calculations", Calculation[].class);
 
