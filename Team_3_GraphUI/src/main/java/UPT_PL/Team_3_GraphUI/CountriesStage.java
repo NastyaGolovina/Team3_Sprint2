@@ -2,7 +2,6 @@ package UPT_PL.Team_3_GraphUI;
 
 
 import UPT_PL.Team_3.model.Country;
-import UPT_PL.Team_3_GraphUI.CountryGridPane.TextFieldName;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
