@@ -28,6 +28,12 @@ public class MainMenu extends Application {
 		Button btnChains = new Button("Logistics Supply Chains");
 		Button btnRouteCalculations= new Button("Route Calculations");
 		
+		btnCountries.setPrefWidth(250);
+		btnProducts.setPrefWidth(250);
+		btnTransports.setPrefWidth(250);
+		btnChains.setPrefWidth(250);
+		btnRouteCalculations.setPrefWidth(250);
+		
 		Text message = new Text("");
 
 		
