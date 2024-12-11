@@ -94,24 +94,24 @@ public class CountryUpdateCreateStage extends Stage {
 	}
 	
 	public void updateCountry(Manager manager) {
-		btnOK.setOnAction(ae -> {
-			String countryId = countryGridPane.getValueFromTextField(TextFieldName.СountryIdField);
-			String name = countryGridPane.getValueFromTextField(TextFieldName.NameField);
-			String population = countryGridPane.getValueFromTextField(TextFieldName.PopulationField);
-			Country newCountry = new Country();
-			String output = manager.getCountries().addCountry(countryId, name, population,newCountry);
-			if(output == "") {
-				manager.addCountry(newCountry);
-				this.close();
-			} else {
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-	            alert.setTitle("Error");
-	            alert.setHeaderText("Failed to add country");
-	            alert.setContentText(output);
-	            alert.showAndWait();
-			}
-		});
-		this.showAndWait();
+//		btnOK.setOnAction(ae -> {
+//			String countryId = countryGridPane.getValueFromTextField(TextFieldName.СountryIdField);
+//			String name = countryGridPane.getValueFromTextField(TextFieldName.NameField);
+//			String population = countryGridPane.getValueFromTextField(TextFieldName.PopulationField);
+//			Country newCountry = new Country();
+//			String output = manager.getCountries().addCountry(countryId, name, population,newCountry);
+//			if(output == "") {
+//				manager.addCountry(newCountry);
+//				this.close();
+//			} else {
+//				Alert alert = new Alert(Alert.AlertType.ERROR);
+//	            alert.setTitle("Error");
+//	            alert.setHeaderText("Failed to add country");
+//	            alert.setContentText(output);
+//	            alert.showAndWait();
+//			}
+//		});
+//		this.showAndWait();
 	}
 
 }
