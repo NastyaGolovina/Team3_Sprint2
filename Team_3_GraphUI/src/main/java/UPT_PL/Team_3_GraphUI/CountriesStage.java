@@ -60,7 +60,12 @@ public class CountriesStage extends Stage {
 			
 			
 			fillListView(manager);
-  
+			
+			
+			if(!manager.getCountries().getCountries().isEmpty()) {
+				listViewCtrl.requestFocus();
+				listViewCtrl.getSelectionModel().select(0);
+			}
 
 		});
 		
@@ -87,7 +92,7 @@ public class CountriesStage extends Stage {
 		btnDelete.setOnAction(ae -> {
 			String selectedCountry = listViewCtrl.getSelectionModel().getSelectedItem();
 			if (selectedCountry != null) {
-				String output = manager.getCountries().deleteCountryForUI(selectedCountry);
+				String output = manager.getCountries().deleteCountry(selectedCountry);
 				if (output == "") {
 					manager.deleteCountry(selectedCountry);
 					fillListView(manager);

@@ -75,7 +75,7 @@ public class CountryUpdateCreateStage extends Stage {
 			String name = countryGridPane.getValueFromTextField(TextFieldName.NameField);
 			String population = countryGridPane.getValueFromTextField(TextFieldName.PopulationField);
 			Country newCountry = new Country();
-			String output = manager.getCountries().addCountryForUI(countryId, name, population,newCountry);
+			String output = manager.getCountries().addCountry(countryId, name, population,newCountry);
 			if(output == "") {
 				manager.addCountry(newCountry);
 				this.close();
@@ -99,7 +99,7 @@ public class CountryUpdateCreateStage extends Stage {
 			String name = countryGridPane.getValueFromTextField(TextFieldName.NameField);
 			String population = countryGridPane.getValueFromTextField(TextFieldName.PopulationField);
 			Country newCountry = new Country();
-			String output = manager.getCountries().addCountryForUI(countryId, name, population,newCountry);
+			String output = manager.getCountries().addCountry(countryId, name, population,newCountry);
 			if(output == "") {
 				manager.addCountry(newCountry);
 				this.close();

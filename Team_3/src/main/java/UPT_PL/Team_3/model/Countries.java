@@ -50,47 +50,47 @@ public class Countries {
     /**
      * Method to add a new country to the list of countries.
      */
-    public Country addCountry() {
-        String countryId = ProjectHelper.inputStr("Input Country ID: ");
-
-        if (countryId.isEmpty()) {  
-            System.out.println("The ID cannot be empty.");
-            return null;  
-        } else if (!countryId.matches("^[a-zA-Z0-9].*")) {
-            System.out.println("The ID cannot begin with special characters.");
-            return null;  
-        } else if (countryId.length() > 20) {
-            System.out.println("The ID cannot exceed more than 20 characters.");
-            return null; 
-        }
-
-        int countryPos = searchCountry(countryId);
-
-        if (countryPos != -1) { 
-            System.out.println("Country already exists with ID: " + countryId);
-            return null;  
-        } else {
-            String name = ProjectHelper.inputStr("Input Country Name: ");
-            int population = ProjectHelper.inputInt("Input Population (must be greater than 0): ");
-
-            // Validate Population
-            while (population <= 0) {
-                System.out.println("Population must be greater than 0. Please try again.");
-                population = ProjectHelper.inputInt("Input Population: ");
-            }
-
-            // Create and add new Country object
-            Country newCountry = new Country(countryId, name, population);
-            countries.add(newCountry);
-                        
-            System.out.println("Country added successfully: " + newCountry);
-            
-            return newCountry;  
-        }
-    }
+//    public Country addCountry() {
+//        String countryId = ProjectHelper.inputStr("Input Country ID: ");
+//
+//        if (countryId.isEmpty()) {  
+//            System.out.println("The ID cannot be empty.");
+//            return null;  
+//        } else if (!countryId.matches("^[a-zA-Z0-9].*")) {
+//            System.out.println("The ID cannot begin with special characters.");
+//            return null;  
+//        } else if (countryId.length() > 20) {
+//            System.out.println("The ID cannot exceed more than 20 characters.");
+//            return null; 
+//        }
+//
+//        int countryPos = searchCountry(countryId);
+//
+//        if (countryPos != -1) { 
+//            System.out.println("Country already exists with ID: " + countryId);
+//            return null;  
+//        } else {
+//            String name = ProjectHelper.inputStr("Input Country Name: ");
+//            int population = ProjectHelper.inputInt("Input Population (must be greater than 0): ");
+//
+//            // Validate Population
+//            while (population <= 0) {
+//                System.out.println("Population must be greater than 0. Please try again.");
+//                population = ProjectHelper.inputInt("Input Population: ");
+//            }
+//
+//            // Create and add new Country object
+//            Country newCountry = new Country(countryId, name, population);
+//            countries.add(newCountry);
+//                        
+//            System.out.println("Country added successfully: " + newCountry);
+//            
+//            return newCountry;  
+//        }
+//    }
+//    
     
-    
-	public String addCountryForUI(String countryId, String name, String population, Country newCountry) {
+	public String addCountry(String countryId, String name, String population, Country newCountry) {
 		String output = "";
 
 		if (countryId != null && !countryId.isBlank()) {
@@ -164,59 +164,59 @@ public class Countries {
     
  // DELETE Country by Id
     
-    public boolean deleteCountryById(String countryId) {
-        int countryIndex = searchCountry(countryId);
+//    public boolean deleteCountryById(String countryId) {
+//        int countryIndex = searchCountry(countryId);
+//
+//        // Check if the country exists in the list
+//        if (countryIndex == -1) {
+//            System.out.println("Country with the specified ID not found.");
+//            return false;  
+//        }
+//
+//        Country country = countries.get(countryIndex);
+//
+//        // 1. Check if the country is linked to any ProductsByCountry
+//        for (ProductsByCountry product : country.getProducts()) {
+//            if (product.getCountry().getCountryId().equals(countryId)) {
+//                System.out.println("Cannot delete country. It is linked to ProductsByCountry.");
+//                return false;  
+//            }
+//        }
+//
+//        // 2. Check if the country is linked to any LogisticsSite
+//        for (LogisticsSite site : country.getSites()) {
+//            if (site.getCountry().getCountryId().equals(countryId)) {
+//                System.out.println("Cannot delete country. It is linked to LogisticsSite.");
+//                return false;
+//            }
+//        }
+//        
+//        RestAPIHelper restAPIHelper = new RestAPIHelper();
+//		ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate().
+//												getForEntity(restAPIHelper.getRootAPIURL() 
+//												+ "routeLines/country/" 
+//														+ countryId,
+//														RouteLine[].class);
+//							
+//		if (response.getStatusCode().is2xxSuccessful()) {
+//			RouteLine[] routeLineArr = response.getBody();
+//			if (routeLineArr != null) {	
+//				if(routeLineArr.length == 0) {
+//					countries.remove(countryIndex);
+//
+//			        System.out.println("Country successfully deleted.");
+//			        return true;
+//				}
+//			}  else {
+//				System.out.println("Cannot delete country. It is linked to RouteLine.");
+//			}
+//		}
+//		
+//		return false;
+//  
+//    }
 
-        // Check if the country exists in the list
-        if (countryIndex == -1) {
-            System.out.println("Country with the specified ID not found.");
-            return false;  
-        }
-
-        Country country = countries.get(countryIndex);
-
-        // 1. Check if the country is linked to any ProductsByCountry
-        for (ProductsByCountry product : country.getProducts()) {
-            if (product.getCountry().getCountryId().equals(countryId)) {
-                System.out.println("Cannot delete country. It is linked to ProductsByCountry.");
-                return false;  
-            }
-        }
-
-        // 2. Check if the country is linked to any LogisticsSite
-        for (LogisticsSite site : country.getSites()) {
-            if (site.getCountry().getCountryId().equals(countryId)) {
-                System.out.println("Cannot delete country. It is linked to LogisticsSite.");
-                return false;
-            }
-        }
-        
-        RestAPIHelper restAPIHelper = new RestAPIHelper();
-		ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate().
-												getForEntity(restAPIHelper.getRootAPIURL() 
-												+ "routeLines/country/" 
-														+ countryId,
-														RouteLine[].class);
-							
-		if (response.getStatusCode().is2xxSuccessful()) {
-			RouteLine[] routeLineArr = response.getBody();
-			if (routeLineArr != null) {	
-				if(routeLineArr.length == 0) {
-					countries.remove(countryIndex);
-
-			        System.out.println("Country successfully deleted.");
-			        return true;
-				}
-			}  else {
-				System.out.println("Cannot delete country. It is linked to RouteLine.");
-			}
-		}
-		
-		return false;
-  
-    }
-
-	public String deleteCountryForUI(String countryId) {
+	public String deleteCountry(String countryId) {
 		String output = "";
 
 		if (countryId != null && !countryId.isBlank()) {
