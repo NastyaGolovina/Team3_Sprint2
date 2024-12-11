@@ -213,9 +213,7 @@ public class Countries {
 //		return false;
 //  
 //    }
-//    public String deleteCountry(String countryId) {
-//    	countries.remove(countryIndex);
-//    }
+
 	public String deleteCountry(String countryId) {
 		String output = "";
 

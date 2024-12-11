@@ -91,9 +91,13 @@ public class CountriesStage extends Stage {
 				if (output == "") {
 					manager.deleteCountry(selectedCountry);
 					fillListView(manager);
-					countryGridPane.setValueToTextField(TextFieldName.СountryIdField, "");
-		    		countryGridPane.setValueToTextField(TextFieldName.NameField, "");
-		    		countryGridPane.setValueToTextField(TextFieldName.PopulationField,"");
+//					countryGridPane.setValueToTextField(TextFieldName.СountryIdField, "");
+//		    		countryGridPane.setValueToTextField(TextFieldName.NameField, "");
+//		    		countryGridPane.setValueToTextField(TextFieldName.PopulationField,"");
+		    		if(!manager.getCountries().getCountries().isEmpty()) {
+						listViewCtrl.requestFocus();
+						listViewCtrl.getSelectionModel().select(0);
+					}
 				} else {
 					Alert alert = new Alert(Alert.AlertType.ERROR);
 					alert.setTitle("Error");
