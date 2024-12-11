@@ -87,7 +87,7 @@ public class CountriesStage extends Stage {
 		btnDelete.setOnAction(ae -> {
 			String selectedCountry = listViewCtrl.getSelectionModel().getSelectedItem();
 			if (selectedCountry != null) {
-				String output = manager.getCountries().deleteCountry(selectedCountry);
+				String output = manager.getCountries().deleteCountryForUI(selectedCountry);
 				if (output == "") {
 					manager.deleteCountry(selectedCountry);
 					fillListView(manager);
