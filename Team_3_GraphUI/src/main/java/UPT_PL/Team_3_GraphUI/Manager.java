@@ -147,7 +147,6 @@ public class Manager {
 		readAllLogisticsSites();
 		readAllProductsByCountrys();
 		readAllSupplyChains();
-//		readСalculation();
 	}
 	/*
 	 * readAllProducts
@@ -491,7 +490,7 @@ public class Manager {
 	/**
 	 * readAllСalculationWithJplq and read road lines
 	 */
-	protected void readСalculation() {
+	public List<Calculation> readCalculation() {
 		
 		ResponseEntity<Calculation[]> response = restTemplate.getForEntity(rootAPIURL + "calculations", Calculation[].class);
 
@@ -499,47 +498,20 @@ public class Manager {
 			Calculation[] calculationsArr = response.getBody();
 			if (calculationsArr != null) {
 				List<Calculation> calculations = Arrays.asList(calculationsArr);
-				
-				int i = 1;
-				for (Calculation c : calculations) {
-					System.out.println("(" + i + ")" + c);
-					i++;
-				}
-				
-				System.out.println("Select the account you want to download or 0 if you don't want to download");
-				int calculationNum = ProjectHelper.inputInt("Input:");
-				while (calculationNum < 0 || calculationNum > calculations.size()) {
-					calculationNum = ProjectHelper.inputInt("Input:");
-				}
-				
-				if (calculationNum != 0) {
-					String calculationId = calculations.get(calculationNum - 1).getCalculationId();
-
-					
-					ResponseEntity<RouteLine[]> routeLineresponse = restTemplate.
-										getForEntity(rootAPIURL + "routeLines/calculation/"
-										+ calculationId, RouteLine[].class);
-					
-					if (routeLineresponse.getStatusCode().is2xxSuccessful()) {
-						RouteLine[] rBody = routeLineresponse.getBody();
-						if (rBody != null) {
-							this.logisticsProcessor = new LogisticsProcessor();
-							logisticsProcessor.setLogisticsRoutes(new ArrayList<RouteLine>(Arrays.asList(rBody)) );
-							logisticsProcessor.setCurrentСalculation(calculations.get(calculationNum - 1));
-						} 
-					} else {
-						System.out.println("Nothing found");
-					}					
-				}				
+				return calculations;
 			}
 		} else {
 			System.out.println("Nothing found");
 		}	
+		return null;
 	}
+	
+//	public List<RouteLine> readRoute
+	
 	/**
 	 * deleteCalculation
 	 */
-	protected void deleteCalculation() {
+	public void deleteCalculation() {
 		
 		ResponseEntity<Calculation[]> response = restTemplate.getForEntity(rootAPIURL + "calculations", Calculation[].class);
 

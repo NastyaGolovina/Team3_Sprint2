@@ -55,7 +55,8 @@ public class MainMenu extends Application {
 		});
 		
 		btnRouteCalculations.setOnAction(ae -> {
-			message.setText("btnRouteCalculations");
+			CalculationsStage calculationsStage = new CalculationsStage(manager);
+			calculationsStage.show();
 		});
 		
 		
