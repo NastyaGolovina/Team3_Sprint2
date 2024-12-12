@@ -148,6 +148,7 @@ public class Manager {
 		readAllProductsByCountrys();
 		readAllSupplyChains();
 	}
+	
 	/*
 	 * readAllProducts
 	 */

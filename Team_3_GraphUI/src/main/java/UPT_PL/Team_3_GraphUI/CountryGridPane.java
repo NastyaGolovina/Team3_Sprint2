@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import java.io.ObjectStreamException;
 
 
 public class CountryGridPane extends GridPane {
@@ -19,7 +20,7 @@ public class CountryGridPane extends GridPane {
 	 * CalcType
 	 */
 	public enum TextFieldName {
-		СountryIdField,NameField,PopulationField;
+		CountryIdField,NameField,PopulationField;
 	}
 	
 	public CountryGridPane() {
@@ -147,7 +148,7 @@ public class CountryGridPane extends GridPane {
 	
 	public String getValueFromTextField(TextFieldName textFieldName) {
 		switch(textFieldName) {
-		case СountryIdField :
+		case CountryIdField :
 			return countryIdField.getText();
 		case NameField :
 			return nameField.getText();
@@ -161,7 +162,7 @@ public class CountryGridPane extends GridPane {
 	
 	public void setValueToTextField(TextFieldName textFieldName, String text) {
 		switch(textFieldName) {
-		case СountryIdField :
+		case CountryIdField :
 			countryIdField.setText(text);
 		case NameField :
 			nameField.setText(text);

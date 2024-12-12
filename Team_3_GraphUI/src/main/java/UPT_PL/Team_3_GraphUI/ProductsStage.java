@@ -49,11 +49,11 @@ public class ProductsStage extends Stage {
 			
 			VBox VBoxDisplayInfor = new VBox();   //VBox to display the information of that product
 			
-			btnNew.setOnAction(ae -> {
-				ProductUpdateCreateStage productCreateStage = new ProductUpdateCreateStage();
-			
+//			btnNew.setOnAction(ae -> {
+//				ProductUpdateCreateStage productCreateStage = new ProductUpdateCreateStage();
+//			
 				
-			}
+//			}
 			
 				
 		}
