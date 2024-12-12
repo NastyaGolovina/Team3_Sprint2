@@ -381,46 +381,35 @@ public class Manager {
 	/**
 	 * calculateSuppyRequest
 	 */
-//	private void calculateSupplyRequest() {
-//		productRequestProcessor.calcSupplyRequest(products, countries);
-//	}
+	private void calculateSupplyRequest() {
+		productRequestProcessor.calcSupplyRequest(products, countries);
+	}
 	/**
 	 * calculateLogisticsRoute
 	 */
-//	public void calculateLogisticsRoute() {
-//		
-//			productRequestProcessor = new ProductRequestProcessor();
-//			logisticsProcessor = new LogisticsProcessor();
-//			logisticsProcessor.setCurrentСalculation(new Calculation(ProjectHelper.inputStr("Input current calculation description :"))); 
-//			calculateSupplyRequest();
-//			
-//			ProjectHelper.printTypes();
-//			String name;
-//			int calcType = ProjectHelper.inputInt("Input calculated type : ");
-//			while (calcType < 1 || calcType > 3) {
-//				System.out.println("Wrong type");
-//				calcType = ProjectHelper.inputInt("Input calculated type : ");
-//			}
-//			
-//			switch (calcType) {
-//			case 1: {
-//				name = "";
-//				logisticsProcessor.calcLogisticsRoute(productRequestProcessor, logisticsSupplyChains, LogisticsProcessor.CalcType.AllCountry, name);
-//				break;
-//			}
-//			case 2: {
-//				name = ProjectHelper.inputStr("Input country name : ");
-//				
-//				logisticsProcessor.calcLogisticsRoute(productRequestProcessor, logisticsSupplyChains, LogisticsProcessor.CalcType.Country, name);
-//				break;
-//				}
-//			case 3: {
-//				name = ProjectHelper.inputStr("Input country product : ");
-//				logisticsProcessor.calcLogisticsRoute(productRequestProcessor, logisticsSupplyChains, LogisticsProcessor.CalcType.Product, name);
-//				break;
-//				}
-//			}
-//			}
+	public void calculateLogisticsRoute(String description, String calcType, String name) {
+		
+			productRequestProcessor = new ProductRequestProcessor();
+			logisticsProcessor = new LogisticsProcessor();
+			logisticsProcessor.setCurrentСalculation(new Calculation(description)); 
+			calculateSupplyRequest();
+			
+					
+			switch (calcType) {
+			case "All": {
+				logisticsProcessor.calcLogisticsRoute(productRequestProcessor, logisticsSupplyChains, LogisticsProcessor.CalcType.AllCountry, name);
+				break;
+			}
+			case "Country": {
+				logisticsProcessor.calcLogisticsRoute(productRequestProcessor, logisticsSupplyChains, LogisticsProcessor.CalcType.Country, name);
+				break;
+				}
+			case "Product": {
+				logisticsProcessor.calcLogisticsRoute(productRequestProcessor, logisticsSupplyChains, LogisticsProcessor.CalcType.Product, name);
+				break;
+				}
+			}
+			}
 			
 			
 		

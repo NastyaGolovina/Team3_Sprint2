@@ -1,6 +1,5 @@
 package UPT_PL.Team_3_GraphUI;
 
-
 import java.util.ArrayList;
 
 import UPT_PL.Team_3.model.Calculation;
@@ -18,13 +17,15 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class CalculationsStage extends Stage {
-	
+
 	private TableView<RouteLine> routeLineTableView;
+
 	/**
 	 * Constructor
 	 */
@@ -34,61 +35,58 @@ public class CalculationsStage extends Stage {
 	}
 
 	public void buildUI(Manager manager) {
-		this.setTitle("Calculations"); 
+		this.setTitle("Calculations");
 		this.initModality(Modality.APPLICATION_MODAL);
 		this.setMaximized(true);
-		
+
 		VBox root = new VBox();
 		root.setSpacing(10);
 		root.setAlignment(Pos.TOP_LEFT);
-		
+
 		HBox HButtonsBox = new HBox();
 		HButtonsBox.setSpacing(10);
 		HButtonsBox.setAlignment(Pos.CENTER);
 
-		
 		Button btnCalculate = new Button("Calculate");
 		Button btnSaveCalculation = new Button("Save Current Calculation");
 		Button btnDelete = new Button("Delete");
 		Button btnLoadCalculation = new Button("Load Calculation");
-		
 
-		
-		
-		
-		
+		ScrollPane scrollPane = new ScrollPane(routeLineTableView);
+
+		scrollPane.setFitToWidth(true);
+		scrollPane.setFitToHeight(true);
 
 		btnCalculate.setOnAction(ae -> {
-			
+			RouteLineCalculateStage routeLineCalculateStage = new RouteLineCalculateStage(manager);
+			routeLineCalculateStage.showAndWait();
+			fillTableView(manager);
+
 		});
-		
-		
+
 		btnDelete.setOnAction(ae -> {
-			
 
 		});
-		
+
 		btnLoadCalculation.setOnAction(ae -> {
-			
 
 		});
-		
+
 		buildRouteLineTableView();
 		fillTableView(manager);
 		root.getChildren().add(HButtonsBox);
-		root.getChildren().add(routeLineTableView);
+
+		VBox.setVgrow(scrollPane, Priority.ALWAYS);
+		root.getChildren().add(scrollPane);
 		VBox.setMargin(HButtonsBox, new Insets(10, 0, 0, 0));
 
-		
-		HButtonsBox.getChildren().addAll(new Button[] {btnCalculate,btnSaveCalculation, btnDelete, btnLoadCalculation});
-		
-	
+		HButtonsBox.getChildren()
+				.addAll(new Button[] { btnCalculate, btnSaveCalculation, btnDelete, btnLoadCalculation });
 
-		this.setScene(new Scene(root,750,750));
-		
-		
+		this.setScene(new Scene(root, 750, 750));
+
 	}
-	
+
 	public void buildRouteLineTableView() {
 		// Columns
 		TableColumn<RouteLine, String> columnRouteLineID = new TableColumn<>("Route Line ID");
@@ -109,7 +107,8 @@ public class CalculationsStage extends Stage {
 		TableColumn<RouteLine, Country> columnCountryReceiver = new TableColumn<>("Country Receiver");
 		columnCountryReceiver.setCellValueFactory(new PropertyValueFactory<>("countryReceiver"));
 
-		TableColumn<RouteLine, LogisticsSite> columnLogisticsSiteReceiver = new TableColumn<>("Logistics Site Receiver");
+		TableColumn<RouteLine, LogisticsSite> columnLogisticsSiteReceiver = new TableColumn<>(
+				"Logistics Site Receiver");
 		columnLogisticsSiteReceiver.setCellValueFactory(new PropertyValueFactory<>("logisticsSiteReceiver"));
 
 		TableColumn<RouteLine, Product> columnProduct = new TableColumn<>("Product");
@@ -140,7 +139,7 @@ public class CalculationsStage extends Stage {
 		columnCovered.setCellValueFactory(new PropertyValueFactory<>("covered"));
 
 		TableColumn<RouteLine, Boolean> columnIsOptimalChain = new TableColumn<>("Optimal Chain");
-		columnIsOptimalChain.setCellValueFactory(new PropertyValueFactory<>("isOptimalChain"));
+		columnIsOptimalChain.setCellValueFactory(new PropertyValueFactory<>("optimalChain"));
 
 		// set width
 		columnRouteLineID.setPrefWidth(150);
@@ -160,7 +159,25 @@ public class CalculationsStage extends Stage {
 		columnDurationInDays.setPrefWidth(150);
 		columnCovered.setPrefWidth(150);
 		columnIsOptimalChain.setPrefWidth(150);
-		
+
+		columnRouteLineID.setResizable(true);
+		columnVersion.setResizable(true);
+		columnCurrentCalculation.setResizable(true);
+		columnCountrySender.setResizable(true);
+		columnLogisticsSiteSender.setResizable(true);
+		columnCountryReceiver.setResizable(true);
+		columnLogisticsSiteReceiver.setResizable(true);
+		columnProduct.setResizable(true);
+		columnTransport.setResizable(true);
+		columnQuantity.setResizable(true);
+		columnRequestedQuantity.setResizable(true);
+		columnAmountProduct.setResizable(true);
+		columnAmountTransport.setResizable(true);
+		columnTotalAmount.setResizable(true);
+		columnDurationInDays.setResizable(true);
+		columnCovered.setResizable(true);
+		columnIsOptimalChain.setResizable(true);
+
 		// Adding columns to the table
 		routeLineTableView.getColumns().add(columnRouteLineID);
 		routeLineTableView.getColumns().add(columnVersion);
@@ -179,21 +196,14 @@ public class CalculationsStage extends Stage {
 		routeLineTableView.getColumns().add(columnDurationInDays);
 		routeLineTableView.getColumns().add(columnCovered);
 		routeLineTableView.getColumns().add(columnIsOptimalChain);
-		
-		
-		ScrollPane scrollPane = new ScrollPane(routeLineTableView);
 
-
-		scrollPane.setFitToWidth(true); 
-		scrollPane.setFitToHeight(true);
 	}
-	
-	
+
 	private void fillTableView(Manager manager) {
 		routeLineTableView.getItems().clear();
-        ArrayList<RouteLine> routeLine = manager.getLogisticsProcessor().getLogisticsRoutes();
-        for (RouteLine r : routeLine) {
-        	routeLineTableView.getItems().add(r);
+		ArrayList<RouteLine> routeLine = manager.getLogisticsProcessor().getLogisticsRoutes();
+		for (RouteLine r : routeLine) {
+			routeLineTableView.getItems().add(r);
 		}
 	}
 }

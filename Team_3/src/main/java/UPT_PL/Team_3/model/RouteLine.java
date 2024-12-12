@@ -120,6 +120,22 @@ public class RouteLine {
 
 
 	/**
+	 * @return the currentCalculation
+	 */
+	public Calculation getCurrentCalculation() {
+		return currentCalculation;
+	}
+
+
+	/**
+	 * @param currentCalculation the currentCalculation to set
+	 */
+	public void setCurrentCalculation(Calculation currentCalculation) {
+		this.currentCalculation = currentCalculation;
+	}
+
+
+	/**
 	 * @param routeLineID the routeLineID to set
 	 */
 	public void setRouteLineID(String routeLineID) {
