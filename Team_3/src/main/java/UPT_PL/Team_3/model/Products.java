@@ -94,52 +94,118 @@ public class Products {
 	 * @return 
 	 */
 
-	public Product addProduct() {
-		String productId = ProjectHelper.inputStr("Input product ID : ");
-
-		if (productId.isEmpty()) {
-			System.out.println("The product ID can not be empty! ");
-			return null; // Indicate that no product was added
-		}
-
-		int productPos = searchProduct(productId); // Product position in the array list
-		// searchProduct by the productId
-		if (productPos != -1) { // in case the product is not found in the list by checking its ID then print
-								// existed
-			// then move to the add product starting by name
-
-			System.out.println("Product already existed");
-			return null;
-		}
-
-		  // Starting to add new product follow by those variables
-			String name = ProjectHelper.inputStr("Input product name: ");
-			if (name.isEmpty()) {
-				System.out.println("The product name can not be empty, please insert the name! ");
-				return null; // Indicate that no product was added
-			}
-			Integer expirationInDays = ProjectHelper.inputInt("Input the number of days before expiration date (positive number): ");
-			if (expirationInDays <= 0) {
-				System.out.println("The number of days before expiration date can't be negative, please insert a valid number!  ");
-				return null;
-			}
-			double recommenedRate = ProjectHelper.inputDouble("Input the recommended rate per year of that product : ");
-			if (recommenedRate <= 0) {
-				System.out.println("The recommended rate can't be negative, please insert a valid number!  ");
-				return null;
-			} 
-
-				// after validation, then add the new product to the list,// create object and
-				// put to array list
-				Product product = new Product(productId, name, expirationInDays, recommenedRate);
-				ProductList.add(product);
-
-				System.out.println("ProductID: " + productId + ",Name:" + name + ",Expiration date" + expirationInDays
-						+ "Recommened rate " + recommenedRate + " is successfully added!");
-				return product;
-			
-		}
+//	public Product addProduct() {
+//		String productId = ProjectHelper.inputStr("Input product ID : ");
+//
+//		if (productId.isEmpty()) {
+//			System.out.println("The product ID can not be empty! ");
+//			return null; // Indicate that no product was added
+//		}
+//
+//		int productPos = searchProduct(productId); // Product position in the array list
+//		// searchProduct by the productId
+//		if (productPos != -1) { // in case the product is not found in the list by checking its ID then print
+//								// existed
+//			// then move to the add product starting by name
+//
+//			System.out.println("Product already existed");
+//			return null;
+//		}
+//
+//		  // Starting to add new product follow by those variables
+//			String name = ProjectHelper.inputStr("Input product name: ");
+//			if (name.isEmpty()) {
+//				System.out.println("The product name can not be empty, please insert the name! ");
+//				return null; // Indicate that no product was added
+//			}
+//			Integer expirationInDays = ProjectHelper.inputInt("Input the number of days before expiration date (positive number): ");
+//			if (expirationInDays <= 0) {
+//				System.out.println("The number of days before expiration date can't be negative, please insert a valid number!  ");
+//				return null;
+//			}
+//			double recommenedRate = ProjectHelper.inputDouble("Input the recommended rate per year of that product : ");
+//			if (recommenedRate <= 0) {
+//				System.out.println("The recommended rate can't be negative, please insert a valid number!  ");
+//				return null;
+//			} 
+//
+//				// after validation, then add the new product to the list,// create object and
+//				// put to array list
+//				Product product = new Product(productId, name, expirationInDays, recommenedRate);
+//				ProductList.add(product);
+//
+//				System.out.println("ProductID: " + productId + ",Name:" + name + ",Expiration date" + expirationInDays
+//						+ "Recommened rate " + recommenedRate + " is successfully added!");
+//				return product;
+//			
+//		}
 		    
+	
+	// ADJUST THE ADD PRODUCT METHOD so that a product can only be added if the all the conditions are met
+		//If any of these conditions fail, an appropriate error message is returned for each condition.
+		//If all conditions pass, the product is added, and an empty string is returned.
+		
+		//The method doesn’t create a new Product from scratch. 
+	    //Instead, it will just fill in the details (like productID, name,expirationInDays,recommendedRate) of the existing Product object here is newProduct .
+
+		public String addProduct(String productID, String name, Integer expirationInDays, double recommendedRate,
+				Product newProduct) {
+			String output = "";
+
+			if (productID != null && !productID.isBlank()) {
+				if (productID.matches("^[a-zA-Z0-9].*")) { // condition if productID begins with any special characters
+															// (i.e., non-alphanumeric characters),
+					if (productID.length() <= 20) {
+						int productPos = searchProduct(productID); // Product position in the array list
+						if (productPos == -1) { // if it is not found
+
+							// then validate the parameters
+							if (name != null && !name.isBlank()) {
+								if (expirationInDays != null) {
+									if (expirationInDays > 0) {
+										if (recommendedRate > 0) {
+											if (recommendedRate <= 10000) {
+												newProduct.setProductID(productID);
+												newProduct.setName(name);
+												newProduct.setExpirationInDays(expirationInDays);
+												ProductList.add(newProduct);
+
+											} else {
+												output = "The recommended rate can not exceed 10000";
+											}
+
+										} else {
+											output = "The recommended rate must be greater than 0";
+										}
+
+									} else {
+										output = "The amount of days till expiration date must be greater than 0";
+									}
+
+								} else {
+									output = "The amount of days till expiration date can not be empty";
+								}
+
+							} else {
+								output = "The name of the product cannot be empty.";
+							}
+						} else {
+							output = "Product already exists with ID: " + productID;
+						}
+
+					} else {
+						output = "The ID cannot exceed more than 20 characters.";
+					}
+				} else {
+					output = "The ID of the product cannot begin with special characters.";
+				}
+
+			} else {
+				output = "The ID of the product cannot be empty.";
+			}
+			return output;
+		}
+		
 
 	/**
 	 * This method builds a string that represents all the Product objects in the
@@ -173,59 +239,112 @@ public class Products {
 	}
 
 	
-	/**
-	 * Delete Product by productId in array list
-	 * 
-	 * Remove the product with the same productID from the ArrayList named
-	 * ProductList.
-	 */
+//	/**
+//	 * Delete Product by productId in array list
+//	 * 
+//	 * Remove the product with the same productID from the ArrayList named
+//	 * ProductList.
+//	 */
+//
+//	public boolean deleteProduct(String productID, ArrayList<Country> countries) {
+//
+//		// Check if product exists in the database or ProductList before proceeding
+//		int productPos = searchProduct(productID);
+//		if (productPos == -1) {
+//			System.out.println("Error: Product with ID " + productID + " does not exist. No product to delete.");
+//
+//			return false;
+//		}
+//
+//		// Check if the product is being used in ProductsByCountry
+//
+//		for (Country country : countries) { // Process each country to delete the product with the specified productId,
+//											// go thru each country in countries list
+//			for (int i = 0; i < country.getProducts().size(); i++) { // Iterate through the ProductByCountry list
+//																		// (products) to check
+//				// if the product is being used
+//				if (country.getProducts().get(i).getProduct().getProductID().equalsIgnoreCase(productID)) {
+//					System.out.println("Error: Product with ID " + productID + " is in use and cannot be deleted.");
+//					return false;
+//				}
+//			}
+//		}
+//
+//		RestAPIHelper restAPIHelper = new RestAPIHelper();
+//		ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate()
+//				.getForEntity(restAPIHelper.getRootAPIURL() + "routeLines/product/" + productID, RouteLine[].class);
+//
+//		if (response.getStatusCode().is2xxSuccessful()) {
+//			RouteLine[] routeLineArr = response.getBody();
+//			if (routeLineArr != null) {
+//				if (routeLineArr.length == 0) {
+//					// Delete from the list
+//					ProductList.remove(productPos);
+//					System.out.println("Product with ID " + productID + " has been successfully deleted.");
+//					return true;
+//				}
+//			} else {
+//				System.out.println("Cannot delete product. It is linked to RouteLine.");
+//			}
+//		}
+//
+//		return false;
+//	}
+//}
 
-	public boolean deleteProduct(String productID, ArrayList<Country> countries) {
+/**
+// * Delete Product by productId in array list
+// * 
+// * Remove the product with the same productID from the ArrayList named
+// * ProductList.
+// */
 
+public String deleteProduct(String productID, ArrayList<Country> countries) {
+	String output = "";
+
+	if (productID != null && !productID.isBlank()) {
 		// Check if product exists in the database or ProductList before proceeding
 		int productPos = searchProduct(productID);
-		if (productPos == -1) {
-			System.out.println("Error: Product with ID " + productID + " does not exist. No product to delete.");
-
-			return false;
-		}
-
-		// Check if the product is being used in ProductsByCountry
-
-		for (Country country : countries) { // Process each country to delete the product with the specified productId,
-											// go thru each country in countries list
-			for (int i = 0; i < country.getProducts().size(); i++) { // Iterate through the ProductByCountry list
-																		// (products) to check
-				// if the product is being used
-				if (country.getProducts().get(i).getProduct().getProductID().equalsIgnoreCase(productID)) {
-					System.out.println("Error: Product with ID " + productID + " is in use and cannot be deleted.");
-					return false;
+		if (productPos != -1) { // if the product is found
+			// Check if the product is being used in ProductsByCountry
+			for (Country country : countries) {
+				for (int i = 0; i < country.getProducts().size(); i++) {
+					if (country.getProducts().get(i).getProduct().getProductID().equalsIgnoreCase(productID)) {
+						return "Cannot delete product. It is linked to ProductsByCountry.";
+					}
 				}
 			}
-		}
 
-		RestAPIHelper restAPIHelper = new RestAPIHelper();
-		ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate()
-				.getForEntity(restAPIHelper.getRootAPIURL() + "routeLines/product/" + productID, RouteLine[].class);
+			RestAPIHelper restAPIHelper = new RestAPIHelper();
+			ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate().getForEntity(
+					restAPIHelper.getRootAPIURL() + "routeLines/product/" + productID, RouteLine[].class);
 
-		if (response.getStatusCode().is2xxSuccessful()) {
-			RouteLine[] routeLineArr = response.getBody();
-			if (routeLineArr != null) {
-				if (routeLineArr.length == 0) {
-					// Delete from the list
-					ProductList.remove(productPos);
-					System.out.println("Product with ID " + productID + " has been successfully deleted.");
-					return true;
+			if (response.getStatusCode().is2xxSuccessful()) {
+				RouteLine[] routeLineArr = response.getBody();
+				if (routeLineArr != null) {
+					if (routeLineArr.length == 0) {
+						// Delete from the list
+						ProductList.remove(productPos);
+						System.out.println("Product with ID " + productID + " has been successfully deleted.");
+					} else {
+						output = "Cannot delete product. It is linked to RouteLine.";
+					}
+
 				}
-			} else {
-				System.out.println("Cannot delete product. It is linked to RouteLine.");
+
 			}
+
+		} else {
+			output = "Product with the specified ID not found.";
 		}
 
-		return false;
+	} else {
+		output = "The ID of the product cannot be empty.";
 	}
+	return output;
 }
 
+}
 
 
 
