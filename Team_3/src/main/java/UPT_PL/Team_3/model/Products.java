@@ -148,7 +148,7 @@ public class Products {
 		//The method doesn’t create a new Product from scratch. 
 	    //Instead, it will just fill in the details (like productID, name,expirationInDays,recommendedRate) of the existing Product object here is newProduct .
 
-		public String addProduct(String productID, String name, Integer expirationInDays, double recommendedRate,
+		public String addProduct(String productID, String name, Integer expirationInDays, double recommendedRate, // convert integer and double to string
 				Product newProduct) {
 			String output = "";
 
