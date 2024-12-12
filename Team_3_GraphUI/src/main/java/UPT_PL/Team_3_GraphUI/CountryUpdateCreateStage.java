@@ -71,7 +71,7 @@ public class CountryUpdateCreateStage extends Stage {
 	
 	public void createNewCountry(Manager manager) {
 		btnOK.setOnAction(ae -> {
-			String countryId = countryGridPane.getValueFromTextField(TextFieldName.СountryIdField);
+			String countryId = countryGridPane.getValueFromTextField(TextFieldName.CountryIdField);
 			String name = countryGridPane.getValueFromTextField(TextFieldName.NameField);
 			String population = countryGridPane.getValueFromTextField(TextFieldName.PopulationField);
 			Country newCountry = new Country();
@@ -85,7 +85,7 @@ public class CountryUpdateCreateStage extends Stage {
 	            alert.setHeaderText("Failed to add country");
 	            alert.setContentText(output);
 	            alert.showAndWait();
-	            countryGridPane.setValueToTextField(TextFieldName.СountryIdField, "");
+	            countryGridPane.setValueToTextField(TextFieldName.CountryIdField, "");
 	    		countryGridPane.setValueToTextField(TextFieldName.NameField, "");
 	    		countryGridPane.setValueToTextField(TextFieldName.PopulationField,"");
 			}
@@ -95,7 +95,7 @@ public class CountryUpdateCreateStage extends Stage {
 	
 	public void updateCountry(Manager manager) {
 		btnOK.setOnAction(ae -> {
-			String countryId = countryGridPane.getValueFromTextField(TextFieldName.СountryIdField);
+			String countryId = countryGridPane.getValueFromTextField(TextFieldName.CountryIdField);
 			String name = countryGridPane.getValueFromTextField(TextFieldName.NameField);
 			String population = countryGridPane.getValueFromTextField(TextFieldName.PopulationField);
 			Country editedCountry = new Country();
