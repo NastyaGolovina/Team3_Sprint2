@@ -8,7 +8,7 @@ import UPT_PL.Team_3.model.ProductsByCountry;
 
 @Repository
 public interface ProductsByCountryRepository extends JpaRepository<ProductsByCountry, String>{
-	@Query(value = "SELECT * FROM team_3.Products_by_Country where Country_Id =?1", nativeQuery = true)
+	@Query(value = "SELECT * FROM Team_3.Products_by_Country where Country_Id =?1", nativeQuery = true)
 	List<ProductsByCountry> getProductsByCountryByCountryID(String countryId);
 
 }
