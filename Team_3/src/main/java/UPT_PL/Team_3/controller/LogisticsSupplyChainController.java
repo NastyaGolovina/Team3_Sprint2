@@ -1,5 +1,6 @@
 package UPT_PL.Team_3.controller;
 
+import UPT_PL.Team_3.dto.LogisticsSupplyChainDto;
 import UPT_PL.Team_3.model.LogisticsSupplyChain;
 import UPT_PL.Team_3.service.LogisticsSupplyChainService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,14 @@ public class LogisticsSupplyChainController {
     }
 
     @PostMapping
-    public LogisticsSupplyChain createSupplyChain(@RequestBody LogisticsSupplyChain supplyChain) {
+    public LogisticsSupplyChain createSupplyChain(@RequestBody LogisticsSupplyChainDto supplyChain) {
         return supplyChainService.createSupplyChain(supplyChain);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<LogisticsSupplyChain> updateSupplyChain(@PathVariable String id, @RequestBody LogisticsSupplyChainDto supplyChain) {
+        Optional<LogisticsSupplyChain> updatedSupplyChain = supplyChainService.updateSupplyChain(id, supplyChain);
+        return updatedSupplyChain.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
