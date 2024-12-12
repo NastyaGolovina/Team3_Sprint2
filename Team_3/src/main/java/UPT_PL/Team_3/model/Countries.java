@@ -318,48 +318,91 @@ public class Countries {
 
 // Method to delete product by country, delete product from a certain country
     
-    public String deleteProductsByCountry() {
-    	
-    	 // Prompt for the country ID to delete
-        String countryId = ProjectHelper.inputStr("Enter the country ID to delete: ");
-        int countryPos = searchCountry(countryId);
-        
-        // Check if the country exists
-        if (countryPos == -1) {
-            System.out.println("Country with the specified ID not found.");
-            return null;
-        }
+//    public String deleteProductsByCountry() {
+//    	
+//    	 // Prompt for the country ID to delete
+//        String countryId = ProjectHelper.inputStr("Enter the country ID to delete: ");
+//        int countryPos = searchCountry(countryId);
+//        
+//        // Check if the country exists
+//        if (countryPos == -1) {
+//            System.out.println("Country with the specified ID not found.");
+//            return null;
+//        }
+//
+//       Country country = countries.get(countryPos);
+//       
+//       // check if country has any products
+//       if(country.getProducts().isEmpty()) {
+//    	   System.out.println("There are no products list in this country.");
+//          return null;
+//       }
+//       // Display the list of products in the country
+//       System.out.println("List of products :");
+//       for (int i = 0; i < country.getProducts().size(); i++) {
+//           System.out.println("(" + (i) + ") " + country.getProducts().get(i));
+//       }
+//       
+//      // Ask for the index/position of the products in the previous list to delete
+//       
+//     int indexProducts = ProjectHelper.inputInt("Enter the index of the product to delete: ");
+//       
+//     // validation for the index of product
+//     if(indexProducts < 0 || indexProducts >= country.getProducts().size()) {
+//    	 System.out.println("Invalid index of Product, try again");
+//    	 return null;
+//     }
+//     
+//     // remove the product by country from the ProductsByCountry list 
+//     String productsByCountryID = country.getProducts().get(indexProducts).getProductByCountryId();
+//     country.getProducts().remove(indexProducts);
+//     System.out.println("Product removed successfully.");
+//     return productsByCountryID;
+//    
+//	}
+	
+	// Method to delete product by country, delete product from a certain country
+	public String deleteProductsByCountry(String countryId) {
+	    String output = ""; // Default to an empty string if everything is valid
 
-       Country country = countries.get(countryPos);
-       
-       // check if country has any products
-       if(country.getProducts().isEmpty()) {
-    	   System.out.println("There are no products list in this country.");
-          return null;
-       }
-       // Display the list of products in the country
-       System.out.println("List of products :");
-       for (int i = 0; i < country.getProducts().size(); i++) {
-           System.out.println("(" + (i) + ") " + country.getProducts().get(i));
-       }
-       
-      // Ask for the index/position of the products in the previous list to delete
-       
-     int indexProducts = ProjectHelper.inputInt("Enter the index of the product to delete: ");
-       
-     // validation for the index of product
-     if(indexProducts < 0 || indexProducts >= country.getProducts().size()) {
-    	 System.out.println("Invalid index of Product, try again");
-    	 return null;
-     }
-     
-     // remove the product by country from the ProductsByCountry list 
-     String productsByCountryID = country.getProducts().get(indexProducts).getProductByCountryId();
-     country.getProducts().remove(indexProducts);
-     System.out.println("Product removed successfully.");
-     return productsByCountryID;
-    
+	    if (countryId != null && !countryId.isBlank()) {
+	        // Check if the country exists
+	        int countryPos = searchCountry(countryId);
+	        if (countryPos != -1) {
+	            Country country = countries.get(countryPos);
+
+	            // Check if the country has any products
+	            if (!country.getProducts().isEmpty()) {
+	                // Display the list of products
+	                System.out.println("List of products:");
+	                for (int i = 0; i < country.getProducts().size(); i++) {
+	                    System.out.println("(" + i + ") " + country.getProducts().get(i));
+	                }
+
+	                // Automatically delete the first product (index 0)
+	                int indexProducts = 0; 
+	                if (indexProducts >= 0 && indexProducts < country.getProducts().size()) {
+	                    String productsByCountryID = country.getProducts().get(indexProducts).getProductByCountryId();
+	                    country.getProducts().remove(indexProducts);
+	                    System.out.println("Product removed successfully.");
+	                    output = "Deleted Product ID: " + productsByCountryID;
+	                } else {
+	                    output = "Invalid index of Product, try again.";
+	                }
+	            } else {
+	                output = "There are no products in this country.";
+	            }
+	        } else {
+	            output = "Country with the specified ID not found.";
+	        }
+	    } else {
+	        output = "The ID cannot be empty.";
+	    }
+
+	    return output;
 	}
+
+	
     
 
     /**
