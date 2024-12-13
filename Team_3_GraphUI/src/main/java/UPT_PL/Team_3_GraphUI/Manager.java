@@ -144,8 +144,8 @@ public class Manager {
 		readAllProducts();
 		readAllCountries();
 		readAllTransports();
-		readAllLogisticsSites();
-		readAllProductsByCountrys();
+//		readAllLogisticsSites();
+//		readAllProductsByCountrys();
 		readAllSupplyChains();
 	}
 	
