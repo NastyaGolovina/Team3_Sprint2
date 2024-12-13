@@ -37,6 +37,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< HEAD
 	<classpathentry kind="src" path="target/generated-sources/annotations">
 		<attributes>
 			<attribute name="optional" value="true"/>
@@ -65,5 +66,7 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
+=======
+>>>>>>> branch 'master' of https://github.com/NastyaGolovina/Team3_Sprint2.git
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
