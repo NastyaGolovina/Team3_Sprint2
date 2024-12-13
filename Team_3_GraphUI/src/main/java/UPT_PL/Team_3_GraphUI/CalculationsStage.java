@@ -11,6 +11,7 @@ import UPT_PL.Team_3.model.Transport;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
@@ -64,6 +65,19 @@ public class CalculationsStage extends Stage {
 
 		});
 
+		btnSaveCalculation.setOnAction(ae -> {
+			if(manager.getLogisticsProcessor().isCurrentСalculationEmpty()) {
+
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Warning");
+				alert.setHeaderText("No calculation to send to database");
+				alert.showAndWait();
+			} else {
+				manager.writeLogisticsProcessorInDB();
+			}
+			fillTableView(manager);
+		});
+		
 		btnDelete.setOnAction(ae -> {
 
 		});
