@@ -1,6 +1,12 @@
 package UPT_PL.Team_3.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 /**
  * The LogisticsSupplyChain class represents a supply chain between two logistics sites.
@@ -9,7 +15,6 @@ import jakarta.persistence.*;
 @Table(name = "Logistics_Supply_Chain")
 public class LogisticsSupplyChain {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chain_id", length = 40, nullable = false)
     private String chainId;
 

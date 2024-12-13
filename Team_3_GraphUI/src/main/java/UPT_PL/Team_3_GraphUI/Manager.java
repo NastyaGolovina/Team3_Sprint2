@@ -144,8 +144,8 @@ public class Manager {
 		readAllProducts();
 		readAllCountries();
 		readAllTransports();
-//		readAllLogisticsSites();
-//		readAllProductsByCountrys();
+		readAllLogisticsSites();
+		readAllProductsByCountrys();
 		readAllSupplyChains();
 	}
 	
@@ -241,7 +241,7 @@ public class Manager {
 	/**
 	 * readAllSupplyChains
 	 */
-	public void readAllSupplyChains() {
+	private void readAllSupplyChains() {
 		ResponseEntity<LogisticsSupplyChain[]> response = restTemplate.getForEntity(rootAPIURL + "supply-chains", LogisticsSupplyChain[].class);
 		
 		if (response.getStatusCode().is2xxSuccessful()) {
@@ -253,7 +253,7 @@ public class Manager {
 			System.out.println("Nothing found");
 		}
 	}
-
+	
 	/**
 	 * addProduct
 	 */
@@ -358,7 +358,10 @@ public class Manager {
 
 	}
 	
-	public void addLogisticsSupplyChain(LogisticsSupplyChainDto newLogisticsSupplyChain) throws Exception {
+	/**
+	 * addLogisticsSupplyChain
+	 */	
+	public void addLogisticsSupplyChain(LogisticsSupplyChain newLogisticsSupplyChain) {
 		if (newLogisticsSupplyChain != null) {
 			ResponseEntity<LogisticsSupplyChain> response = restTemplate.postForEntity(rootAPIURL + "supply-chains",
 					newLogisticsSupplyChain, LogisticsSupplyChain.class);
@@ -366,29 +369,13 @@ public class Manager {
 			if (response.getStatusCode().is2xxSuccessful()) {
 				LogisticsSupplyChain body = response.getBody();
 				if (body != null) {
-					System.out.println("Successful save in DB");
+					System.out.println("Successful save in BD");
 				} else {
 					System.out.println("No body");
 				}
 			} else {
 				System.out.println("Nothing found");
 			}
-		}
-	}
-	
-	public void updateLogisticsSupplyChain(LogisticsSupplyChainDto editedSupplyChain) throws Exception {
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-		HttpEntity<LogisticsSupplyChainDto> requestEntity = new HttpEntity<LogisticsSupplyChainDto>(editedSupplyChain,
-				headers);
-		
-		ResponseEntity<LogisticsSupplyChain> response = restTemplate.exchange(rootAPIURL + "supply-chains/" + editedSupplyChain.getChainId(),
-				HttpMethod.PUT, requestEntity, LogisticsSupplyChain.class);
-			
-		if (response.getStatusCode().is2xxSuccessful()) {
-			System.out.println("Updated");
-		} else {
-			System.out.println("Nothing found");
 		}
 	}
 	/**
@@ -634,23 +621,5 @@ public class Manager {
 	 */
 	public void printTransports() {
 		transports.displayTransports();
-	}
-
-	public void deleteSupplyChain(int selectedSupplyChain) {
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-		ResponseEntity<LogisticsSupplyChain> response = restTemplate.exchange(
-			    rootAPIURL + "/supply-chains/" + selectedSupplyChain,
-			    HttpMethod.DELETE,
-			    null,
-			    LogisticsSupplyChain.class
-			);
-
-
-		if (response.getStatusCode().is2xxSuccessful()) {
-			System.out.println("Updated");
-		} else {
-			System.out.println("Nothing found");
-		}
 	}
 }
