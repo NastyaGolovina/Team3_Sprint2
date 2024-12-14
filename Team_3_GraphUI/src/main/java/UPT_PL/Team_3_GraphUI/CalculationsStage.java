@@ -1,11 +1,14 @@
 package UPT_PL.Team_3_GraphUI;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import UPT_PL.Team_3.model.Calculation;
 import UPT_PL.Team_3.model.Country;
+import UPT_PL.Team_3.model.LogisticsProcessor;
 import UPT_PL.Team_3.model.LogisticsSite;
 import UPT_PL.Team_3.model.Product;
+import UPT_PL.Team_3.model.ProductRequestProcessor;
 import UPT_PL.Team_3.model.RouteLine;
 import UPT_PL.Team_3.model.Transport;
 import javafx.geometry.Insets;
@@ -13,6 +16,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -52,6 +56,7 @@ public class CalculationsStage extends Stage {
 		Button btnSaveCalculation = new Button("Save Current Calculation");
 		Button btnDelete = new Button("Delete");
 		Button btnLoadCalculation = new Button("Load Calculation");
+		Button btnClear = new Button("Clear");
 
 		ScrollPane scrollPane = new ScrollPane(routeLineTableView);
 
@@ -84,11 +89,36 @@ public class CalculationsStage extends Stage {
 			fillTableView(manager);
 		});
 
+		
 		btnDelete.setOnAction(ae -> {
 			CalculationDeleteLoadStage calculationDeleteLoadStage = new CalculationDeleteLoadStage(manager);
 			calculationDeleteLoadStage.deleteCalculation(manager);
 			fillTableView(manager);
 		});
+
+		btnClear.setOnAction(ae -> {
+			if (!manager.getLogisticsProcessor().isCurrentСalculationEmpty()) {
+				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+				alert.setTitle("Confirmation Dialog");
+				alert.setHeaderText("The previous calculation will be deleted before adding to the database  ");
+				alert.setContentText("Do you want to continue?");
+
+				Optional<ButtonType> result = alert.showAndWait();
+
+				if (result.isPresent()) {
+					if (result.get() == ButtonType.OK) {
+						manager.setProductRequestProcessor(new ProductRequestProcessor());
+						manager.setLogisticsProcessor(new LogisticsProcessor());
+						fillTableView(manager);
+					}
+				}
+			} else {
+				manager.setProductRequestProcessor(new ProductRequestProcessor());
+				manager.setLogisticsProcessor(new LogisticsProcessor());
+				fillTableView(manager);
+			}
+		});
+
 
 		buildRouteLineTableView();
 		fillTableView(manager);
@@ -99,7 +129,7 @@ public class CalculationsStage extends Stage {
 		VBox.setMargin(HButtonsBox, new Insets(10, 0, 0, 0));
 
 		HButtonsBox.getChildren()
-				.addAll(new Button[] { btnCalculate, btnSaveCalculation, btnLoadCalculation, btnDelete });
+				.addAll(new Button[] { btnCalculate, btnSaveCalculation, btnLoadCalculation, btnDelete, btnClear });
 
 		this.setScene(new Scene(root, 750, 750));
 
