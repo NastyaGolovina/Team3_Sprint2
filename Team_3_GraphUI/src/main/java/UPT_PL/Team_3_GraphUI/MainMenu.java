@@ -43,7 +43,8 @@ public class MainMenu extends Application {
 		});
 		
 		btnProducts.setOnAction(ae -> {
-			message.setText("btnProducts");
+			ProductsStage productsStage = new ProductsStage(manager);
+			productsStage.show();
 		});
 		
 		btnTransports.setOnAction(ae -> {
