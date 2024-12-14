@@ -137,7 +137,7 @@ public class ProductsStage extends Stage {
 			fillListView(manager);
 			listViewDisplay.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 			HBoxInfor.getChildren().add(listViewDisplay);
-			HBoxInfor.getChildren().add(listViewDisplay);
+//			HBoxInfor.getChildren().add(listViewDisplay);
 			HBox.setMargin(listViewDisplay, new Insets(0,10,10,10));
 			//VBoxList.getChildren().add(listView);
 			//VBoxList.setPadding(new Insets(0, 0, 0, 20));
