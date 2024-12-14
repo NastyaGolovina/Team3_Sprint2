@@ -1,6 +1,7 @@
 package UPT_PL.Team_3_GraphUI;
 
 import UPT_PL.Team_3.model.Product;
+import UPT_PL.Team_3_GraphUI.ProductsGridPane;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -49,12 +50,138 @@ public class ProductsStage extends Stage {
 			
 			VBox VBoxDisplayInfor = new VBox();   //VBox to display the information of that product
 			
-//			btnNew.setOnAction(ae -> {
-//				ProductUpdateCreateStage productCreateStage = new ProductUpdateCreateStage();
-//			
+			// Button new
+			btnNew.setOnAction(ae -> {
+				ProductUpdateCreateStage productCreateStage = new ProductUpdateCreateStage(manager);
+				productCreateStage.createNewProduct(manager);
 				
-//			}
+				
+				fillListView(manager);
+				
+				
+				if(!manager.getProducts().getProductList().isEmpty()) {
+					listViewDisplay.requestFocus();
+					listViewDisplay.getSelectionModel().select(0);
+				}
+
+			});
 			
+			//Button Edit
+			btnEdit.setOnAction(ae -> {
+				String selectedProduct = listViewDisplay.getSelectionModel().getSelectedItem();
+				int selectedProductPos = listViewDisplay.getSelectionModel().getSelectedIndex();
+				if (selectedProduct != null) {
+					ProductUpdateCreateStage propductUpdateStage = new ProductUpdateCreateStage(manager);
+					propductUpdateStage.getProductGridPane().getProductIDField().setEditable(false);
+					propductUpdateStage.getProductGridPane().fillGrid(selectedProduct,manager);
+					
+					propductUpdateStage.updateProduct(manager);
+					
+					fillListView(manager);
+					if(!manager.getProducts().getProductList().isEmpty()) {
+						listViewDisplay.requestFocus();
+						listViewDisplay.getSelectionModel().select(selectedProductPos);
+					}
+				} else {
+
+					Alert alert = new Alert(Alert.AlertType.WARNING);
+					alert.setTitle("Warning");
+					alert.setHeaderText("No product selected");
+					alert.setContentText("Please select a product to edit.");
+					alert.showAndWait();
+
+				}
+
+			});
+			
+			//Button delete
+
+			btnDelete.setOnAction(ae -> {
+				String selectedProduct = listViewDisplay.getSelectionModel().getSelectedItem();
+				if (selectedProduct != null) {
+					String output = manager.getProducts().deleteProduct(selectedProduct, null);
+					if (output == "") {
+						manager.deleteCountry(selectedProduct);
+						fillListView(manager);
+
+						if(!manager.getProducts().getProductList().isEmpty()) {
+							listViewDisplay.requestFocus();
+							listViewDisplay.getSelectionModel().select(0);
+						}
+
+					} else {
+						Alert alert = new Alert(Alert.AlertType.ERROR);
+						alert.setTitle("Error");
+						alert.setHeaderText("Failed to delete product");
+						alert.setContentText(output);
+						alert.showAndWait();
+					}
+				} else {
+
+					Alert alert = new Alert(Alert.AlertType.WARNING);
+					alert.setTitle("Warning");
+					alert.setHeaderText("No product selected");
+					alert.setContentText("Please select a product to delete.");
+					alert.showAndWait();
+
+				}
+
+			});
+			
+			root.getChildren().addAll(new HBox[] { HBoxButton, HBoxInfor});
+			VBox.setMargin(HBoxButton, new Insets(10, 0, 0, 0));
+			VBox.setVgrow(HBoxInfor, Priority.ALWAYS);
+			
+			HBoxButton.getChildren().addAll(new Button[] {btnNew, btnEdit, btnDelete});
+			//HInfoBox.getChildren().addAll(new VBox[] {VBoxList,VBoxResult});
+			fillListView(manager);
+			listViewDisplay.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+			HBoxInfor.getChildren().add(listViewDisplay);
+			HBoxInfor.getChildren().add(listViewDisplay);
+			HBox.setMargin(listViewDisplay, new Insets(0,10,10,10));
+			//VBoxList.getChildren().add(listView);
+			//VBoxList.setPadding(new Insets(0, 0, 0, 20));
+			productGridPane = buildUIProductFields();
+			VBoxDisplayInfor.getChildren().add(productGridPane.getGrid());
+			
+			listViewDisplay.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+	            if (newValue != null) {
+	            	productGridPane.fillGrid(String.valueOf(newValue), manager);
+	            }
+			});
+			
+			this.setScene(new Scene(root,750,750));
+			
+			this.setOnShown(event -> {
+				Platform.runLater(() -> {
+					if(!manager.getCountries().getCountries().isEmpty()) {
+						listViewDisplay.requestFocus();
+						listViewDisplay.getSelectionModel().select(0);
+					}
+				});
+			});
 				
 		}
+		
+		// refresh the listViewDisplay component with product IDs from the list of products
+		//updating the UI whenever the product list changes
+		public void fillListView(Manager manager) {
+			listViewDisplay.getItems().clear();
+			for(Product c : manager.getProducts().getProductList()) {
+				listViewDisplay.getItems().add(c.getProductID()); 
+			}
+		}
+		
+		public ProductsGridPane buildUIProductFields() {
+			ProductsGridPane productGridPane = new ProductsGridPane();
+			
+			productGridPane.getProductIDField().setEditable(false);
+			productGridPane.getNameField().setEditable(false);
+			productGridPane.getExpirationInDaysField().setEditable(false);
+			productGridPane.getRecommendedRateField().setEditable(false);
+			
+
+			return productGridPane;
+		}
+		
 	}
