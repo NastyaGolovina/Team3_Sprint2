@@ -597,6 +597,19 @@ public class Manager {
 		}
 	}
 	
+	public void updateProduct(Product product) {
+        headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		HttpEntity<Product> requestEntity = new HttpEntity<Product>(product, headers);
+		ResponseEntity<Product> response = restTemplate.exchange(rootAPIURL + "products", HttpMethod.PUT, requestEntity, Product.class);
+		
+		if (response.getStatusCode().is2xxSuccessful()) {
+			System.out.println("Updated");
+		} else {
+			System.out.println("Nothing found");
+		}
+	}
+	
 	
 	/**
 	 * printProducts
