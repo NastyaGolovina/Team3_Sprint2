@@ -1,5 +1,6 @@
 package UPT_PL.Team_3.controller;
 
+
 import UPT_PL.Team_3.model.Product;
 
 
@@ -30,6 +31,11 @@ public class ProductController {
 
 	@PostMapping
 	public Product createProduct(@RequestBody Product product) {
+		return productService.createProduct(product);
+	}
+	
+	@PutMapping
+	public Product updateProduct(@RequestBody Product product) {
 		return productService.createProduct(product);
 	}
 

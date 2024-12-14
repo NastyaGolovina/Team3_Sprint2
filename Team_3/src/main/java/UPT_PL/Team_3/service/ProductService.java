@@ -1,5 +1,6 @@
 package UPT_PL.Team_3.service;
 
+
 import UPT_PL.Team_3.model.Product;
 
 import UPT_PL.Team_3.repository.ProductRepository;
@@ -26,6 +27,10 @@ public class ProductService {
 	}
 
 	public Product createProduct(Product product) {
+		return productRepository.save(product);
+	}
+
+	public Product updateProduct(Product product) {
 		return productRepository.save(product);
 	}
 
