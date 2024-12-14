@@ -1,6 +1,5 @@
 package UPT_PL.Team_3_GraphUI;
 
-
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -25,66 +24,65 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class CalculationDeleteLoadStage extends Stage{
-	
+public class CalculationDeleteLoadStage extends Stage {
+
 	private Button btnOK;
 	private TableView<Calculation> calculationTableView;
+
 	/*
 	 * Constructor
 	 */
 	public CalculationDeleteLoadStage(Manager manage) {
-		calculationTableView = new TableView<Calculation>(); 
+		calculationTableView = new TableView<Calculation>();
 		buildUI(manage);
 	}
 
 	public void buildUI(Manager manager) {
 		this.setTitle("Calculations");
 		this.initModality(Modality.APPLICATION_MODAL);
-		
+
 		VBox calculationVBox = new VBox();
-		
+
 		HBox HButtonsBox = new HBox();
 		HButtonsBox.setAlignment(Pos.TOP_CENTER);
 		HButtonsBox.setSpacing(10);
 		btnOK = new Button("OK");
 		Button btnCancel = new Button("Cancel");
-		
-		
+
 		btnCancel.setOnAction(ae -> {
 			this.close();
 		});
-		
+
 		buildCalculationTableView();
 		calculationTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		ScrollPane scrollPane = new ScrollPane(calculationTableView);
 		scrollPane.setFitToWidth(true);
 		scrollPane.setFitToHeight(true);
-		
+
 		VBox.setVgrow(scrollPane, Priority.ALWAYS);
-				
-		HButtonsBox.getChildren().addAll(new Button[] {btnOK,btnCancel});
+
+		HButtonsBox.getChildren().addAll(new Button[] { btnOK, btnCancel });
 		calculationVBox.getChildren().addAll(HButtonsBox);
-		VBox.setMargin(HButtonsBox, new Insets(10,10,10,10));
+		VBox.setMargin(HButtonsBox, new Insets(10, 10, 10, 10));
 		calculationVBox.getChildren().addAll(scrollPane);
 		fillTableView(manager);
 		this.setScene(new Scene(calculationVBox, 500, 500));
-		
-		
+
 		this.setOnShown(event -> {
 			Platform.runLater(() -> {
-				if(manager.readCalculations() != null) {
+				if (manager.readCalculations() != null) {
 					calculationTableView.requestFocus();
 					calculationTableView.getSelectionModel().select(0);
 				}
 			});
 		});
 	}
-	
+
 	public void buildCalculationTableView() {
 		// Columns
 		TableColumn<Calculation, String> columnCalculationId = new TableColumn<>("Calculation Id");
 		columnCalculationId.setCellValueFactory(new PropertyValueFactory<>("calculationId"));
-		
+
 		TableColumn<Calculation, String> columnCalculationDate = new TableColumn<>("Calculation Date");
 		columnCalculationDate.setCellValueFactory(new PropertyValueFactory<>("calculationDate"));
 
@@ -94,44 +92,40 @@ public class CalculationDeleteLoadStage extends Stage{
 		TableColumn<Calculation, String> columnSortBy = new TableColumn<>("SortBy");
 		columnSortBy.setCellValueFactory(new PropertyValueFactory<>("sortBy"));
 
-		
 		// set width
 		columnCalculationId.setPrefWidth(98);
 		columnCalculationDate.setPrefWidth(98);
 		columnCalculationDescription.setPrefWidth(200);
 		columnSortBy.setPrefWidth(98);
-		
 
 		columnCalculationId.setResizable(true);
 		columnCalculationDate.setResizable(true);
 		columnCalculationDescription.setResizable(true);
 		columnSortBy.setResizable(true);
-		
 
 		// Adding columns to the table
 		calculationTableView.getColumns().add(columnCalculationId);
 		calculationTableView.getColumns().add(columnCalculationDate);
-	    calculationTableView.getColumns().add(columnCalculationDescription);
-	    calculationTableView.getColumns().add(columnSortBy);
-		
+		calculationTableView.getColumns().add(columnCalculationDescription);
+		calculationTableView.getColumns().add(columnSortBy);
 
 	}
 
 	private void fillTableView(Manager manager) {
 		calculationTableView.getItems().clear();
 		ArrayList<Calculation> calculation = manager.readCalculations();
-		if(calculation != null) {
+		if (calculation != null) {
 			for (Calculation c : calculation) {
 				calculationTableView.getItems().add(c);
 			}
 		}
-		
+
 	}
-	
+
 	public void loadCalculation(Manager manager) {
 		btnOK.setOnAction(ae -> {
 			Calculation selectedCalculation = calculationTableView.getSelectionModel().getSelectedItem();
-			if(selectedCalculation != null) {
+			if (selectedCalculation != null) {
 				if (!manager.getLogisticsProcessor().isCurrentСalculationEmpty()) {
 					Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 					alert.setTitle("Confirmation Dialog");
@@ -155,15 +149,14 @@ public class CalculationDeleteLoadStage extends Stage{
 				}
 			} else {
 				Alert alert = new Alert(Alert.AlertType.ERROR);
-	            alert.setTitle("Error");
-	            alert.setHeaderText("Failed to load calculation");
-	            alert.showAndWait();
+				alert.setTitle("Error");
+				alert.setHeaderText("Failed to load calculation");
+				alert.showAndWait();
 			}
 		});
 		this.showAndWait();
 	}
-	
-	
+
 	public void deleteCalculation(Manager manager) {
 		btnOK.setOnAction(ae -> {
 			Alert deleteAlert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -176,11 +169,13 @@ public class CalculationDeleteLoadStage extends Stage{
 			if (deleteResult.isPresent()) {
 				if (deleteResult.get() == ButtonType.OK) {
 					Calculation selectedCalculation = calculationTableView.getSelectionModel().getSelectedItem();
-					if(selectedCalculation != null) {
-						if (!manager.getLogisticsProcessor().isCurrentСalculationEmpty()) {
+					if (selectedCalculation != null ) {
+						if (!manager.getLogisticsProcessor().isCurrentСalculationEmpty() && selectedCalculation.getCalculationId().
+								equalsIgnoreCase(manager.getLogisticsProcessor().getCurrentСalculation().getCalculationId())) {
 							Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 							alert.setTitle("Confirmation Dialog");
-							alert.setHeaderText("The previous calculation will be deleted before adding to the database  ");
+							alert.setHeaderText(
+									"The previous calculation will be deleted before adding to the database  ");
 							alert.setContentText("Do you want to continue?");
 
 							Optional<ButtonType> result = alert.showAndWait();
@@ -200,9 +195,9 @@ public class CalculationDeleteLoadStage extends Stage{
 						}
 					} else {
 						Alert alert = new Alert(Alert.AlertType.ERROR);
-			            alert.setTitle("Error");
-			            alert.setHeaderText("Failed to delete calculation");
-			            alert.showAndWait();
+						alert.setTitle("Error");
+						alert.setHeaderText("Failed to delete calculation");
+						alert.showAndWait();
 					}
 				}
 			}

@@ -488,7 +488,7 @@ public class Manager {
 
 	public void readRouteLines(Calculation calculation) {
 		String calculationId = calculation.getCalculationId();
-		
+
 		ResponseEntity<RouteLine[]> routeLineresponse = restTemplate
 				.getForEntity(rootAPIURL + "routeLines/calculation/" + calculationId, RouteLine[].class);
 
@@ -514,8 +514,8 @@ public class Manager {
 		restTemplate.delete(rootAPIURL + "routeLines/calculation/" + calculationId);
 		restTemplate.delete(rootAPIURL + "calculations/" + calculationId);
 
-		if ((!logisticsProcessor.isCurrentСalculationEmpty()) && (logisticsProcessor.getCurrentСalculation()
-				.getCalculationId().equalsIgnoreCase(calculationId))) {
+		if ((!logisticsProcessor.isCurrentСalculationEmpty())
+				&& (logisticsProcessor.getCurrentСalculation().getCalculationId().equalsIgnoreCase(calculationId))) {
 			productRequestProcessor = new ProductRequestProcessor();
 			logisticsProcessor = new LogisticsProcessor();
 		}

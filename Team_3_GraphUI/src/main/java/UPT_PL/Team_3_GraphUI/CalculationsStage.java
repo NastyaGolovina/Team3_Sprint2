@@ -66,31 +66,29 @@ public class CalculationsStage extends Stage {
 		});
 
 		btnSaveCalculation.setOnAction(ae -> {
-			if(!manager.getLogisticsProcessor().isCurrentСalculationEmpty()) {
+			if (!manager.getLogisticsProcessor().isCurrentСalculationEmpty()) {
 				manager.writeLogisticsProcessorInDB();
 			} else {
 				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.setTitle("Warning");
 				alert.setHeaderText("No calculation to send to database");
 				alert.showAndWait();
-				
+
 			}
 			fillTableView(manager);
 		});
-		
+
 		btnLoadCalculation.setOnAction(ae -> {
 			CalculationDeleteLoadStage calculationDeleteLoadStage = new CalculationDeleteLoadStage(manager);
 			calculationDeleteLoadStage.loadCalculation(manager);
 			fillTableView(manager);
 		});
-		
+
 		btnDelete.setOnAction(ae -> {
 			CalculationDeleteLoadStage calculationDeleteLoadStage = new CalculationDeleteLoadStage(manager);
 			calculationDeleteLoadStage.deleteCalculation(manager);
 			fillTableView(manager);
 		});
-
-		
 
 		buildRouteLineTableView();
 		fillTableView(manager);
