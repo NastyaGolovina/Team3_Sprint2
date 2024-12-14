@@ -107,7 +107,7 @@ public class CountryUpdateCreateStage extends Stage {
 			} else {
 				Alert alert = new Alert(Alert.AlertType.ERROR);
 	            alert.setTitle("Error");
-	            alert.setHeaderText("Failed to add country");
+	            alert.setHeaderText("Failed to edite country");
 	            alert.setContentText(output);
 	            alert.showAndWait();
 			}

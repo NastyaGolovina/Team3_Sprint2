@@ -66,25 +66,31 @@ public class CalculationsStage extends Stage {
 		});
 
 		btnSaveCalculation.setOnAction(ae -> {
-			if(manager.getLogisticsProcessor().isCurrentСalculationEmpty()) {
-
+			if(!manager.getLogisticsProcessor().isCurrentСalculationEmpty()) {
+				manager.writeLogisticsProcessorInDB();
+			} else {
 				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.setTitle("Warning");
 				alert.setHeaderText("No calculation to send to database");
 				alert.showAndWait();
-			} else {
-				manager.writeLogisticsProcessorInDB();
+				
 			}
 			fillTableView(manager);
 		});
 		
-		btnDelete.setOnAction(ae -> {
-
-		});
-
 		btnLoadCalculation.setOnAction(ae -> {
-
+			CalculationDeleteLoadStage calculationDeleteLoadStage = new CalculationDeleteLoadStage(manager);
+			calculationDeleteLoadStage.loadCalculation(manager);
+			fillTableView(manager);
 		});
+		
+		btnDelete.setOnAction(ae -> {
+			CalculationDeleteLoadStage calculationDeleteLoadStage = new CalculationDeleteLoadStage(manager);
+			calculationDeleteLoadStage.deleteCalculation(manager);
+			fillTableView(manager);
+		});
+
+		
 
 		buildRouteLineTableView();
 		fillTableView(manager);
@@ -95,7 +101,7 @@ public class CalculationsStage extends Stage {
 		VBox.setMargin(HButtonsBox, new Insets(10, 0, 0, 0));
 
 		HButtonsBox.getChildren()
-				.addAll(new Button[] { btnCalculate, btnSaveCalculation, btnDelete, btnLoadCalculation });
+				.addAll(new Button[] { btnCalculate, btnSaveCalculation, btnLoadCalculation, btnDelete });
 
 		this.setScene(new Scene(root, 750, 750));
 
