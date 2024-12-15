@@ -1,6 +1,7 @@
 package UPT_PL.Team_3.model;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import org.hibernate.Session;
@@ -17,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 public class Products {
 	// variable
 	private ArrayList<Product> ProductList; // list name ProductList to store all of the products from Product class
-
+	private ArrayList<Country> countries;
 	/**
 	 * Constructor to initialize the Products object with an empty list of products
 	 * 
@@ -304,6 +305,7 @@ public class Products {
 //		return false;
 //	}
 //}
+	
 
 /**
 // * Delete Product by productId in array list
@@ -312,7 +314,7 @@ public class Products {
 // * ProductList.
 // */
 
-public String deleteProduct(String productID, ArrayList<Country> countries) {
+public String deleteProduct(String productID) {
 	String output = "";
 
 	if (productID != null && !productID.isBlank()) {
@@ -323,7 +325,7 @@ public String deleteProduct(String productID, ArrayList<Country> countries) {
 			for (Country country : countries) {
 				for (int i = 0; i < country.getProducts().size(); i++) {
 					if (country.getProducts().get(i).getProduct().getProductID().equalsIgnoreCase(productID)) {
-						return "Cannot delete product. It is linked to ProductsByCountry.";
+
 					}
 				}
 			}
@@ -339,12 +341,10 @@ public String deleteProduct(String productID, ArrayList<Country> countries) {
 						// Delete from the list
 						ProductList.remove(productPos);
 						System.out.println("Product with ID " + productID + " has been successfully deleted.");
-					} else {
-						output = "Cannot delete product. It is linked to RouteLine.";
 					}
-
+				} else {
+					output = "Cannot delete product. It is linked to RouteLine.";
 				}
-
 			}
 
 		} else {
@@ -356,6 +356,8 @@ public String deleteProduct(String productID, ArrayList<Country> countries) {
 	}
 	return output;
 }
+
+	
 
 // UPDATE PRODUCT
 
@@ -417,4 +419,7 @@ public String updateProduct(String productID, String name, String expirationInDa
 	output = "The ID of the product cannot be empty.";
 }
 	return output;
-}}
+}
+}
+
+
