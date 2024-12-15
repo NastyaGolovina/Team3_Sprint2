@@ -5,6 +5,7 @@ package UPT_PL.Team_3_GraphUI;
 
 import UPT_PL.Team_3.model.Product;
 
+
 import UPT_PL.Team_3_GraphUI.ProductsGridPane.TextFieldName;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -55,7 +56,7 @@ public class ProductUpdateCreateStage extends Stage {
 		});
 		
 		HButtonsBox.getChildren().addAll(new Button[] {btnOK,btnCancel});
-		productGridPane.getGrid().add(HButtonsBox, 1, 3);
+		productGridPane.getGrid().add(HButtonsBox, 1, 4);
 		this.setScene(new Scene(productGridPane.getGrid(), 500, 500));
 		}
 	
