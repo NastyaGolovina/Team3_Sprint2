@@ -1,6 +1,7 @@
 package UPT_PL.Team_3_GraphUI;
 
 import UPT_PL.Team_3.model.Product;
+
 import UPT_PL.Team_3_GraphUI.ProductsGridPane;
 
 import javafx.application.Platform;
@@ -41,14 +42,16 @@ public class ProductsStage extends Stage {
 			HBox HBoxButton = new HBox();   // for the button options
 			HBoxButton.setSpacing(10);
 			HBoxButton.setAlignment(Pos.TOP_CENTER); // for display the information about Product
-			HBox HBoxInfor = new HBox();
+			HBox HBoxInfor = new HBox();    // where contain ListView 
 			HBoxInfor.setSpacing(10);
+			HBoxInfor.setAlignment(Pos.TOP_LEFT);
 			
 			Button btnNew = new Button("New Product");
 			Button btnEdit = new Button("Edit Product");
 			Button btnDelete = new Button("Delete Product");
 			
 			VBox VBoxDisplayInfor = new VBox();   //VBox to display the information of that product
+			VBoxDisplayInfor.setAlignment(Pos.TOP_RIGHT);
 			
 			// Button new
 			btnNew.setOnAction(ae -> {
@@ -128,19 +131,18 @@ public class ProductsStage extends Stage {
 
 			});
 			
-			root.getChildren().addAll(new HBox[] { HBoxButton, HBoxInfor});
+			root.getChildren().addAll(new HBox[] { HBoxButton, HBoxInfor, });
+
 			VBox.setMargin(HBoxButton, new Insets(10, 0, 0, 0));
 			VBox.setVgrow(HBoxInfor, Priority.ALWAYS);
 			
 			HBoxButton.getChildren().addAll(new Button[] {btnNew, btnEdit, btnDelete});
-			//HInfoBox.getChildren().addAll(new VBox[] {VBoxList,VBoxResult});
+			HBoxInfor.getChildren().addAll(VBoxDisplayInfor);
 			fillListView(manager);
 			listViewDisplay.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 			HBoxInfor.getChildren().add(listViewDisplay);
-//			HBoxInfor.getChildren().add(listViewDisplay);
+
 			HBox.setMargin(listViewDisplay, new Insets(0,10,10,10));
-			//VBoxList.getChildren().add(listView);
-			//VBoxList.setPadding(new Insets(0, 0, 0, 20));
 			productGridPane = buildUIProductFields();
 			VBoxDisplayInfor.getChildren().add(productGridPane.getGrid());
 			
