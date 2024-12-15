@@ -1,6 +1,7 @@
 package UPT_PL.Team_3_GraphUI;
 
 import UPT_PL.Team_3.model.Product;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
