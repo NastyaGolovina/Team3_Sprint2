@@ -323,14 +323,12 @@ public String deleteProduct(String productID) {
 		if (productPos != -1) { // if the product is found
 			// Check if the product is being used in ProductsByCountry
 			for (Country country : countries) {
-				for (int i = 0; i < country.getProducts().size(); i++) {
-					if (country.getProducts().get(i).getProduct().getProductID().equalsIgnoreCase(productID)) {
+				for (ProductsByCountry productByCountry : country.getProducts()) {
+					if (productByCountry.getProduct().getProductID().equalsIgnoreCase(productID)) {
 						return "Cannot delete product. It is linked to ProductsByCountry.";
-
 					}
 				}
 			}
-
 			RestAPIHelper restAPIHelper = new RestAPIHelper();
 			ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate()
 					.getForEntity(restAPIHelper.getRootAPIURL() + "routeLines/product/" + productID, RouteLine[].class);
@@ -357,7 +355,6 @@ public String deleteProduct(String productID) {
 	}
 	return output;
 }
-
 	
 
 // UPDATE PRODUCT
