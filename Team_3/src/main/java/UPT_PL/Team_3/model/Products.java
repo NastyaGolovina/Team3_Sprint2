@@ -2,6 +2,7 @@ package UPT_PL.Team_3.model;
 
 import java.util.ArrayList;
 
+
 import java.util.List;
 
 import org.hibernate.Session;
@@ -303,10 +304,9 @@ public class Products {
 //		}
 //
 //		return false;
-//	}
+//	
 //}
 	
-
 /**
 // * Delete Product by productId in array list
 // * 
@@ -325,6 +325,7 @@ public String deleteProduct(String productID) {
 			for (Country country : countries) {
 				for (int i = 0; i < country.getProducts().size(); i++) {
 					if (country.getProducts().get(i).getProduct().getProductID().equalsIgnoreCase(productID)) {
+						return "Cannot delete product. It is linked to ProductsByCountry.";
 
 					}
 				}
