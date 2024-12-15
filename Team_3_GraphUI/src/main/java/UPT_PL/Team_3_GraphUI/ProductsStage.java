@@ -114,7 +114,7 @@ public class ProductsStage extends Stage {
 					if (selectedProduct != null) {
 						String output = manager.getProducts().deleteProduct(selectedProduct, null);
 						if (output == "") {
-							manager.deleteCountry(selectedProduct);
+							manager.deleteProduct(selectedProduct);
 							fillListView(manager);
 	
 							if(!manager.getProducts().getProductList().isEmpty()) {
