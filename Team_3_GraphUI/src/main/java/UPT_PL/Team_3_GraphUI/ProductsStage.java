@@ -1,5 +1,7 @@
 package UPT_PL.Team_3_GraphUI;
 
+import java.util.Optional;
+
 import UPT_PL.Team_3.model.Product;
 
 import UPT_PL.Team_3_GraphUI.ProductsGridPane;
@@ -10,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.HBox;
@@ -96,40 +99,49 @@ public class ProductsStage extends Stage {
 				}
 
 			});
-			
-			//Button delete
 
 			btnDelete.setOnAction(ae -> {
-				String selectedProduct = listViewDisplay.getSelectionModel().getSelectedItem();
-				if (selectedProduct != null) {
-					String output = manager.getProducts().deleteProduct(selectedProduct, null);
-					if (output == "") {
-						manager.deleteCountry(selectedProduct);
-						fillListView(manager);
 
-						if(!manager.getProducts().getProductList().isEmpty()) {
-							listViewDisplay.requestFocus();
-							listViewDisplay.getSelectionModel().select(0);
+				Alert deleteAlert = new Alert(Alert.AlertType.CONFIRMATION);
+				deleteAlert.setTitle("Confirmation Dialog");
+				deleteAlert.setHeaderText("Are you sure you want to delete this product? ");
+				deleteAlert.setContentText("This action cannot be undone.");
+
+				Optional<ButtonType> deleteResult = deleteAlert.showAndWait();
+
+				if (deleteResult.isPresent()) {
+					String selectedProduct = listViewDisplay.getSelectionModel().getSelectedItem();
+					if (selectedProduct != null) {
+						String output = manager.getProducts().deleteProduct(selectedProduct, null);
+						if (output == "") {
+							manager.deleteCountry(selectedProduct);
+							fillListView(manager);
+	
+							if(!manager.getProducts().getProductList().isEmpty()) {
+								listViewDisplay.requestFocus();
+								listViewDisplay.getSelectionModel().select(0);
+							}
+	
+						} else {
+							Alert alert = new Alert(Alert.AlertType.ERROR);
+							alert.setTitle("Error");
+							alert.setHeaderText("Failed to delete product");
+							alert.setContentText(output);
+							alert.showAndWait();
 						}
-
 					} else {
-						Alert alert = new Alert(Alert.AlertType.ERROR);
-						alert.setTitle("Error");
-						alert.setHeaderText("Failed to delete product");
-						alert.setContentText(output);
+	
+						Alert alert = new Alert(Alert.AlertType.WARNING);
+						alert.setTitle("Warning");
+						alert.setHeaderText("No product selected");
+						alert.setContentText("Please select a product to delete.");
 						alert.showAndWait();
+	
 					}
-				} else {
-
-					Alert alert = new Alert(Alert.AlertType.WARNING);
-					alert.setTitle("Warning");
-					alert.setHeaderText("No product selected");
-					alert.setContentText("Please select a product to delete.");
-					alert.showAndWait();
-
 				}
+				
+				});
 
-			});
 			
 			root.getChildren().addAll(new HBox[] { HBoxButton, HBoxInfor, });
 
@@ -177,12 +189,11 @@ public class ProductsStage extends Stage {
 		public ProductsGridPane buildUIProductFields() {
 			ProductsGridPane productGridPane = new ProductsGridPane();
 			
-			productGridPane.getProductIDField().setEditable(false);
-			productGridPane.getNameField().setEditable(false);
-			productGridPane.getExpirationInDaysField().setEditable(false);
-			productGridPane.getRecommendedRateField().setEditable(false);
+			productGridPane.getProductIDField().setEditable(true);
+			productGridPane.getNameField().setEditable(true);
+			productGridPane.getExpirationInDaysField().setEditable(true);
+			productGridPane.getRecommendedRateField().setEditable(true);
 			
-
 			return productGridPane;
 		}
 		
