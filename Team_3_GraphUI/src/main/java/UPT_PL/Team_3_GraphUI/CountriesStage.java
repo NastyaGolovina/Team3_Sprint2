@@ -3,7 +3,7 @@ package UPT_PL.Team_3_GraphUI;
 import java.util.Optional;
 
 import UPT_PL.Team_3.model.Country;
-
+import UPT_PL.Team_3_GraphUI.CountryGridPane.TextFieldName;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -64,7 +64,7 @@ public class CountriesStage extends Stage {
 			if (!manager.getCountries().getCountries().isEmpty()) {
 				listViewCtrl.requestFocus();
 				listViewCtrl.getSelectionModel().select(0);
-			}
+			} 
 
 		});
 
@@ -116,6 +116,10 @@ public class CountriesStage extends Stage {
 							if (!manager.getCountries().getCountries().isEmpty()) {
 								listViewCtrl.requestFocus();
 								listViewCtrl.getSelectionModel().select(0);
+							} else {
+								countryGridPane.setValueToTextField(TextFieldName.CountryIdField, "");
+								countryGridPane.setValueToTextField(TextFieldName.NameField, "");
+								countryGridPane.setValueToTextField(TextFieldName.PopulationField, "");
 							}
 						} else {
 							Alert alert = new Alert(Alert.AlertType.ERROR);
