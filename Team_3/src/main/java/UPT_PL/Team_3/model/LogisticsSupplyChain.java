@@ -18,15 +18,15 @@ public class LogisticsSupplyChain {
     @Column(name = "chain_id", length = 40, nullable = false)
     private String chainId;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
     @JoinColumn(name = "sender_site_id", nullable = false)
     private LogisticsSite sender;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "receiver", nullable = false)
     private LogisticsSite receiver;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "Transport_Id", nullable = false)
     private Transport transport;
 

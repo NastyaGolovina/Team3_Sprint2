@@ -596,6 +596,22 @@ public class Manager {
 		}
 	}
 
+	public void updateLogisticsSupplyChain(LogisticsSupplyChain chain) {
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<LogisticsSupplyChain> requestEntity = new HttpEntity<LogisticsSupplyChain>(chain, headers);
+		ResponseEntity<LogisticsSupplyChain> response = restTemplate.exchange(rootAPIURL + "supply-chains", HttpMethod.PUT, requestEntity,
+				LogisticsSupplyChain.class);
+
+		if (response.getStatusCode().is2xxSuccessful()) {
+			System.out.println("Updated");
+		} else {
+			System.out.println("Nothing found");
+		}
+	}
+
+	
+	
 	/**
 	 * printProducts
 	 */

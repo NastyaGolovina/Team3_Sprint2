@@ -52,7 +52,8 @@ public class MainMenu extends Application {
 		});
 		
 		btnChains.setOnAction(ae -> {
-			message.setText("btnChains");
+			LogisticsSupplyChainsStage logisticsSupplyChainsStage = new LogisticsSupplyChainsStage(manager);
+			logisticsSupplyChainsStage.show();
 		});
 		
 		btnRouteCalculations.setOnAction(ae -> {

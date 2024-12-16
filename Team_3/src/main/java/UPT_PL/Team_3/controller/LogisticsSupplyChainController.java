@@ -35,6 +35,11 @@ public class LogisticsSupplyChainController {
     public LogisticsSupplyChain createSupplyChain(@RequestBody LogisticsSupplyChain supplyChain) {
         return supplyChainService.createSupplyChain(supplyChain);
     }
+    
+    @PutMapping
+    public LogisticsSupplyChain updateSupplyChain(@RequestBody LogisticsSupplyChain supplyChain) {
+        return supplyChainService.updateSupplyChain(supplyChain);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSupplyChain(@PathVariable String id) {

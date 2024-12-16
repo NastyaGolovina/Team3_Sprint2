@@ -29,6 +29,10 @@ public class LogisticsSupplyChainService {
     public LogisticsSupplyChain createSupplyChain(LogisticsSupplyChain supplyChain) {
         return supplyChainRepository.save(supplyChain);
     }
+    
+    public LogisticsSupplyChain updateSupplyChain(LogisticsSupplyChain supplyChain) {
+        return supplyChainRepository.save(supplyChain);
+    }
 
     public void deleteSupplyChain(String id) {
         if (supplyChainRepository.existsById(id)) {
