@@ -2,10 +2,12 @@ package UPT_PL.Team_3_GraphUI;
 
 import java.util.Optional;
 
+
+
 import UPT_PL.Team_3.model.Product;
 
 import UPT_PL.Team_3_GraphUI.ProductsGridPane;
-
+import UPT_PL.Team_3_GraphUI.ProductsGridPane.TextFieldName;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -109,19 +111,27 @@ public class ProductsStage extends Stage {
 
 				Optional<ButtonType> deleteResult = deleteAlert.showAndWait();
 
-				if (deleteResult.isPresent()) {
-					String selectedProduct = listViewDisplay.getSelectionModel().getSelectedItem();
-					if (selectedProduct != null) {
-						String output = manager.getProducts().deleteProduct(selectedProduct, null);
+				if (deleteResult.isPresent()) { // Check user confirmation
+					String selectedProduct = listViewDisplay.getSelectionModel().getSelectedItem(); // Get selected
+																									// product from
+																									// ListView
+
+					if (selectedProduct != null) { // Delete the product using manager's deleteProduct method
+						String output = manager.getProducts().deleteProduct(selectedProduct, manager.getCountries().getCountries());
 						if (output == "") {
 							manager.deleteProduct(selectedProduct);
 							fillListView(manager);
-	
-							if(!manager.getProducts().getProductList().isEmpty()) {
-								listViewDisplay.requestFocus();
-								listViewDisplay.getSelectionModel().select(0);
+
+							if (!manager.getProducts().getProductList().isEmpty()) {  // if the ProductList is not empty
+								listViewDisplay.requestFocus(); 
+								listViewDisplay.getSelectionModel().select(0); //Selects the first item (index 0) in the list view.
+							} else {
+								productGridPane.setValueToTextField(TextFieldName.productIDField, "");
+								productGridPane.setValueToTextField(TextFieldName.nameField, "");
+								productGridPane.setValueToTextField(TextFieldName.expirationInDaysField, "");
+								productGridPane.setValueToTextField(TextFieldName.recommendedRateField, "");
 							}
-	
+
 						} else {
 							Alert alert = new Alert(Alert.AlertType.ERROR);
 							alert.setTitle("Error");
@@ -130,18 +140,17 @@ public class ProductsStage extends Stage {
 							alert.showAndWait();
 						}
 					} else {
-	
+
 						Alert alert = new Alert(Alert.AlertType.WARNING);
 						alert.setTitle("Warning");
 						alert.setHeaderText("No product selected");
 						alert.setContentText("Please select a product to delete.");
 						alert.showAndWait();
-	
+
 					}
 				}
-				
-				});
 
+			});
 			
 			root.getChildren().addAll(new HBox[] { HBoxButton, HBoxInfor, });
 
@@ -149,10 +158,11 @@ public class ProductsStage extends Stage {
 			VBox.setVgrow(HBoxInfor, Priority.ALWAYS);
 			
 			HBoxButton.getChildren().addAll(new Button[] {btnNew, btnEdit, btnDelete});
+			HBoxInfor.getChildren().add(listViewDisplay);
 			HBoxInfor.getChildren().addAll(VBoxDisplayInfor);
 			fillListView(manager);
 			listViewDisplay.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-			HBoxInfor.getChildren().add(listViewDisplay);
+			
 
 			HBox.setMargin(listViewDisplay, new Insets(0,10,10,10));
 			productGridPane = buildUIProductFields();

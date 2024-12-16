@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 public class Products {
 	// variable
 	private ArrayList<Product> ProductList; // list name ProductList to store all of the products from Product class
-	private ArrayList<Country> countries;
+
 	/**
 	 * Constructor to initialize the Products object with an empty list of products
 	 * 
@@ -254,67 +254,15 @@ public class Products {
 	}
 
 	
-//	/**
-//	 * Delete Product by productId in array list
-//	 * 
-//	 * Remove the product with the same productID from the ArrayList named
-//	 * ProductList.
-//	 */
-//
-//	public boolean deleteProduct(String productID, ArrayList<Country> countries) {
-//
-//		// Check if product exists in the database or ProductList before proceeding
-//		int productPos = searchProduct(productID);
-//		if (productPos == -1) {
-//			System.out.println("Error: Product with ID " + productID + " does not exist. No product to delete.");
-//
-//			return false;
-//		}
-//
-//		// Check if the product is being used in ProductsByCountry
-//
-//		for (Country country : countries) { // Process each country to delete the product with the specified productId,
-//											// go thru each country in countries list
-//			for (int i = 0; i < country.getProducts().size(); i++) { // Iterate through the ProductByCountry list
-//																		// (products) to check
-//				// if the product is being used
-//				if (country.getProducts().get(i).getProduct().getProductID().equalsIgnoreCase(productID)) {
-//					System.out.println("Error: Product with ID " + productID + " is in use and cannot be deleted.");
-//					return false;
-//				}
-//			}
-//		}
-//
-//		RestAPIHelper restAPIHelper = new RestAPIHelper();
-//		ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate()
-//				.getForEntity(restAPIHelper.getRootAPIURL() + "routeLines/product/" + productID, RouteLine[].class);
-//
-//		if (response.getStatusCode().is2xxSuccessful()) {
-//			RouteLine[] routeLineArr = response.getBody();
-//			if (routeLineArr != null) {
-//				if (routeLineArr.length == 0) {
-//					// Delete from the list
-//					ProductList.remove(productPos);
-//					System.out.println("Product with ID " + productID + " has been successfully deleted.");
-//					return true;
-//				}
-//			} else {
-//				System.out.println("Cannot delete product. It is linked to RouteLine.");
-//			}
-//		}
-//
-//		return false;
-//	
-//}
-	
 /**
 // * Delete Product by productId in array list
 // * 
 // * Remove the product with the same productID from the ArrayList named
 // * ProductList.
 // */
+	
 
-public String deleteProduct(String productID) {
+public String deleteProduct(String productID, ArrayList<Country> countries) {
 	String output = "";
 
 	if (productID != null && !productID.isBlank()) {
