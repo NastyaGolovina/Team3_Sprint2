@@ -2,6 +2,7 @@ package UPT_PL.Team_3.model;
 
 import java.util.ArrayList;
 
+
 import java.util.List;
 
 
@@ -255,7 +256,7 @@ public class Countries {
 					} else {
 						output = "Cannot delete country. It is linked to RouteLine.";
 					}
-				}
+				} 
 			} else {
 				output = "Country with the specified ID not found.";
 			}
@@ -364,47 +365,126 @@ public class Countries {
 	
 	// Method to delete product by country, delete product from a certain country
 	public String deleteProductsByCountry(String countryId) {
-	    String output = ""; // Default to an empty string if everything is valid
+		String output = ""; // Default to an empty string if everything is valid
 
-	    if (countryId != null && !countryId.isBlank()) {
-	        // Check if the country exists
-	        int countryPos = searchCountry(countryId);
-	        if (countryPos != -1) {
-	            Country country = countries.get(countryPos);
+		if (countryId != null && !countryId.isBlank()) {
+			// Check if the country exists
+			int countryPos = searchCountry(countryId);
+			if (countryPos != -1) {
+				Country country = countries.get(countryPos);
 
-	            // Check if the country has any products
-	            if (!country.getProducts().isEmpty()) {
-	                // Display the list of products
-	                System.out.println("List of products:");
-	                for (int i = 0; i < country.getProducts().size(); i++) {
-	                    System.out.println("(" + i + ") " + country.getProducts().get(i));
-	                }
+				// Check if the country has any products
+				if (!country.getProducts().isEmpty()) {
 
-	                // Automatically delete the first product (index 0)
-	                int indexProducts = 0; 
-	                if (indexProducts >= 0 && indexProducts < country.getProducts().size()) {
-	                    String productsByCountryID = country.getProducts().get(indexProducts).getProductByCountryId();
-	                    country.getProducts().remove(indexProducts);
-	                    System.out.println("Product removed successfully.");
-	                    output = "Deleted Product ID: " + productsByCountryID;
-	                } else {
-	                    output = "Invalid index of Product, try again.";
-	                }
-	            } else {
-	                output = "There are no products in this country.";
-	            }
-	        } else {
-	            output = "Country with the specified ID not found.";
-	        }
-	    } else {
-	        output = "The ID cannot be empty.";
-	    }
+					// Automatically delete the first product (index 0)
+					int indexProducts = 0;
+					if (indexProducts >= 0 && indexProducts < country.getProducts().size()) {
+						String productsByCountryID = country.getProducts().get(indexProducts).getProductByCountryId();
+						country.getProducts().remove(indexProducts);
+						System.out.println("Product removed successfully.");
+						output = "Deleted Product ID: " + productsByCountryID;
+					} else {
+						output = "Invalid index of Product, try again.";
+					}
+				} else {
+					output = "There are no products in this country.";
+				}
+			} else {
+				output = "Country with the specified ID not found.";
+			}
+		} else {
+			output = "The ID cannot be empty.";
+		}
 
-	    return output;
+		return output;
 	}
-
 	
-    
+    //Update ProductsByCountry
+	public String updateProductsByCountry(String countryId, String indexProduct, String name, String expirationInDays,
+			String recommendedRate, String production, String price) {
+		String output = ""; // Default to an empty string if everything is valid
+
+		if (countryId != null && !countryId.isBlank()) {
+			// Check if the country exists by counryId
+			int countryPos = searchCountry(countryId);
+			if (countryPos != -1) {
+				Country country = countries.get(countryPos);
+
+				// Check if the country has any products
+				if (!country.getProducts().isEmpty()) { // if the products by country is not empty
+					// Validate the product index
+					if (indexProduct != null && !indexProduct.isBlank()) {
+						int productIndexInt = Integer.parseInt(indexProduct);
+						if (productIndexInt >= 0 && productIndexInt < country.getProducts().size()) {
+							ProductsByCountry productToUpdate = country.getProducts().get(productIndexInt);
+							if (name != null && !name.isBlank()) {
+								if (expirationInDays != null && !expirationInDays.isBlank()) {
+									if (expirationInDays.matches("-?\\d+")) {
+										int expirationInDaysInt = Integer.parseInt(expirationInDays);
+										if (expirationInDaysInt > 0) {
+											if (recommendedRate != null && !recommendedRate.isBlank()) {
+												if (recommendedRate.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
+													double recommendedRateDouble = Double.parseDouble(recommendedRate);
+													if (production != null && !production.isBlank() && production
+															.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
+														double productionDouble = Double.parseDouble(production);
+														if (price != null && !price.isBlank()
+																&& price.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
+															double priceDouble = Double.parseDouble(price);
+															productToUpdate.getProduct().setName(name);
+															productToUpdate.getProduct()
+																	.setExpirationInDays(expirationInDaysInt);
+															productToUpdate.getProduct()
+																	.setRecommendedRate(recommendedRateDouble);
+															productToUpdate.setProduction(productionDouble);
+															productToUpdate.setPrice(priceDouble);
+
+														} else {
+															output = "The price can not be empty and must be double  ";
+														}
+													} else {
+														output = "The production can not be empty and must be double  ";
+													}
+												} else {
+													output = "The recommended rate must be double  ";
+												}
+											} else {
+												output = "The recommended rate cannot be empty.";
+											}
+										} else {
+											output = "The amount of till expiration must be greater than 0";
+										}
+									} else {
+										output = "The amount of day till expiration must be an integer.";
+
+									}
+								} else {
+									output = "The amount of day till expiration cannot be empty.";
+
+								}
+
+							} else {
+								output = "Product name cannot be empty.";
+
+							}
+						} else {
+							output = "The index of product is invalid";
+						}
+					} else {
+						output = "The index of product must be an integer";
+					}
+				} else {
+					output = "There are no products in this country.";
+				}
+
+			} else {
+				output = "Country with the specified ID not found.";
+			}
+		} else {
+			output = "The Country ID cannot be empty.";
+		}
+		return output;
+	}
 
     /**
      * Deletes a logistics site from the specified country if no dependencies are found.
