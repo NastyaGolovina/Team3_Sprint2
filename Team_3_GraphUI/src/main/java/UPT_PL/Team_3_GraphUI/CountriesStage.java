@@ -88,7 +88,7 @@ public class CountriesStage extends Stage {
 				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.setTitle("Warning");
 				alert.setHeaderText("No country selected");
-				alert.setContentText("Please select a country to delete.");
+				alert.setContentText("Please select a country to update.");
 				alert.showAndWait();
 
 			}
@@ -99,7 +99,7 @@ public class CountriesStage extends Stage {
 
 			Alert deleteAlert = new Alert(Alert.AlertType.CONFIRMATION);
 			deleteAlert.setTitle("Confirmation Dialog");
-			deleteAlert.setHeaderText("Are you sure you want to delete this calculation? ");
+			deleteAlert.setHeaderText("Are you sure you want to delete this country? ");
 			deleteAlert.setContentText("This action cannot be undone.");
 
 			Optional<ButtonType> deleteResult = deleteAlert.showAndWait();

@@ -111,6 +111,7 @@ public class CountryUpdateCreateStage extends Stage {
 	            alert.setHeaderText("Failed to edite country");
 	            alert.setContentText(output);
 	            alert.showAndWait();
+	            countryGridPane.fillGrid(countryId, manager);
 			}
 		});
 		this.showAndWait();

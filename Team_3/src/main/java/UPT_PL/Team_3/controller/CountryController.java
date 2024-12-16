@@ -29,7 +29,7 @@ public class CountryController {
 	
 	@PutMapping
 	public Country updateCountry(@RequestBody Country country) {
-		return countryService.createCountry(country);
+		return countryService.updateCountry(country);
 	}
 	
 	@PostMapping
