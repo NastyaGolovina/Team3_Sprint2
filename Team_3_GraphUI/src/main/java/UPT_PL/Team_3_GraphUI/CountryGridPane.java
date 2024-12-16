@@ -17,7 +17,7 @@ public class CountryGridPane extends GridPane {
 	private TextField populationField;
 	
 	/**
-	 * CalcType
+	 * TextFieldName
 	 */
 	public enum TextFieldName {
 		CountryIdField,NameField,PopulationField;

@@ -43,7 +43,6 @@ public class CountryUpdateCreateStage extends Stage {
 
 
 	public void buildUI(Manager manager) {
-		this.setTitle("Create Country"); 
 		this.initModality(Modality.APPLICATION_MODAL);
 		
 		countryGridPane = new CountryGridPane();
@@ -70,6 +69,7 @@ public class CountryUpdateCreateStage extends Stage {
 	}
 	
 	public void createNewCountry(Manager manager) {
+		this.setTitle("Create Country"); 
 		btnOK.setOnAction(ae -> {
 			String countryId = countryGridPane.getValueFromTextField(TextFieldName.CountryIdField);
 			String name = countryGridPane.getValueFromTextField(TextFieldName.NameField);
@@ -94,6 +94,7 @@ public class CountryUpdateCreateStage extends Stage {
 	}
 	
 	public void updateCountry(Manager manager) {
+		this.setTitle("Update Country"); 
 		btnOK.setOnAction(ae -> {
 			String countryId = countryGridPane.getValueFromTextField(TextFieldName.CountryIdField);
 			String name = countryGridPane.getValueFromTextField(TextFieldName.NameField);
