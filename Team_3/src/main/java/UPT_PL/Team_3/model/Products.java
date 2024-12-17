@@ -311,7 +311,7 @@ public String updateProduct(String productID, String name, String expirationInDa
 	String output = "";
 	if (productID != null && !productID.isBlank()) {
 		int productPos = searchProduct(productID); // Product position in the array list
-		if (productPos == -1) { // if it is not found
+		if (productPos != -1) { // if it is not found
 			Product editedProduct = ProductList.get(productPos);
 			if (name != null && !name.isBlank()) {
 				if (expirationInDays != null && !expirationInDays.isBlank()) {
