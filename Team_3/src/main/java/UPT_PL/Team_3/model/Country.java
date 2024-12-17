@@ -119,6 +119,16 @@ public class Country {
 		}
 		return -1;
 	}
+	
+	public int searchProductByCountryID(String productsByCountryID) {
+        for (int i = 0; i < products.size(); i++) {
+            ProductsByCountry productByCountry = products.get(i);
+            if (productByCountry.getProductByCountryId().equalsIgnoreCase(productsByCountryID)) {
+                return i;  
+            }
+        }
+        return -1;  
+    }
 
 	/**
 	 * Adds a product to the country's list of products.
@@ -179,129 +189,117 @@ public class Country {
 //        return successfullyAddedProducts; // Return the last added product or null if no product was added
 //    }
 
-	public String addProductsByCountry(String productsByCountryID, String production, String price, Product product) {
+	public String addProductsByCountry(String production, String price, Product product,
+			ProductsByCountry newProductByCountry) {
 		String output = ""; // Default output message
-
-		if (productsByCountryID != null && !productsByCountryID.isBlank()) {
-			if (productsByCountryID.matches("^[a-zA-Z0-9].*")) { // ID must not start with special characters
-				if (productsByCountryID.length() <= 20) {
-					int productPos = searchProductByID(productsByCountryID); // Check if product exists in the list
-					if (productPos == -1) { // Product not found
-						if (production != null && !production.isBlank()) {
-							if (production.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
-								double productionDouble = Double.parseDouble(production);
-								if (productionDouble > 0) {
-									if (price != null && !price.isBlank()) {
-										if (price.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
-											double priceDouble = Double.parseDouble(price);
-											if (priceDouble > 0) {
-												ProductsByCountry newProductByCountry = new ProductsByCountry(product,
-														productionDouble, priceDouble, this);
-												this.products.add(newProductByCountry);
-												output = "Product '" + product.getName()
-														+ "' added successfully with Production: " + productionDouble
-														+ " and Price: " + priceDouble;
-											} else {
-												output = "The price must be greater than 0.";
-											}
-										} else {
-											output = "The price must be a valid double.";
-										}
+		if (product != null) {
+			int productPos = searchProductByID(product.getProductID()); // Check if product exists in the list
+			if (productPos == -1) { // Product not found
+				if (production != null && !production.isBlank()) {
+					if (production.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
+						double productionDouble = Double.parseDouble(production);
+						if (productionDouble > 0) {
+							if (price != null && !price.isBlank()) {
+								if (price.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
+									double priceDouble = Double.parseDouble(price);
+									if (priceDouble > 0) {
+										newProductByCountry.setProduct(product);
+										newProductByCountry.setProduction(productionDouble);
+										newProductByCountry.setPrice(priceDouble);
+										newProductByCountry.setCountry(this);
+										products.add(newProductByCountry);
 									} else {
-										output = "The price cannot be empty.";
+										output = "The price must be greater than 0.";
 									}
 								} else {
-									output = "The production quantity must be greater than 0.";
+									output = "The price must be a valid double.";
 								}
 							} else {
-								output = "The production quantity must be a valid double.";
+								output = "The price cannot be empty.";
 							}
 						} else {
-							output = "The production quantity cannot be empty.";
+							output = "The production quantity must be greater than 0.";
 						}
 					} else {
-						output = "A product with ID '" + productsByCountryID + "' already exists.";
+						output = "The production quantity must be a valid double.";
 					}
 				} else {
-					output = "The product ID cannot exceed 40 characters.";
+					output = "The production quantity cannot be empty.";
 				}
 			} else {
-				output = "The product ID cannot begin with special characters.";
+				output = "A product with ID '" + product.getProductID() + "' already exists.";
 			}
-		} else {
-			output = "The product ID cannot be empty.";
+
 		}
+
 		return output;
 	}
 
 	// Method to delete product by country
-	public String deleteProductsByCountry() {
-		String output = ""; // Default to an empty string if everything is valid
+		public String deleteProductsByCountry(String productsByCountryID) {
+			String output = ""; // Default to an empty string if everything is valid
 
-		if (!products.isEmpty()) {
-			// Automatically delete the first product (index 0)
-			int indexProducts = 0;
-			if (indexProducts >= 0 && indexProducts < products.size()) {
-				String productsByCountryID = products.get(indexProducts).getProductByCountryId();
-				this.products.remove(indexProducts);
-				output = "Deleted Product ID: " + productsByCountryID;
-			} else {
-				output = "Invalid index of Product, try again.";
-			}
-		} else {
-			output = "There are no products in this country.";
-		}
-		return output;
-	}
+			if (productsByCountryID != null && !productsByCountryID.isBlank()) {
+				// Check if the product by country exists
 
-	// Update ProductsByCountry
-	public String updateProductsByCountry(String countryId, String indexProduct, String productsByCountryId,
-			String name, String production, String price) {
-		String output = ""; // Default to an empty string if everything is valid
+				// Automatically delete the first product (index 0)
+				int indexProducts = searchProductByCountryID(productsByCountryID);
+				;
+				if (indexProducts >= 0 && indexProducts < products.size()) {
+					products.remove(indexProducts);
 
-		if (!products.isEmpty()) { // If the products by country are not empty
-			// Validate the product index
-			if (indexProduct != null && !indexProduct.isBlank()) {
-				int productIndexInt = Integer.parseInt(indexProduct);
-				if (productIndexInt >= 0 && productIndexInt < products.size()) {
-					ProductsByCountry productByCountryToUpdate = products.get(productIndexInt);
-
-					if (productsByCountryId != null && !productsByCountryId.isBlank()) {
-						if (name != null && !name.isBlank()) {
-							if (production != null && !production.isBlank()
-									&& production.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
-								double productionDouble = Double.parseDouble(production);
-								if (price != null && !price.isBlank()
-										&& price.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
-									double priceDouble = Double.parseDouble(price);
-									productByCountryToUpdate.setProductByCountryId(productsByCountryId);
-									productByCountryToUpdate.getProduct().setName(name);
-									productByCountryToUpdate.setProduction(productionDouble);
-									productByCountryToUpdate.setPrice(priceDouble);
-									output = "Product updated successfully.";
-								} else {
-									output = "The price cannot be empty and must be a valid double.";
-								}
-							} else {
-								output = "The production cannot be empty and must be a valid double.";
-							}
-						} else {
-							output = "Product name cannot be empty.";
-						}
-					} else {
-						output = "The product by country ID cannot be empty.";
-					}
 				} else {
-					output = "The index of product is invalid.";
+					output = "Invalid index of Product, try again.";
 				}
 			} else {
-				output = "The index of product must be an integer.";
+				output = "The product by country ID can not be empty";
 			}
-		} else {
-			output = "There are no products in this country.";
+			return output;
 		}
-		return output;
-	}
+
+		// Update ProductsByCountry
+		public String updateProductsByCountry(String productsByCountryId, String production, String price,
+				ProductsByCountry newProductByCountry) {
+			String output = ""; // Default to an empty string if everything is vali
+			if (!products.isEmpty()) { // If the products by country are not empty
+				// Validate the product index
+				if (productsByCountryId != null && !productsByCountryId.isBlank()) {
+					int indexProducts = searchProductByCountryID(productsByCountryId);
+					if (indexProducts >= 0 && indexProducts < products.size()) {
+						ProductsByCountry productByCountryToUpdate = products.get(indexProducts);
+
+						if (production != null && !production.isBlank()
+								&& production.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
+							double productionDouble = Double.parseDouble(production);
+							if (price != null && !price.isBlank() && price.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
+								double priceDouble = Double.parseDouble(price);
+
+								productByCountryToUpdate.setProduction(productionDouble);
+								productByCountryToUpdate.setPrice(priceDouble);
+								newProductByCountry.setProductByCountryId(productsByCountryId);
+								newProductByCountry.setPrice(priceDouble);
+								newProductByCountry.setProduction(productionDouble);
+								newProductByCountry.setProduct(productByCountryToUpdate.getProduct());
+								newProductByCountry.setCountry(this);
+								output = "Product updated successfully.";
+							} else {
+								output = "The price cannot be empty and must be a valid double.";
+							}
+						} else {
+							output = "The production cannot be empty and must be a valid double.";
+						}
+
+					} else {
+						output = "The index of product is invalid.";
+					}
+				} else {
+					output = "The product by country ID can not be empty";
+				}
+			} else {
+				output = "There are no products in this country.";
+			}
+			return output;
+		}
 
 	/**
 	 * addProductsByCountry
