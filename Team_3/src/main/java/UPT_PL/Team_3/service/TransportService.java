@@ -1,5 +1,6 @@
 package UPT_PL.Team_3.service;
 
+import UPT_PL.Team_3.model.Country;
 import UPT_PL.Team_3.model.Transport;
 import UPT_PL.Team_3.repository.TransportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,11 @@ public class TransportService {
 	public Transport createTransport(Transport transport) {
 		return transportRepository.save(transport);
 	}
+	
+	public Transport updateTransport(Transport transport) {
+		return transportRepository.save(transport);
+	}
+
 
 	public void deleteTransport(String id) {
 		if (transportRepository.existsById(id)) {

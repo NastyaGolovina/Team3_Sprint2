@@ -595,6 +595,35 @@ public class Manager {
 			System.out.println("Nothing found");
 		}
 	}
+	
+	public void updateTransport(Transport transport) {
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		HttpEntity<Transport> requestEntity = new HttpEntity<Transport>(transport, headers);
+		ResponseEntity<Transport> response = restTemplate.exchange(rootAPIURL + "transports", HttpMethod.PUT, 
+				requestEntity, Transport.class);
+		
+		if (response.getStatusCode().is2xxSuccessful()) {
+			System.out.println("Updated");
+		} else {
+			System.out.println("Nothing found");
+		}
+	}
+	
+	public void updateLogisticsSite(LogisticsSite logisticsSite) {
+	    headers.setContentType(MediaType.APPLICATION_JSON);
+	    
+	    HttpEntity<LogisticsSite> requestEntity = new HttpEntity<>(logisticsSite, headers);
+	    ResponseEntity<LogisticsSite> response = restTemplate.exchange(
+	            rootAPIURL + "logisticsSites", HttpMethod.PUT, requestEntity, LogisticsSite.class);
+	    
+	    if (response.getStatusCode().is2xxSuccessful()) {
+	        System.out.println("Logistics site updated successfully.");
+	    } else {
+	        System.out.println("Nothing found.");
+	    }
+	}
+
 
 	public void updateLogisticsSupplyChain(LogisticsSupplyChain chain) {
 		headers.setContentType(MediaType.APPLICATION_JSON);

@@ -1,5 +1,6 @@
 package UPT_PL.Team_3.controller;
 
+import UPT_PL.Team_3.model.Country;
 import UPT_PL.Team_3.model.Transport;
 import UPT_PL.Team_3.service.TransportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,12 @@ public class TransportController {
 		Optional<Transport> transport = transportService.getTransportById(id);
 		return transport.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
+	
+	@PutMapping
+	public Transport updateTransport(@RequestBody Transport transport) {
+		return transportService.updateTransport(transport);
+	}
+
 
 	@PostMapping
 	public Transport createTransport(@RequestBody Transport transport) {

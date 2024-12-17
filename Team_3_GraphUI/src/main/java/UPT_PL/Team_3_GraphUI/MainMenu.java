@@ -47,9 +47,13 @@ public class MainMenu extends Application {
 			productsStage.show();
 		});
 		
+		
+
 		btnTransports.setOnAction(ae -> {
-			message.setText("btnTransports");
+			TransportStage transportStage = new TransportStage(manager);
+			transportStage.show();
 		});
+
 		
 		btnChains.setOnAction(ae -> {
 			LogisticsSupplyChainsStage logisticsSupplyChainsStage = new LogisticsSupplyChainsStage(manager);

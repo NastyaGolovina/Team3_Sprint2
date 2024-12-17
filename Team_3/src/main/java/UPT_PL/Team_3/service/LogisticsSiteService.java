@@ -1,46 +1,54 @@
 package UPT_PL.Team_3.service;
 
-import java.util.List;
-import java.util.Optional;
-
+import UPT_PL.Team_3.model.LogisticsSite;
+import UPT_PL.Team_3.repository.LogisticsSiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import UPT_PL.Team_3.model.LogisticsSite;
-import UPT_PL.Team_3.model.Transport;
-import UPT_PL.Team_3.repository.LogisticsSiteRepository;
-import UPT_PL.Team_3.repository.TransportRepository;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LogisticsSiteService {
-	private final LogisticsSiteRepository logisticsSiteRepository;
-	
-	@Autowired
-	public LogisticsSiteService(LogisticsSiteRepository logisticsSiteRepository) {
-		this.logisticsSiteRepository = logisticsSiteRepository;
-	}
+    private final LogisticsSiteRepository logisticsSiteRepository;
 
-	public List<LogisticsSite> getAllLogisticsSites() {
-		return logisticsSiteRepository.findAll();
-	}
+    @Autowired
+    public LogisticsSiteService(LogisticsSiteRepository logisticsSiteRepository) {
+        this.logisticsSiteRepository = logisticsSiteRepository;
+    }
 
-	public List<LogisticsSite> getLogisticsSiteByCountryId(String countryId) {
+    // Method to get all logistics sites
+    public List<LogisticsSite> getAllLogisticsSites() {
+        return logisticsSiteRepository.findAll();
+    }
+
+    // Method to get logistics sites by country ID
+    public List<LogisticsSite> getLogisticsSiteByCountryId(String countryId) {
         return logisticsSiteRepository.getLogisticsSiteByCountryId(countryId);
     }
-	
-	public Optional<LogisticsSite> gettLogisticsSiteById(String id) {
-		return logisticsSiteRepository.findById(id);
-	}
 
-	public LogisticsSite createLogisticsSite(LogisticsSite logisticsSite) {
-		return logisticsSiteRepository.save(logisticsSite);
-	}
+    // Method to get a logistics site by ID
+    public Optional<LogisticsSite> getLogisticsSiteById(String id) {
+        return logisticsSiteRepository.findById(id);
+    }
 
-	public void deleteLogisticsSite(String id) {
-		if (logisticsSiteRepository.existsById(id)) {
-			logisticsSiteRepository.deleteById(id);
-		} else {
-			throw new RuntimeException("LogisticsSite not found with id: " + id);
-		}
-	}
+    // Method to create a new logistics site
+    public LogisticsSite createLogisticsSite(LogisticsSite logisticsSite) {
+        return logisticsSiteRepository.save(logisticsSite);
+    }
+
+    // Method to update an existing logistics site
+    public LogisticsSite updateLogisticsSite(LogisticsSite logisticsSite) {
+        // You may want to add a check to ensure the logistics site exists before updating
+        return logisticsSiteRepository.save(logisticsSite);
+    }
+
+    // Method to delete a logistics site by ID
+    public void deleteLogisticsSite(String id) {
+        if (logisticsSiteRepository.existsById(id)) {
+            logisticsSiteRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("LogisticsSite not found with id: " + id);
+        }
+    }
 }
