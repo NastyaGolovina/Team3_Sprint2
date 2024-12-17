@@ -615,7 +615,7 @@ public class Manager {
 	    
 	    HttpEntity<LogisticsSite> requestEntity = new HttpEntity<>(logisticsSite, headers);
 	    ResponseEntity<LogisticsSite> response = restTemplate.exchange(
-	            rootAPIURL + "logisticsSites", HttpMethod.PUT, requestEntity, LogisticsSite.class);
+	            rootAPIURL + "logistics-sites", HttpMethod.PUT, requestEntity, LogisticsSite.class);
 	    
 	    if (response.getStatusCode().is2xxSuccessful()) {
 	        System.out.println("Logistics site updated successfully.");

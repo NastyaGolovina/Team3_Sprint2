@@ -324,27 +324,27 @@ public class Country {
 	 * @param allCountries The list of all countries to check for duplicate site
 	 *                     IDs.
 	 */
-	public LogisticsSite addLogisticsSite(Transports transports, ArrayList<Country> allCountries) {
-		String siteId = ProjectHelper.inputStr("Enter the unique ID for the logistics site:");
-
-		// Check if the logistics site ID already exists across all countries
-		if (checkIfLogisticsSiteIdExists(siteId, allCountries)) {
-			System.out.println("A logistics site with this ID already exists.");
-			return null;
-		}
-
-		String name = ProjectHelper.inputStr("Enter the name of the logistics site:");
-
-		LogisticsSite newLogisticsSite = new LogisticsSite(siteId, name, this, new ArrayList<>());
-		this.sites.add(newLogisticsSite);
-
-		newLogisticsSite.addSuppliedTransport(transports);
-
-		System.out.println("Logistics site '" + name + "' added successfully.");
-
-		return newLogisticsSite;
-
-	}
+//	public LogisticsSite addLogisticsSite(Transports transports, ArrayList<Country> allCountries) {
+//		String siteId = ProjectHelper.inputStr("Enter the unique ID for the logistics site:");
+//
+//		// Check if the logistics site ID already exists across all countries
+//		if (checkIfLogisticsSiteIdExists(siteId, allCountries)) {
+//			System.out.println("A logistics site with this ID already exists.");
+//			return null;
+//		}
+//
+//		String name = ProjectHelper.inputStr("Enter the name of the logistics site:");
+//
+//		LogisticsSite newLogisticsSite = new LogisticsSite(siteId, name, this, new ArrayList<>());
+//		this.sites.add(newLogisticsSite);
+//
+//		newLogisticsSite.addSuppliedTransport(transports);
+//
+//		System.out.println("Logistics site '" + name + "' added successfully.");
+//
+//		return newLogisticsSite;
+//
+//	}
 
 	/**
 	 * Checks if a logistics site with the given ID already exists across all
@@ -414,7 +414,7 @@ public class Country {
 	public LogisticsSite searchSite(String siteId, ArrayList<Country> allCountries) {
 		for (Country country : allCountries) {
 			for (LogisticsSite site : country.getSites()) {
-				if (site.getSiteId().equals(siteId)) {
+				if (site.getSiteId().equalsIgnoreCase(siteId)) {
 					return site;
 				}
 			}
@@ -458,11 +458,11 @@ public class Country {
 		// Check if the country has any products
 		if (!this.getSites().isEmpty()) {
 			if (checkIfLogisticsSiteIdExists(siteId, allCountries)) {
-
+				
 				boolean isPartOfChain = chains.getSupplyChains().stream()
 						.anyMatch(chain -> chain.getSender().equals(searchSite(siteId, allCountries))
 								|| chain.getReceiver().equals(searchSite(siteId, allCountries)));
-
+				
 				if (!isPartOfChain) {
 
 					RestAPIHelper restAPIHelper = new RestAPIHelper();
@@ -473,11 +473,13 @@ public class Country {
 						RouteLine[] routeLineArr = response.getBody();
 						if (routeLineArr != null && routeLineArr.length == 0) {
 
-							String deletedSiteId = siteId;
-							this.getSites().remove(siteId);
+							
+							sites.remove(searchSite(siteId, allCountries));
 
 							System.out.println("Logistics site successfully deleted.");
 
+						} else {
+							output = "Failed to check route lines. Server returned status";
 						}
 					} else {
 						output = "Failed to check route lines. Server returned status";
@@ -487,7 +489,7 @@ public class Country {
 				}
 
 			} else {
-
+				output = "There are no LogisticsSites  with this id.";
 			}
 		} else {
 			output = "There are no LogisticsSites in this country.";
@@ -512,7 +514,6 @@ public class Country {
 					updatedSite.setCountry(this);
 					updatedSite.setSuppliedTransports(new ArrayList<Transport>(site.getSuppliedTransports()));
 
-					output = "Logistics site updated successfully.";
 				} else {
 					output = "Logistics site name cannot be empty.";
 				}

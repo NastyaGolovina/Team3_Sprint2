@@ -146,6 +146,8 @@ public class CountriesStage extends Stage {
 			String selectedCountry = listViewCtrl.getSelectionModel().getSelectedItem();
 			if (selectedCountry != null) { 
 				Country country = manager.getCountries().getCountries().get(manager.getCountries().searchCountry(selectedCountry));
+				LogisticsSitesStage logisticsSitesStage = new LogisticsSitesStage(manager, country);
+				logisticsSitesStage.show();
 			} else {
 
 				Alert alert = new Alert(Alert.AlertType.WARNING);

@@ -470,84 +470,84 @@ public class Countries {
      *
      * @param chains The LogisticsSupplyChains instance, used to access the list of supply chains and check for dependencies.
      */
-    public String deleteLogisticsSite(LogisticsSupplyChains chains) {
-        // Request the country ID
-        String countryId = ProjectHelper.inputStr("Enter the country ID: ");
-        int countryIndex = searchCountry(countryId);
-
-        // Check if the country exists
-        if (countryIndex == -1) {
-            System.out.println("Country with the specified ID not found.");
-            return null;
-        }
-
-        Country country = countries.get(countryIndex);
-
-        // Check if the country has any logistics sites
-        if (country.getSites().isEmpty()) {
-            System.out.println("There are no logistics sites in this country.");
-            return null;
-        }
-
-        // Display the list of logistics sites in the country
-        System.out.println("List of logistics sites:");
-        for (int i = 0; i < country.getSites().size(); i++) {
-            System.out.println("(" + (i + 1) + ") " + country.getSites().get(i).getName());
-        }
-
-        // Request the logistics site number for deletion
-        int siteIndex = ProjectHelper.inputInt("Select the logistics site number to delete: ") - 1;
-
-        // Validate the selected index
-        if (siteIndex < 0 || siteIndex >= country.getSites().size()) {
-            System.out.println("Invalid selection. Operation canceled.");
-            return null;
-        }
-
-        // Get the selected logistics site
-        LogisticsSite selectedSite = country.getSites().get(siteIndex);
-
-//        // Check if the logistics site has any associated transport
-//        if (selectedSite.getSuppliedTransports() != null && !selectedSite.getSuppliedTransports().isEmpty()) {
-//            System.out.println("Error. The logistics site has associated transport. Deletion is not possible.");
+//    public String deleteLogisticsSite(LogisticsSupplyChains chains) {
+//        // Request the country ID
+//        String countryId = ProjectHelper.inputStr("Enter the country ID: ");
+//        int countryIndex = searchCountry(countryId);
+//
+//        // Check if the country exists
+//        if (countryIndex == -1) {
+//            System.out.println("Country with the specified ID not found.");
 //            return null;
 //        }
-
-        // Check if the selected site is part of any active logistics supply chain
-        boolean isPartOfChain = chains.getSupplyChains().stream()
-                .anyMatch(chain -> chain.getSender().equals(selectedSite) || chain.getReceiver().equals(selectedSite));
-
-        if (isPartOfChain) {
-            System.out.println("Error. The logistics site is part of an active supply chain. Deletion is not possible.");
-            return null;
-        }
-
-       
-      
-        // Use RestAPIHelper to check for route lines linked to the logistics site
-        RestAPIHelper restAPIHelper = new RestAPIHelper();
-        ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate()
-                .getForEntity(restAPIHelper.getRootAPIURL() 
-                              + "routeLines/site/" 
-                              + selectedSite.getSiteId(), 
-                              RouteLine[].class);
-
-        if (response.getStatusCode().is2xxSuccessful()) {
-            RouteLine[] routeLineArr = response.getBody();
-            if (routeLineArr != null && routeLineArr.length == 0) {
-            
-            	 String deletedSiteId = selectedSite.getSiteId();
-                 country.getSites().remove(siteIndex);
-
-                 System.out.println("Logistics site successfully deleted.");
-                 return deletedSiteId;
-            }
-        } else {
-            System.out.println("Failed to check route lines. Server returned status: " + response.getStatusCode());
-            return null;
-        }
-        return null;
-    }
+//
+//        Country country = countries.get(countryIndex);
+//
+//        // Check if the country has any logistics sites
+//        if (country.getSites().isEmpty()) {
+//            System.out.println("There are no logistics sites in this country.");
+//            return null;
+//        }
+//
+//        // Display the list of logistics sites in the country
+//        System.out.println("List of logistics sites:");
+//        for (int i = 0; i < country.getSites().size(); i++) {
+//            System.out.println("(" + (i + 1) + ") " + country.getSites().get(i).getName());
+//        }
+//
+//        // Request the logistics site number for deletion
+//        int siteIndex = ProjectHelper.inputInt("Select the logistics site number to delete: ") - 1;
+//
+//        // Validate the selected index
+//        if (siteIndex < 0 || siteIndex >= country.getSites().size()) {
+//            System.out.println("Invalid selection. Operation canceled.");
+//            return null;
+//        }
+//
+//        // Get the selected logistics site
+//        LogisticsSite selectedSite = country.getSites().get(siteIndex);
+//
+////        // Check if the logistics site has any associated transport
+////        if (selectedSite.getSuppliedTransports() != null && !selectedSite.getSuppliedTransports().isEmpty()) {
+////            System.out.println("Error. The logistics site has associated transport. Deletion is not possible.");
+////            return null;
+////        }
+//
+//        // Check if the selected site is part of any active logistics supply chain
+//        boolean isPartOfChain = chains.getSupplyChains().stream()
+//                .anyMatch(chain -> chain.getSender().equals(selectedSite) || chain.getReceiver().equals(selectedSite));
+//
+//        if (isPartOfChain) {
+//            System.out.println("Error. The logistics site is part of an active supply chain. Deletion is not possible.");
+//            return null;
+//        }
+//
+//       
+//      
+//        // Use RestAPIHelper to check for route lines linked to the logistics site
+//        RestAPIHelper restAPIHelper = new RestAPIHelper();
+//        ResponseEntity<RouteLine[]> response = restAPIHelper.getRestTemplate()
+//                .getForEntity(restAPIHelper.getRootAPIURL() 
+//                              + "routeLines/site/" 
+//                              + selectedSite.getSiteId(), 
+//                              RouteLine[].class);
+//
+//        if (response.getStatusCode().is2xxSuccessful()) {
+//            RouteLine[] routeLineArr = response.getBody();
+//            if (routeLineArr != null && routeLineArr.length == 0) {
+//            
+//            	 String deletedSiteId = selectedSite.getSiteId();
+//                 country.getSites().remove(siteIndex);
+//
+//                 System.out.println("Logistics site successfully deleted.");
+//                 return deletedSiteId;
+//            }
+//        } else {
+//            System.out.println("Failed to check route lines. Server returned status: " + response.getStatusCode());
+//            return null;
+//        }
+//        return null;
+//    }
 
 }
 
