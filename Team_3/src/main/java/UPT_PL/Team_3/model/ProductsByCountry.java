@@ -54,6 +54,10 @@ public class ProductsByCountry {
 		return productByCountryId;
 	}
 
+	public void setProductByCountryIdForUI() {
+		this.productByCountryId = UUID.randomUUID().toString();
+	}
+	
 	public void setProductByCountryId(String productByCountryId) {
 		this.productByCountryId = productByCountryId;
 	}

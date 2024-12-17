@@ -32,9 +32,9 @@ public class CalculationDeleteLoadStage extends Stage {
 	/*
 	 * Constructor
 	 */
-	public CalculationDeleteLoadStage(Manager manage) {
+	public CalculationDeleteLoadStage(Manager manager) {
 		calculationTableView = new TableView<Calculation>();
-		buildUI(manage);
+		buildUI(manager);
 	}
 
 	public void buildUI(Manager manager) {

@@ -1,4 +1,5 @@
 package UPT_PL.Team_3_GraphUI;
+
 import java.util.Optional;
 
 import UPT_PL.Team_3.model.Country;
@@ -49,15 +50,13 @@ import javafx.stage.Modality;
 
 import javafx.stage.Stage;
 
-
-
 public class ProductsByCountryStage extends Stage {
 
 	private ListView<String> listViewDisplay;
 
 	private ProductsByCountryGridPane productsByCountryGridPane;
 
-	//Constructor
+	// Constructor
 
 	public ProductsByCountryStage(Manager manager, Country country) {
 
@@ -67,360 +66,263 @@ public class ProductsByCountryStage extends Stage {
 
 	}
 
+	// This method builds the user interface layout and assigns behavior to the
+	// buttons:
 
+	public void buildUI(Manager manager, Country country) {
 
-	    //This method builds the user interface layout and assigns behavior to the buttons:
+		this.setTitle("Products by Country  for " + country.getName());
 
-		public void buildUI(Manager manager, Country country) { 
+		this.initModality(Modality.APPLICATION_MODAL); // block interaction with other windows while this one is open.
 
-			this.setTitle("Products by Country");
+		VBox root = new VBox();
 
-			this.initModality(Modality.APPLICATION_MODAL); //block interaction with other windows while this one is open.
+		root.setSpacing(10); // Spacing among child nodes
 
-			
+		root.setAlignment(Pos.TOP_LEFT); // The alignment determines where these elements are positioned within the
+											// VBox.
 
-			VBox root = new VBox();
+		// HBox for button options layout
 
-			root.setSpacing(10);                // Spacing among child nodes
+		HBox HBoxButton = new HBox(); // for the button options
 
-			root.setAlignment(Pos.TOP_LEFT);	//The alignment determines where these elements are positioned within the VBox.	
+		HBoxButton.setSpacing(10);
 
-			
+		HBoxButton.setAlignment(Pos.TOP_CENTER); // for display the information about Product
 
-			//HBox for button options layout
+		HBox HBoxInfor = new HBox(); // where contain ListView
 
-			HBox HBoxButton = new HBox();   // for the button options
+		HBoxInfor.setSpacing(10);
 
-			HBoxButton.setSpacing(10);
+		HBoxInfor.setAlignment(Pos.TOP_LEFT);
 
-			HBoxButton.setAlignment(Pos.TOP_CENTER); // for display the information about Product
+		Button btnNew = new Button("New Product by Country");
 
-			HBox HBoxInfor = new HBox();    // where contain ListView 
+		Button btnEdit = new Button("Edit Product by Country");
 
-			HBoxInfor.setSpacing(10);
+		Button btnDelete = new Button("Delete Product by Country");
 
-			HBoxInfor.setAlignment(Pos.TOP_LEFT);
+		VBox VBoxDisplayInfor = new VBox(); // VBox to display the information of that product
 
-			
+		VBoxDisplayInfor.setAlignment(Pos.TOP_RIGHT);
 
-			Button btnNew = new Button("New Product by Country");
+		// Button new
 
-			Button btnEdit = new Button("Edit Product by Country");
+		btnNew.setOnAction(ae -> {
 
-			Button btnDelete = new Button("Delete Product by Country");
+			ProductsByCountryUpdateCreateStage productByCountryCreateStage = new ProductsByCountryUpdateCreateStage(
+					manager, country);
 
-			
+			productByCountryCreateStage.createNewProductsByCountry(manager, country);
 
-			VBox VBoxDisplayInfor = new VBox();   //VBox to display the information of that product
+			fillListView(manager, country);
 
-			VBoxDisplayInfor.setAlignment(Pos.TOP_RIGHT);
+			if (!country.getProducts().isEmpty()) {
 
-			
+				listViewDisplay.requestFocus();
 
-			// Button new
+				listViewDisplay.getSelectionModel().select(0);
 
-						btnNew.setOnAction(ae -> {
+			}
 
-							ProductsByCountryUpdateCreateStage productByCountryCreateStage = new ProductsByCountryUpdateCreateStage(manager,country);
+		});
 
-							productByCountryCreateStage.createNewProductsByCountry(manager, country);
+		// Button Edit
 
-	
+		btnEdit.setOnAction(ae -> {
 
-							
+			String selectedProductsByCountry = listViewDisplay.getSelectionModel().getSelectedItem();
 
-							fillListView(manager, country);
+			int selectedProductPos = listViewDisplay.getSelectionModel().getSelectedIndex();
 
-							
+			if (selectedProductsByCountry != null) {
 
-							
+				ProductsByCountryUpdateCreateStage productByCountryCreateStage = new ProductsByCountryUpdateCreateStage(
+						manager, country);
 
-							if(!country.getProducts().isEmpty()) {
+				productByCountryCreateStage.getProductsByCountryGridPane().getProductsByCountryComboBox()
+						.setDisable(true);
 
-								listViewDisplay.requestFocus();
+				productByCountryCreateStage.getProductsByCountryGridPane().fillGrid(selectedProductsByCountry, manager,
+						country);
 
-								listViewDisplay.getSelectionModel().select(0);
+				productByCountryCreateStage.updateProductsByCopuntry(manager, country);
 
-							}
+				fillListView(manager, country);
 
+				if (!country.getProducts().isEmpty()) {
 
+					listViewDisplay.requestFocus();
 
-						});
+					listViewDisplay.getSelectionModel().select(selectedProductPos);
 
-						
+				}
 
-						//Button Edit
+			} else {
 
-						btnEdit.setOnAction(ae -> {
+				Alert alert = new Alert(Alert.AlertType.WARNING);
 
-							String selectedProductsByCountry = listViewDisplay.getSelectionModel().getSelectedItem();
+				alert.setTitle("Warning");
 
-							int selectedProductPos = listViewDisplay.getSelectionModel().getSelectedIndex();
+				alert.setHeaderText("No product by country selected");
 
-							if (selectedProductsByCountry != null) {
+				alert.setContentText("Please select a product by country to edit.");
 
-								ProductsByCountryUpdateCreateStage  productByCountryCreateStage = new ProductsByCountryUpdateCreateStage(manager,country);
+				alert.showAndWait();
 
-								
+			}
 
-								productByCountryCreateStage.getProductsByCountryGridPane().getProductsByCountryComboBox().setDisable(true);
+		});
 
-								productByCountryCreateStage.getProductsByCountryGridPane().fillGrid(selectedProductsByCountry,manager, country);
+		btnDelete.setOnAction(ae -> {
 
-								
+			Alert deleteAlert = new Alert(Alert.AlertType.CONFIRMATION);
 
-								productByCountryCreateStage.updateProductsByCopuntry(manager, country);
+			deleteAlert.setTitle("Confirmation Dialog");
 
-								
+			deleteAlert.setHeaderText("Are you sure you want to delete this product? ");
 
-								fillListView(manager, country);
+			deleteAlert.setContentText("This action cannot be undone.");
 
-								if(!country.getProducts().isEmpty()) {
+			Optional<ButtonType> deleteResult = deleteAlert.showAndWait();
 
-									listViewDisplay.requestFocus();
+			if (deleteResult.isPresent()) { // Check user confirmation
 
-									listViewDisplay.getSelectionModel().select(selectedProductPos);
+				String selectedProduct = listViewDisplay.getSelectionModel().getSelectedItem(); // Get selected
 
-								}
+				// product from
 
-							} else {
+				// ListView
 
+				if (selectedProduct != null) { // Delete the product using manager's deleteProduct method
 
+					String output = country.deleteProductsByCountry(selectedProduct);
 
-								Alert alert = new Alert(Alert.AlertType.WARNING);
+					if (output == "") {
 
-								alert.setTitle("Warning");
-
-								alert.setHeaderText("No product by country selected");
-
-								alert.setContentText("Please select a product by country to edit.");
-
-								alert.showAndWait();
-
-
-
-							}
-
-
-
-						});
-
-		
-
-						btnDelete.setOnAction(ae -> {
-
-
-
-							Alert deleteAlert = new Alert(Alert.AlertType.CONFIRMATION);
-
-							deleteAlert.setTitle("Confirmation Dialog");
-
-							deleteAlert.setHeaderText("Are you sure you want to delete this product? ");
-
-							deleteAlert.setContentText("This action cannot be undone.");
-
-
-
-							Optional<ButtonType> deleteResult = deleteAlert.showAndWait();
-
-
-
-							if (deleteResult.isPresent()) { // Check user confirmation
-
-								String selectedProduct = listViewDisplay.getSelectionModel().getSelectedItem(); // Get selected
-
-																												// product from
-
-																												// ListView
-
-
-
-								if (selectedProduct != null) { // Delete the product using manager's deleteProduct method
-
-									String output = country.deleteProductsByCountry(selectedProduct);
-
-									if (output == "") {
-
-										manager.deleteProductsByCountry(selectedProduct);
-
-										fillListView(manager, country);
-
-
-
-										if (!country.getProducts().isEmpty()) {  // if the ProductList is not empty
-
-											listViewDisplay.requestFocus(); 
-
-											listViewDisplay.getSelectionModel().select(0); //Selects the first item (index 0) in the list view.
-
-										} else {
-
-											productsByCountryGridPane.setValueToTextField(TextFieldName.productionField, "");
-
-											productsByCountryGridPane.setValueToTextField(TextFieldName.priceField, "");
-
-											productsByCountryGridPane.setValueToTextField(TextFieldName.ProductsByCountryComboBox, "");
-
-										}
-
-
-
-									} else {
-
-										Alert alert = new Alert(Alert.AlertType.ERROR);
-
-										alert.setTitle("Error");
-
-										alert.setHeaderText("Failed to delete product");
-
-										alert.setContentText(output);
-
-										alert.showAndWait();
-
-									}
-
-								} else {
-
-
-
-									Alert alert = new Alert(Alert.AlertType.WARNING);
-
-									alert.setTitle("Warning");
-
-									alert.setHeaderText("No product selected");
-
-									alert.setContentText("Please select a product to delete.");
-
-									alert.showAndWait();
-
-
-
-								}
-
-							}
-
-
-
-						});
-
-						
-
-						root.getChildren().addAll(new HBox[] { HBoxButton, HBoxInfor, });
-
-
-
-						VBox.setMargin(HBoxButton, new Insets(10, 0, 0, 0));
-
-						VBox.setVgrow(HBoxInfor, Priority.ALWAYS);
-
-						
-
-						HBoxButton.getChildren().addAll(new Button[] {btnNew, btnEdit, btnDelete});
-
-						HBoxInfor.getChildren().add(listViewDisplay);
-
-						HBoxInfor.getChildren().addAll(VBoxDisplayInfor);
+						manager.deleteProductsByCountry(selectedProduct);
 
 						fillListView(manager, country);
 
-						listViewDisplay.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+						if (!country.getProducts().isEmpty()) { // if the ProductList is not empty
 
-						
+							listViewDisplay.requestFocus();
 
+							listViewDisplay.getSelectionModel().select(0); // Selects the first item (index 0) in the
+																			// list view.
 
+						} else {
 
-						HBox.setMargin(listViewDisplay, new Insets(0,10,10,10));
+							productsByCountryGridPane.setValueToTextField(TextFieldName.productionField, "");
 
-						productsByCountryGridPane = buildUIProductsByCountryFields();
+							productsByCountryGridPane.setValueToTextField(TextFieldName.priceField, "");
 
-						VBoxDisplayInfor.getChildren().add(productsByCountryGridPane.getMyGridPane());
+							productsByCountryGridPane.setValueToTextField(TextFieldName.ProductsByCountryComboBox, "");
 
-						
+						}
 
-						listViewDisplay.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+					} else {
 
-				            if (newValue != null) {
+						Alert alert = new Alert(Alert.AlertType.ERROR);
 
-				            	productsByCountryGridPane.fillGrid(String.valueOf(newValue), manager, country);
+						alert.setTitle("Error");
 
-				            }
+						alert.setHeaderText("Failed to delete product");
 
-						});
+						alert.setContentText(output);
 
-						
-
-						this.setScene(new Scene(root,750,750));
-
-						
-
-						this.setOnShown(event -> {
-
-							Platform.runLater(() -> {
-
-								if(!manager.getCountries().getCountries().isEmpty()) {
-
-									listViewDisplay.requestFocus();
-
-									listViewDisplay.getSelectionModel().select(0);
-
-								}
-
-							});
-
-						});
-
-							
+						alert.showAndWait();
 
 					}
 
-		
+				} else {
 
-		
+					Alert alert = new Alert(Alert.AlertType.WARNING);
 
-		
+					alert.setTitle("Warning");
 
-		
+					alert.setHeaderText("No product selected");
 
-		
+					alert.setContentText("Please select a product to delete.");
 
-		// refresh the listViewDisplay component with product IDs from the list of products
-
-				//updating the UI whenever the product list changes
-
-				public void fillListView(Manager manager, Country country) {
-
-					listViewDisplay.getItems().clear();
-
-					for(Product c : manager.getProducts().getProductList()) {
-
-						listViewDisplay.getItems().add(c.getProductID()); 
-
-					}
+					alert.showAndWait();
 
 				}
 
-				
+			}
 
-				public ProductsByCountryGridPane buildUIProductsByCountryFields() {
+		});
 
-					ProductsByCountryGridPane productsByCountryGridPane = new ProductsByCountryGridPane();
+		root.getChildren().addAll(new HBox[] { HBoxButton, HBoxInfor, });
+		VBox.setMargin(HBoxButton, new Insets(10, 0, 0, 0));
+		VBox.setVgrow(HBoxInfor, Priority.ALWAYS);
+		HBoxButton.getChildren().addAll(new Button[] { btnNew, btnEdit, btnDelete });
+		HBoxInfor.getChildren().add(listViewDisplay);
+		HBoxInfor.getChildren().addAll(VBoxDisplayInfor);
+		fillListView(manager, country);
+		listViewDisplay.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+		HBox.setMargin(listViewDisplay, new Insets(0, 10, 10, 10));
+		productsByCountryGridPane = buildUIProductsByCountryFields();
+		VBoxDisplayInfor.getChildren().add(productsByCountryGridPane.getMyGridPane());
+		
+		listViewDisplay.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue != null) {
+				productsByCountryGridPane.fillGrid(String.valueOf(newValue), manager, country);
+			}
 
-					
+		});
 
-					productsByCountryGridPane.getProductByCountryIdField().setEditable(true);
+		this.setScene(new Scene(root, 750, 750));
 
-					productsByCountryGridPane.getProductionField().setEditable(true);
+		this.setOnShown(event -> {
 
-					productsByCountryGridPane.getPriceField().setEditable(true);
+			Platform.runLater(() -> {
 
-					productsByCountryGridPane.getProductsByCountryComboBox().setDisable(true);
+				if (!manager.getCountries().getCountries().isEmpty()) {
 
-					
+					listViewDisplay.requestFocus();
 
-					return productsByCountryGridPane;
+					listViewDisplay.getSelectionModel().select(0);
 
 				}
 
-				
+			});
+
+		});
+
+	}
+
+	// refresh the listViewDisplay component with product IDs from the list of
+	// products
+
+	// updating the UI whenever the product list changes
+
+	public void fillListView(Manager manager, Country country) {
+
+		listViewDisplay.getItems().clear();
+
+		for (ProductsByCountry c : country.getProducts()) {
+
+			listViewDisplay.getItems().add(c.getProductByCountryId());
+
+		}
+
+	}
+
+	public ProductsByCountryGridPane buildUIProductsByCountryFields() {
+
+		ProductsByCountryGridPane productsByCountryGridPane = new ProductsByCountryGridPane();
+
+		productsByCountryGridPane.getProductByCountryIdField().setEditable(false);
+
+		productsByCountryGridPane.getProductionField().setEditable(false);
+
+		productsByCountryGridPane.getPriceField().setEditable(false);
+
+		productsByCountryGridPane.getProductsByCountryComboBox().setDisable(true);
+
+		return productsByCountryGridPane;
+
+	}
 
 }

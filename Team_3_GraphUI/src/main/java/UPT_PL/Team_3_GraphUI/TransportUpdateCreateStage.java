@@ -20,8 +20,8 @@ public class TransportUpdateCreateStage extends Stage {
     /**
      * Constructor
      */
-    public TransportUpdateCreateStage(Manager manage) {
-        buildUI(manage);
+    public TransportUpdateCreateStage(Manager manager) {
+        buildUI(manager);
     }
 
     /**

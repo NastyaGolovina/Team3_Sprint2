@@ -648,10 +648,9 @@ public class Manager {
 
 		HttpEntity<ProductsByCountry> requestEntity = new HttpEntity<ProductsByCountry>(productsByCountry, headers);
 
-		ResponseEntity<ProductsByCountry> response = restTemplate.exchange(rootAPIURL + "productsByCountry", HttpMethod.PUT, requestEntity,
+		ResponseEntity<ProductsByCountry> response = restTemplate.exchange(rootAPIURL + "products-by-country", HttpMethod.PUT, requestEntity,
 
 				ProductsByCountry.class);
-
 
 
 		if (response.getStatusCode().is2xxSuccessful()) {

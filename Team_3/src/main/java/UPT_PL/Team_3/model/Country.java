@@ -281,7 +281,7 @@ public class Country {
 								newProductByCountry.setProduction(productionDouble);
 								newProductByCountry.setProduct(productByCountryToUpdate.getProduct());
 								newProductByCountry.setCountry(this);
-								output = "Product updated successfully.";
+								
 							} else {
 								output = "The price cannot be empty and must be a valid double.";
 							}

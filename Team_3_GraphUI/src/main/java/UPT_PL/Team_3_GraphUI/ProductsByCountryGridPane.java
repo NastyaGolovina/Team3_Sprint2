@@ -3,7 +3,7 @@ package UPT_PL.Team_3_GraphUI;
 import UPT_PL.Team_3.model.ProductsByCountry;
 
 import UPT_PL.Team_3.model.Country;
-
+import UPT_PL.Team_3.model.Product;
 import javafx.scene.control.ComboBox;
 
 import javafx.scene.control.Label;
@@ -206,9 +206,9 @@ public class ProductsByCountryGridPane {
 
 		if (country.getProducts() != null) {
 
-			for (ProductsByCountry p : country.getProducts()) {
+			for (Product p : manager.getProducts().getProductList()) {
 
-				ProductsByCountryComboBox.getItems().add(p.getProductByCountryId());
+				ProductsByCountryComboBox.getItems().add(p.getProductID());
 
 			}
 

@@ -34,9 +34,9 @@ public class CalculationsStage extends Stage {
 	/**
 	 * Constructor
 	 */
-	public CalculationsStage(Manager manage) {
+	public CalculationsStage(Manager manager) {
 		routeLineTableView = new TableView<>();
-		buildUI(manage);
+		buildUI(manager);
 	}
 
 	public void buildUI(Manager manager) {
