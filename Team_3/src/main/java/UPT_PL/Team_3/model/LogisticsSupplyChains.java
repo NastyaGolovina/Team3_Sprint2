@@ -27,6 +27,7 @@ public class LogisticsSupplyChains {
         supplyChains.add(logisticsSupplyChain);  // Adding the supply chain to the array
     }
     
+    
     public int searchChain(String supplyChainsId) {
     	int i = 0;
 		 while (i < supplyChains.size() && !supplyChains.get(i).getChainId().equalsIgnoreCase(supplyChainsId)){
