@@ -143,11 +143,33 @@ public class CountriesStage extends Stage {
 		});
 
 		btnSite.setOnAction(ae -> {
+			String selectedCountry = listViewCtrl.getSelectionModel().getSelectedItem();
+			if (selectedCountry != null) { 
+				Country country = manager.getCountries().getCountries().get(manager.getCountries().searchCountry(selectedCountry));
+			} else {
 
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Warning");
+				alert.setHeaderText("No country selected");
+				alert.setContentText("Please select a country to delete.");
+				alert.showAndWait();
+
+			}
 		});
 
 		btnProductsByCountry.setOnAction(ae -> {
+			String selectedCountry = listViewCtrl.getSelectionModel().getSelectedItem();
+			if (selectedCountry != null) {
+				Country country = manager.getCountries().getCountries().get(manager.getCountries().searchCountry(selectedCountry));
+			} else {
 
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Warning");
+				alert.setHeaderText("No country selected");
+				alert.setContentText("Please select a country to delete.");
+				alert.showAndWait();
+
+			}
 		});
 
 		root.getChildren().addAll(new HBox[] { HButtonsBox, HInfoBox });
