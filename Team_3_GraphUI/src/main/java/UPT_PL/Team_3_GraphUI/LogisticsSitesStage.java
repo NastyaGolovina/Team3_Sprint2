@@ -29,12 +29,12 @@ public class LogisticsSitesStage extends Stage {
      * Constructor
      */
     public LogisticsSitesStage(Manager manager, Country country) {
-        listViewCtrl = new ListView<>();
+		listViewCtrl = new ListView<>();
         buildUI(manager, country);
     }
 
     public void buildUI(Manager manager, Country country) {
-        this.setTitle("Logistics Sites");
+        this.setTitle("Logistics Sites for " + country.getName());
         this.initModality(Modality.APPLICATION_MODAL);
 
         VBox root = new VBox();

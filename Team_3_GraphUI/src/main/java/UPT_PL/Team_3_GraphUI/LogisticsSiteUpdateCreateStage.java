@@ -71,7 +71,9 @@ public class LogisticsSiteUpdateCreateStage extends Stage {
         logisticsSiteGridPane.getListViewCtrlTransport().getSelectionModel().clearSelection();
         logisticsSiteGridPane.getListViewCtrlTransport().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         btnOK.setOnAction(ae -> {
-        	ObservableList<String> items = logisticsSiteGridPane.getListViewCtrlTransport().getItems();
+        	ObservableList<String> items = logisticsSiteGridPane.getListViewCtrlTransport()
+                    .getSelectionModel()
+                    .getSelectedItems();
         	ArrayList<Transport> transports = new ArrayList<Transport>();
         	for(String s : items) {
         		int pos = manager.getTransports().searchTransport(s);
