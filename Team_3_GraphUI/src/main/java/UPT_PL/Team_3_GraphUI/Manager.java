@@ -339,7 +339,7 @@ public class Manager {
 	/**
 	 * addProductsToCountry
 	 */
-	public void addProductsToCountry(ProductsByCountry newProductsByCountry) {
+	public void addProductsByCountry(ProductsByCountry newProductsByCountry) {
 		if (productRequestProcessor != null) {
 			ResponseEntity<ProductsByCountry> response = restTemplate.postForEntity(rootAPIURL + "products-by-country",
 					newProductsByCountry, ProductsByCountry.class);
@@ -640,6 +640,31 @@ public class Manager {
 		}
 	}
 
+	public void updateProductsByCountry(ProductsByCountry productsByCountry) {
+
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+
+
+		HttpEntity<ProductsByCountry> requestEntity = new HttpEntity<ProductsByCountry>(productsByCountry, headers);
+
+		ResponseEntity<ProductsByCountry> response = restTemplate.exchange(rootAPIURL + "productsByCountry", HttpMethod.PUT, requestEntity,
+
+				ProductsByCountry.class);
+
+
+
+		if (response.getStatusCode().is2xxSuccessful()) {
+
+			System.out.println("Updated");
+
+		} else {
+
+			System.out.println("Nothing found");
+
+		}
+
+	}
 	
 	
 	/**
