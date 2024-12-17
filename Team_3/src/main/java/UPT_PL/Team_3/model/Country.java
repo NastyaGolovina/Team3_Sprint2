@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.net.httpserver.Filter.Chain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -459,10 +460,18 @@ public class Country {
 		if (!this.getSites().isEmpty()) {
 			if (checkIfLogisticsSiteIdExists(siteId, allCountries)) {
 				
-				boolean isPartOfChain = chains.getSupplyChains().stream()
-						.anyMatch(chain -> chain.getSender().equals(searchSite(siteId, allCountries))
-								|| chain.getReceiver().equals(searchSite(siteId, allCountries)));
-				
+//				boolean isPartOfChain = chains.getSupplyChains().stream()
+//						.anyMatch(chain -> chain.getSender().equals(searchSite(siteId, allCountries))
+//								|| chain.getReceiver().equals(searchSite(siteId, allCountries)));
+//				
+				boolean isPartOfChain = false; // Initially false
+
+				for (LogisticsSupplyChain chain : chains.getSupplyChains()) {     
+					if (chain.getSender().getSiteId().equals(siteId) || chain.getReceiver().getSiteId().equals(siteId)) {
+				        isPartOfChain = true;
+				        break;
+				    }
+				}
 				if (!isPartOfChain) {
 
 					RestAPIHelper restAPIHelper = new RestAPIHelper();
