@@ -121,58 +121,177 @@ public class Country {
      * @param products
      * @return
      */
-    public ArrayList<ProductsByCountry> addProductByCountry(Products products) {
-    	ArrayList<ProductsByCountry> successfullyAddedProducts = new ArrayList<ProductsByCountry>();
-        ArrayList<Product> allProducts = products.getProductList();
+//    public ArrayList<ProductsByCountry> addProductByCountry(Products products) {
+//    	ArrayList<ProductsByCountry> successfullyAddedProducts = new ArrayList<ProductsByCountry>();
+//        ArrayList<Product> allProducts = products.getProductList();
+//
+//        System.out.println("Available Products:");
+//        for (int i = 0; i < allProducts.size(); i++) {
+//            System.out.println("(" + (i + 1) + ") " + allProducts.get(i).toString());
+//        }
+//
+//        ProductsByCountry newProductByCountry = null; // Declare variable outside loop
+//
+//        int inputUser = ProjectHelper.inputInt("Select the product number to add (or choose 0 to exit): ");
+//
+//        while (inputUser != 0) {
+//            if (inputUser < 1 || inputUser > allProducts.size()) {
+//                System.out.println("Invalid choice. Please choose a valid product number or 0 to exit.");
+//            } else {
+//                Product product = allProducts.get(inputUser - 1);
+//                double production = ProjectHelper.inputDouble("Enter the production quantity: ");
+//                double price = ProjectHelper.inputDouble("Enter the price of the product: ");
+//
+//                // Check if a product with the same name already exists in ProductsByCountry
+//                boolean exists = false;
+//                for (ProductsByCountry existingProduct : this.products) {
+//                    if (existingProduct.getProduct().getName().equals(product.getName())) {
+//                        exists = true;
+//                        break;
+//                    }
+//                }
+//
+//                if (exists) {
+//                    System.out.println("The product '" + product.getName() + "' already exists in the country.");
+//                } else {
+//                    // Create a new ProductsByCountry object
+//                    newProductByCountry = new ProductsByCountry(product, production, price, this);
+//                    this.products.add(newProductByCountry);
+//                    successfullyAddedProducts.add(newProductByCountry);
+//                    System.out.println("Product " + product.getName() + " added successfully.");
+//                }
+//            }
+//
+//            inputUser = ProjectHelper.inputInt("Select the product number to add (or choose 0 to exit): ");
+//        }
+//
+//        if (newProductByCountry == null) {
+//            System.out.println("No products were added.");
+//        } else {
+//            System.out.println("Product Addition Process Completed.");
+//        }
+//
+//        return successfullyAddedProducts; // Return the last added product or null if no product was added
+//    }
 
-        System.out.println("Available Products:");
-        for (int i = 0; i < allProducts.size(); i++) {
-            System.out.println("(" + (i + 1) + ") " + allProducts.get(i).toString());
-        }
+    public String addProductsByCountry(String productsByCountryID, String production, String price, Product product) {
+        String output = ""; // Default output message
 
-        ProductsByCountry newProductByCountry = null; // Declare variable outside loop
-
-        int inputUser = ProjectHelper.inputInt("Select the product number to add (or choose 0 to exit): ");
-
-        while (inputUser != 0) {
-            if (inputUser < 1 || inputUser > allProducts.size()) {
-                System.out.println("Invalid choice. Please choose a valid product number or 0 to exit.");
-            } else {
-                Product product = allProducts.get(inputUser - 1);
-                double production = ProjectHelper.inputDouble("Enter the production quantity: ");
-                double price = ProjectHelper.inputDouble("Enter the price of the product: ");
-
-                // Check if a product with the same name already exists in ProductsByCountry
-                boolean exists = false;
-                for (ProductsByCountry existingProduct : this.products) {
-                    if (existingProduct.getProduct().getName().equals(product.getName())) {
-                        exists = true;
-                        break;
+        if (productsByCountryID != null && !productsByCountryID.isBlank()) {
+            if (productsByCountryID.matches("^[a-zA-Z0-9].*")) { // ID must not start with special characters
+                if (productsByCountryID.length() <= 20) {
+                    int productPos = searchProductByID(productsByCountryID); // Check if product exists in the list
+                    if (productPos == -1) { // Product not found
+                        if (production != null && !production.isBlank()) {
+                            if (production.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
+                                double productionDouble = Double.parseDouble(production);
+                                if (productionDouble > 0) {
+                                    if (price != null && !price.isBlank()) {
+                                        if (price.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
+                                            double priceDouble = Double.parseDouble(price);
+                                            if (priceDouble > 0) {
+                                                ProductsByCountry newProductByCountry = new ProductsByCountry(product, productionDouble, priceDouble, this);
+                                                this.products.add(newProductByCountry);
+                                                output = "Product '" + product.getName() + "' added successfully with Production: " + productionDouble + " and Price: " + priceDouble;
+                                            } else {
+                                                output = "The price must be greater than 0.";
+                                            }
+                                        } else {
+                                            output = "The price must be a valid double.";
+                                        }
+                                    } else {
+                                        output = "The price cannot be empty.";
+                                    }
+                                } else {
+                                    output = "The production quantity must be greater than 0.";
+                                }
+                            } else {
+                                output = "The production quantity must be a valid double.";
+                            }
+                        } else {
+                            output = "The production quantity cannot be empty.";
+                        }
+                    } else {
+                        output = "A product with ID '" + productsByCountryID + "' already exists.";
                     }
-                }
-
-                if (exists) {
-                    System.out.println("The product '" + product.getName() + "' already exists in the country.");
                 } else {
-                    // Create a new ProductsByCountry object
-                    newProductByCountry = new ProductsByCountry(product, production, price, this);
-                    this.products.add(newProductByCountry);
-                    successfullyAddedProducts.add(newProductByCountry);
-                    System.out.println("Product " + product.getName() + " added successfully.");
+                    output = "The product ID cannot exceed 40 characters.";
                 }
+            } else {
+                output = "The product ID cannot begin with special characters.";
             }
-
-            inputUser = ProjectHelper.inputInt("Select the product number to add (or choose 0 to exit): ");
-        }
-
-        if (newProductByCountry == null) {
-            System.out.println("No products were added.");
         } else {
-            System.out.println("Product Addition Process Completed.");
+            output = "The product ID cannot be empty.";
         }
-
-        return successfullyAddedProducts; // Return the last added product or null if no product was added
+        return output;
     }
+
+ // Method to delete product by country
+    public String deleteProductsByCountry() {
+        String output = ""; // Default to an empty string if everything is valid
+
+        if (!products.isEmpty()) {
+            // Automatically delete the first product (index 0)
+            int indexProducts = 0;
+            if (indexProducts >= 0 && indexProducts < products.size()) {
+                String productsByCountryID = products.get(indexProducts).getProductByCountryId();
+                this.products.remove(indexProducts);
+                output = "Deleted Product ID: " + productsByCountryID;
+            } else {
+                output = "Invalid index of Product, try again.";
+            }
+        } else {
+            output = "There are no products in this country.";
+        }
+        return output;
+    }
+    
+ // Update ProductsByCountry
+    public String updateProductsByCountry(String countryId, String indexProduct, String productsByCountryId, String name, String production,
+			String price) {
+    String output = ""; // Default to an empty string if everything is valid
+
+    if (!products.isEmpty()) { // If the products by country are not empty
+        // Validate the product index
+        if (indexProduct != null && !indexProduct.isBlank()) {
+            int productIndexInt = Integer.parseInt(indexProduct);
+            if (productIndexInt >= 0 && productIndexInt < products.size()) {
+                ProductsByCountry productByCountryToUpdate = products.get(productIndexInt);
+
+                if (productsByCountryId != null && !productsByCountryId.isBlank()) {
+                    if (name != null && !name.isBlank()) {
+                        if (production != null && !production.isBlank() && production.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
+                            double productionDouble = Double.parseDouble(production);
+                            if (price != null && !price.isBlank() && price.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?")) {
+                                double priceDouble = Double.parseDouble(price);
+                                productByCountryToUpdate.setProductByCountryId(productsByCountryId);
+                                productByCountryToUpdate.getProduct().setName(name);
+                                productByCountryToUpdate.setProduction(productionDouble);
+                                productByCountryToUpdate.setPrice(priceDouble);
+                                output = "Product updated successfully.";
+                            } else {
+                                output = "The price cannot be empty and must be a valid double.";
+                            }
+                        } else {
+                            output = "The production cannot be empty and must be a valid double.";
+                        }
+                    } else {
+                        output = "Product name cannot be empty.";
+                    }
+                } else {
+                    output = "The product by country ID cannot be empty.";
+                }
+            } else {
+                output = "The index of product is invalid.";
+            }
+        } else {
+            output = "The index of product must be an integer.";
+        }
+    } else {
+        output = "There are no products in this country.";
+    }
+    return output;
+}
 
  
     /**
