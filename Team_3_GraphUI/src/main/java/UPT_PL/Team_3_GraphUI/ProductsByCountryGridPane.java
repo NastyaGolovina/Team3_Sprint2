@@ -118,7 +118,7 @@ public class ProductsByCountryGridPane {
 
 		Label priceLabel = new Label("Price");
 
-		Label ProductsByCountryComboBoxLabel = new Label("Products By Country");
+		Label ProductsByCountryComboBoxLabel = new Label("Product ");
 
 		// actual boxes (TextField) where users can type in the ID, Name..
 

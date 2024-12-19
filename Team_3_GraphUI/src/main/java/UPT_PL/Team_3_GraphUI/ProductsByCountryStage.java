@@ -71,7 +71,7 @@ public class ProductsByCountryStage extends Stage {
 
 	public void buildUI(Manager manager, Country country) {
 
-		this.setTitle("Products by Country  for " + country.getName());
+		this.setTitle("Products for " + country.getName());
 
 		this.initModality(Modality.APPLICATION_MODAL); // block interaction with other windows while this one is open.
 
@@ -187,68 +187,68 @@ public class ProductsByCountryStage extends Stage {
 			Optional<ButtonType> deleteResult = deleteAlert.showAndWait();
 
 			if (deleteResult.isPresent()) { // Check user confirmation
+				if (deleteResult.get() == ButtonType.OK) {
+					String selectedProduct = listViewDisplay.getSelectionModel().getSelectedItem(); // Get selected
 
-				String selectedProduct = listViewDisplay.getSelectionModel().getSelectedItem(); // Get selected
+					// product from
 
-				// product from
+					// ListView
 
-				// ListView
+					if (selectedProduct != null) { // Delete the product using manager's deleteProduct method
 
-				if (selectedProduct != null) { // Delete the product using manager's deleteProduct method
+						String output = country.deleteProductsByCountry(selectedProduct);
 
-					String output = country.deleteProductsByCountry(selectedProduct);
+						if (output == "") {
 
-					if (output == "") {
+							manager.deleteProductsByCountry(selectedProduct);
 
-						manager.deleteProductsByCountry(selectedProduct);
+							fillListView(manager, country);
 
-						fillListView(manager, country);
+							if (!country.getProducts().isEmpty()) { // if the ProductList is not empty
 
-						if (!country.getProducts().isEmpty()) { // if the ProductList is not empty
+								listViewDisplay.requestFocus();
 
-							listViewDisplay.requestFocus();
+								listViewDisplay.getSelectionModel().select(0); // Selects the first item (index 0) in the
+																				// list view.
 
-							listViewDisplay.getSelectionModel().select(0); // Selects the first item (index 0) in the
-																			// list view.
+							} else {
+
+								productsByCountryGridPane.setValueToTextField(TextFieldName.productionField, "");
+
+								productsByCountryGridPane.setValueToTextField(TextFieldName.priceField, "");
+
+								productsByCountryGridPane.setValueToTextField(TextFieldName.ProductsByCountryComboBox, "");
+
+							}
 
 						} else {
 
-							productsByCountryGridPane.setValueToTextField(TextFieldName.productionField, "");
+							Alert alert = new Alert(Alert.AlertType.ERROR);
 
-							productsByCountryGridPane.setValueToTextField(TextFieldName.priceField, "");
+							alert.setTitle("Error");
 
-							productsByCountryGridPane.setValueToTextField(TextFieldName.ProductsByCountryComboBox, "");
+							alert.setHeaderText("Failed to delete product");
+
+							alert.setContentText(output);
+
+							alert.showAndWait();
 
 						}
 
 					} else {
 
-						Alert alert = new Alert(Alert.AlertType.ERROR);
+						Alert alert = new Alert(Alert.AlertType.WARNING);
 
-						alert.setTitle("Error");
+						alert.setTitle("Warning");
 
-						alert.setHeaderText("Failed to delete product");
+						alert.setHeaderText("No product selected");
 
-						alert.setContentText(output);
+						alert.setContentText("Please select a product to delete.");
 
 						alert.showAndWait();
 
 					}
-
-				} else {
-
-					Alert alert = new Alert(Alert.AlertType.WARNING);
-
-					alert.setTitle("Warning");
-
-					alert.setHeaderText("No product selected");
-
-					alert.setContentText("Please select a product to delete.");
-
-					alert.showAndWait();
-
 				}
-
 			}
 
 		});
